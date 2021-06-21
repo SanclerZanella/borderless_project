@@ -1,5 +1,7 @@
 import os
-from flask import Flask
+from flask import (Flask, flash,
+                   render_template, redirect,
+                   request, session, url_for)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 if os.path.exists('env.py'):
@@ -21,6 +23,11 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 # Create an instance of PyMongo
 mongo = PyMongo(app)
+
+
+@app.route("/")
+def landpage():
+    return render_template("landpage.html")
 
 
 # Define host and port for the app

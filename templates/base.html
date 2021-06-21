@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap css link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"
+        type="text/css">
+
+    <!-- css file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+
+    <!--vvv Custom Styles vvv-->
+    {% block styles %}
+    {% endblock %}
+
+    <title>Borderless</title>
+</head>
+
+<body>
+    <header>
+        <!-- Navbar from bootstrap -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#"><img id="logo"
+                    src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
+
+            <!-- side nav button for small and medium screens -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <!-- Navbar and side items -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fas fa-house-user"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Sign In</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Sign Up</a>
+                    </li>
+                </ul>
+                <div>
+                    <a class="navSmFont" href="#">Log Out</a>
+                </div>
+                <div>
+                    <a class="" href="#"><img id="profileLinkPic"
+                            src="{{ url_for('static', filename='images/profile_pic.png') }}"
+                            alt="Profile Link Photo"></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!--vvv Custom Content vvv-->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!--vvv Footer vvv-->
+    <footer>
+        <div id="copyright">
+            <p class="text-center">Borderless © <span id="footerYear"></span></p>
+        </div>
+    </footer>
+
+    <!--vvv External Resources vvv-->
+
+    <!-- Bootstrap JS Bundle Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+    </script>
+
+    <!-- Jquery 3.6.0 minified -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Fontawesome Kit script -->
+    <script src="https://kit.fontawesome.com/169bbd8201.js" crossorigin="anonymous"></script>
+
+    <!-- JavaScript file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!--vv Custom Scripts vv-->
+    {% block scripts %}
+    {% endblock %}
+</body>
+
+</html>
