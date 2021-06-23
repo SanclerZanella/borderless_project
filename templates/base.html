@@ -26,11 +26,11 @@
         <!-- Navbar from bootstrap -->
         <nav class="navbar navbar-expand-lg navbar-light">
             {% if not session.user %}
-                <a class="navbar-brand" href="{{ url_for('landpage') }}"><img id="logo"
-                        src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
+            <a class="navbar-brand" href="{{ url_for('landpage') }}"><img id="logo"
+                    src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
             {% else %}
-                <a class="navbar-brand" href="#"><img id="logo"
-                    src="{{ url_for('static', filename='images/logo_session.png') }}" alt="Borderless Logo"></a>
+            <a class="navbar-brand" href="#"><img id="logo"
+                src="{{ url_for('static', filename='images/logo_session.png') }}" alt="Borderless Logo"></a>
             {% endif %}
 
             <!-- side nav button for small and medium screens -->
@@ -44,27 +44,34 @@
                 <!-- Navbar and side items -->
                 <ul class="navbar-nav ml-auto">
                     {% if session.user %}
-                        <li class="nav-item activeItem">
-                            <a class="nav-link" href="#"><i class="fas fa-house-user"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
-                        </li>
+                    <li class="nav-item activeItem">
+                        <a class="nav-link" href="#"><i class="fas fa-house-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                    </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
+                    </li>
                     {% endif %}
                 </ul>
                 {% if session.user %}
-                    <div>
-                        <a class="navSmFont" href="{{ url_for('logout') }}">Log Out</a>
+                <div>
+                    <div class="dropdown dropleft">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img id="profileLinkPic" src="{{ url_for('static', filename='images/profile_pic.png') }}"
+                                alt="Profile Link Photo">
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
+                            <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+                            <a class="dropdown-item" href="#">Notifications</a>
+                        </div>
                     </div>
-                    <div>
-                        <a class="" href="#"><img id="profileLinkPic"
-                                src="{{ url_for('static', filename='images/profile_pic.png') }}"
-                                alt="Profile Link Photo"></a>
-                    </div>
+                </div>
                 {% endif %}
             </div>
         </nav>
@@ -74,15 +81,15 @@
         <section>
             <!-- Flash messages -->
             {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages%}
-                        <div class="row no-gutters flashes">
-                            <div class="col-12 text-center">
-                                <h4>{{ message }}</h4>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            {% if messages %}
+            {% for message in messages%}
+            <div class="row no-gutters flashes">
+                <div class="col-12 text-center">
+                    <h4>{{ message }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
         </section>
 

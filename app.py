@@ -55,7 +55,7 @@ def signup():
         # Put the new user into 'session' cookie
         session['user'] = existing_user["fname"].capitalize()
         flash("Registration Successful")
-        return redirect(url_for("landpage"))
+        return redirect(url_for("profile"))
 
     return render_template("signup.html")
 
@@ -75,7 +75,7 @@ def login():
                     session["user"] = existing_user["fname"].capitalize()
                     flash("Welcome, {}".format(
                         existing_user["fname"].capitalize()))
-                    return redirect(url_for("landpage"))
+                    return redirect(url_for("profile"))
             else:
                 # Invalid password
                 flash("Incorrect username and/or password")
@@ -87,6 +87,12 @@ def login():
             return redirect(url_for("login"))
 
     return render_template("login.html")
+
+
+# View to execute the profile page
+@app.route("/profile")
+def profile():
+    return render_template('profile.html')
 
 
 # View to logout the user (Clear the session cookie)

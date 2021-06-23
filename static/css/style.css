@@ -35,10 +35,13 @@ form label {
 }
 
 .flashes {
-    margin-top: 1rem;
     background-color: #b6f8ff;
 }
 
+.img-centered {
+    object-fit: cover;
+    object-position: center;
+}
 
 /* Navbar */
 
@@ -116,11 +119,11 @@ a.navSmFont:hover {
 }
 
 .cardLandPage h2 {
-    margin-top: 1rem; 
+    margin-top: 1rem;
 }
 
 .cardLandPage p {
-    font-weight: 500; 
+    font-weight: 500;
 }
 
 .signUpBtn {
@@ -134,18 +137,20 @@ a.navSmFont:hover {
     background-color: #b6f8ff;
     width: 50vw;
     height: 100%;
-    margin: 2.3rem 0; 
+    margin: 2.3rem 0;
 }
 
 .registerBtn {
     margin: 1rem 0;
 }
 
-.logOutBottomText a, .logInBottomText a {
+.logOutBottomText a,
+.logInBottomText a {
     text-decoration: none;
 }
 
-.logOutBottomText p, .logInBottomText p {
+.logOutBottomText p,
+.logInBottomText p {
     font-weight: 600;
 }
 
@@ -167,24 +172,90 @@ footer {
     color: #fff;
 }
 
-/* Media Queries */
+/* Profile Page */
 
+.profilePics {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.profileCover {
+    width: 100%;
+    height: 50vh;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+#profilePic {
+    height: 40vh;
+    border-radius: 100%;
+    border: 1px solid #000;
+    position: absolute;
+    top: 30px;
+    left: 500px;
+}
+
+.profileName {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.profileNav {
+    height: 6vh;
+    background-color: #b6f8ff;
+    margin-bottom: 2rem;
+}
+
+.profileNav .nav-item {
+    margin-left: 5rem;
+}
+
+.searchInput {
+    width: 100%;
+}
+
+.profileSearchForm {
+    margin: 0 auto;
+}
+
+.feedProfile {
+    background-color: #ededed;
+    border-radius: 5%;
+    margin: 2rem 0;
+    height: 70vh;
+}
+
+.floating-right-bottom-btn {
+    position: fixed;
+    left: 60px;
+    bottom: 400px;
+    z-index: 1;
+}
+
+/* Media Queries */
 /* Width */
 
 @media screen and (min-width: 1600px) {
     a.navSmFont {
         font-size: 2em;
     }
+
     .landCover {
         margin-top: 5rem;
     }
+
     .cardLandPage {
         width: 80vw;
         margin-bottom: 4rem;
     }
+
     .signUpCard {
         margin: 9rem 0;
     }
+
     .card {
         width: 90vw;
         margin-left: 0;
@@ -196,6 +267,7 @@ footer {
     .signUpCard {
         margin: 4rem 0;
     }
+
     .loginCard {
         margin: 5rem 0;
     }
@@ -205,6 +277,7 @@ footer {
     .signUpCard {
         margin: 4rem;
     }
+
     .loginCard {
         margin: 5rem 0;
     }
@@ -214,18 +287,23 @@ footer {
     a.navSmFont {
         font-size: 2em;
     }
+
     .landCover {
         margin-top: 5rem;
     }
+
     .cardLandPage {
         width: 80vw;
     }
+
     .signUpCard {
         margin: 4rem;
     }
+
     .card {
         width: 80vw;
     }
+
     .loginCard {
         margin: 5rem 0;
     }
@@ -239,17 +317,21 @@ footer {
     .landTitle img {
         width: 90vw;
     }
+
     .cardLandPage {
         width: 90vw;
     }
+
     .signUpCard {
         margin: 4rem;
     }
+
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
+
     .loginCard {
         margin: 5rem 0;
     }
@@ -272,14 +354,17 @@ footer {
     .cardLandPage {
         width: 90vw;
     }
+
     .signUpCard {
         margin: 5rem;
     }
+
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
+
     .loginCard {
         margin: 6rem 0;
     }
@@ -302,14 +387,17 @@ footer {
     .cardLandPage {
         width: 90vw;
     }
+
     .signUpCard {
         margin: 4rem;
     }
+
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
+
     .loginCard {
         margin: 6rem 0;
     }
@@ -321,17 +409,21 @@ footer {
     .landCover {
         margin-top: 12rem;
     }
+
     .cardLandPage {
         margin-bottom: 10rem;
     }
+
     .signUpCard {
         margin: 21rem 0;
     }
+
     .card {
         width: 90vw;
         margin-left: 0;
         margin-right: 0;
     }
+
     .loginCard {
         margin: 21rem 0;
     }
@@ -341,12 +433,15 @@ footer {
     .landCover {
         margin-top: 14rem;
     }
+
     .cardLandPage {
         margin-bottom: 3rem;
     }
+
     .signUpCard {
         margin: 10rem 0;
     }
+
     .loginCard {
         margin: 12rem 0;
     }
