@@ -25,8 +25,13 @@
     <header>
         <!-- Navbar from bootstrap -->
         <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="#"><img id="logo"
-                    src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
+            {% if not session.user %}
+                <a class="navbar-brand" href="{{ url_for('landpage') }}"><img id="logo"
+                        src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
+            {% else %}
+                <a class="navbar-brand" href="#"><img id="logo"
+                    src="{{ url_for('static', filename='images/logo_session.png') }}" alt="Borderless Logo"></a>
+            {% endif %}
 
             <!-- side nav button for small and medium screens -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -38,35 +43,54 @@
 
                 <!-- Navbar and side items -->
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#"><i class="fas fa-house-user"></i></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Sign In</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Sign Up</a>
-                    </li>
+                    {% if session.user %}
+                        <li class="nav-item activeItem">
+                            <a class="nav-link" href="#"><i class="fas fa-house-user"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
+                        </li>
+                    {% endif %}
                 </ul>
-                <div>
-                    <a class="navSmFont" href="#">Log Out</a>
-                </div>
-                <div>
-                    <a class="" href="#"><img id="profileLinkPic"
-                            src="{{ url_for('static', filename='images/profile_pic.png') }}"
-                            alt="Profile Link Photo"></a>
-                </div>
+                {% if session.user %}
+                    <div>
+                        <a class="navSmFont" href="{{ url_for('logout') }}">Log Out</a>
+                    </div>
+                    <div>
+                        <a class="" href="#"><img id="profileLinkPic"
+                                src="{{ url_for('static', filename='images/profile_pic.png') }}"
+                                alt="Profile Link Photo"></a>
+                    </div>
+                {% endif %}
             </div>
         </nav>
     </header>
 
     <main>
+        <section>
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages%}
+                        <div class="row no-gutters flashes">
+                            <div class="col-12 text-center">
+                                <h4>{{ message }}</h4>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </section>
+
         <!--vvv Custom Content vvv-->
-        {% block content %}
-        {% endblock %}
+        <section>
+            {% block content %}
+            {% endblock %}
+        </section>
     </main>
 
     <!--vvv Footer vvv-->

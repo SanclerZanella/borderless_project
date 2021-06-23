@@ -1,8 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
 
-h1,h2,h3 {
+h1,
+h2,
+h3 {
     font-family: 'Fira Sans', sans-serif;
     /* font-family: 'Source Sans Pro', sans-serif; */
+}
+
+hr {
+    width: 50%;
+    height: 0.5px;
+    background: black;
+    margin-bottom: 2.5rem;
+}
+
+.col {
+    margin: 0;
+    padding: 0;
+}
+
+.content-alignment {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+form legend {
+    font-size: 3em;
+    font-weight: 700;
+}
+
+form label {
+    font-weight: 600;
+}
+
+.flashes {
+    margin-top: 1rem;
+    background-color: #b6f8ff;
 }
 
 
@@ -59,8 +93,69 @@ a.navSmFont:hover {
     color: #fff !important;
 }
 
+.activeItem a,
+.activeItem i {
+    color: #fff !important;
+}
+
+/* Landpage */
+.landCover {
+    margin-top: 2rem;
+}
+
+.landTitle {
+    margin-top: 1.2rem;
+}
+
+.cardLandPage {
+    background-color: #b6f8ff;
+    width: 50vw;
+    height: 100%;
+    border-radius: 2%;
+    margin-bottom: 2rem;
+}
+
+.cardLandPage h2 {
+    margin-top: 1rem; 
+}
+
+.cardLandPage p {
+    font-weight: 500; 
+}
+
+.signUpBtn {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+/* Sign Up and LogIn page */
+
+.card {
+    background-color: #b6f8ff;
+    width: 50vw;
+    height: 100%;
+    margin: 2.3rem 0; 
+}
+
+.registerBtn {
+    margin: 1rem 0;
+}
+
+.logOutBottomText a, .logInBottomText a {
+    text-decoration: none;
+}
+
+.logOutBottomText p, .logInBottomText p {
+    font-weight: 600;
+}
+
+#loginForm {
+    margin: 5rem 0;
+}
+
 /* Footer */
 footer {
+    height: 5vh;
     border-top: 1px solid rgb(0, 155, 155);
     background-color: rgb(1, 95, 95);
 }
@@ -74,9 +169,65 @@ footer {
 
 /* Media Queries */
 
+/* Width */
+
+@media screen and (min-width: 1600px) {
+    a.navSmFont {
+        font-size: 2em;
+    }
+    .landCover {
+        margin-top: 5rem;
+    }
+    .cardLandPage {
+        width: 80vw;
+        margin-bottom: 4rem;
+    }
+    .signUpCard {
+        margin: 9rem 0;
+    }
+    .card {
+        width: 90vw;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+    .signUpCard {
+        margin: 4rem 0;
+    }
+    .loginCard {
+        margin: 5rem 0;
+    }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+    .signUpCard {
+        margin: 4rem;
+    }
+    .loginCard {
+        margin: 5rem 0;
+    }
+}
+
 @media screen and (min-width: 768px) and (max-width: 1023px) {
     a.navSmFont {
         font-size: 2em;
+    }
+    .landCover {
+        margin-top: 5rem;
+    }
+    .cardLandPage {
+        width: 80vw;
+    }
+    .signUpCard {
+        margin: 4rem;
+    }
+    .card {
+        width: 80vw;
+    }
+    .loginCard {
+        margin: 5rem 0;
     }
 }
 
@@ -84,14 +235,53 @@ footer {
     a.navSmFont {
         font-size: 2em;
     }
+
+    .landTitle img {
+        width: 90vw;
+    }
+    .cardLandPage {
+        width: 90vw;
+    }
+    .signUpCard {
+        margin: 4rem;
+    }
+    .card {
+        width: 100vw;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .loginCard {
+        margin: 5rem 0;
+    }
 }
 
 @media screen and (min-width: 375px) and (max-width: 424px) {
     #logo {
         height: 7vh;
     }
+
     a.navSmFont {
         font-size: 2em;
+    }
+
+    .landTitle img,
+    .landCover img {
+        width: 90vw;
+    }
+
+    .cardLandPage {
+        width: 90vw;
+    }
+    .signUpCard {
+        margin: 5rem;
+    }
+    .card {
+        width: 100vw;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .loginCard {
+        margin: 6rem 0;
     }
 }
 
@@ -99,7 +289,65 @@ footer {
     #logo {
         height: 6vh;
     }
+
     a.navSmFont {
         font-size: 2em;
+    }
+
+    .landTitle img,
+    .landCover img {
+        width: 90vw;
+    }
+
+    .cardLandPage {
+        width: 90vw;
+    }
+    .signUpCard {
+        margin: 4rem;
+    }
+    .card {
+        width: 100vw;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .loginCard {
+        margin: 6rem 0;
+    }
+}
+
+/* Height */
+
+@media screen and (min-height: 1366px) {
+    .landCover {
+        margin-top: 12rem;
+    }
+    .cardLandPage {
+        margin-bottom: 10rem;
+    }
+    .signUpCard {
+        margin: 21rem 0;
+    }
+    .card {
+        width: 90vw;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .loginCard {
+        margin: 21rem 0;
+    }
+}
+
+@media screen and (min-height: 1024px) and (max-height: 1365px) {
+    .landCover {
+        margin-top: 14rem;
+    }
+    .cardLandPage {
+        margin-bottom: 3rem;
+    }
+    .signUpCard {
+        margin: 10rem 0;
+    }
+    .loginCard {
+        margin: 12rem 0;
     }
 }

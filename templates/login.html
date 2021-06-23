@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Login Form from bootstrap -->
+    <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+        <fieldset class="content-alignment">
+            <div class="card loginCard">
+                <div class="text-center">
+                    <legend>Login</legend>
+                </div>
+
+                <!-- Email Field -->
+                <div class="row no-gutters content-alignment">
+                    <div class="col-8">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                </div>
+
+                <!-- Password field -->
+                <div class="row no-gutters content-alignment">
+                    <div class="col-8">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" minlenght="5" maxlenght="15"
+                        pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password"
+                            required>
+                    </div>
+                </div>
+
+                <!-- LogIn Button -->
+                <div class="row no-gutters text-center">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-lg registerBtn">Log In</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <!-- Sign Up Link -->
+    <div class="row no-gutters">
+        <div class="col-12 text-center logInBottomText">
+            <p>
+                New here?!
+                <a href="{{ url_for('signup') }}" class="signUpLink">Sign Up!</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
