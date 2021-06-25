@@ -5,6 +5,7 @@ from flask import (Flask, flash,
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+import datetime as dt
 if os.path.exists('env.py'):
     import env
 
@@ -71,11 +72,11 @@ def login():
         if existing_user:
             # Ensure hashed password matches user input
             if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = existing_user["fname"].capitalize()
-                    flash("Welcome, {}".format(
-                        existing_user["fname"].capitalize()))
-                    return redirect(url_for("profile"))
+                    existing_user["password"], request.form.get("password")):
+                session["user"] = existing_user["fname"].capitalize()
+                flash("Welcome, {}".format(
+                    existing_user["fname"].capitalize()))
+                return redirect(url_for("profile"))
             else:
                 # Invalid password
                 flash("Incorrect username and/or password")
@@ -89,10 +90,56 @@ def login():
     return render_template("login.html")
 
 
-# View to execute the profile page
-@app.route("/profile")
+# View to execute the profile
+# (Add new trip button, feed to show the trips, followers,
+#  following and statistics)
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template('profile.html')
+    if request.method == "POST":
+
+        # Catch data from form into variables
+        current_user = mongo.db.users.find_one(
+            {'fname': session['user'].lower()})
+        trip_category = request.form.get("trip_category")
+        trip_name = request.form.get("trip_name")
+        trip_place_name = request.form.get("trip_place_name")
+        trip_country = request.form.get("trip_country")
+        trip_description = request.form.get("trip_description")
+        trip_startdate = dt.datetime.strptime(
+            request.form.get("trip_startdate"), '%Y-%m-%d')
+        trip_end_date = dt.datetime.strptime(
+            request.form.get("trip_end_date"), '%Y-%m-%d')
+        trip_privacy = request.form.get("trip_privacy")
+
+        # New trip dictionary to insert into database
+        new_trip = {
+            "user": ObjectId(current_user['_id']),
+            "trip_category": trip_category,
+            "trip_name": trip_name,
+            "trip_place_name": trip_place_name,
+            "trip_country": trip_country,
+            "trip_description": trip_description,
+            "trip_startdate": trip_startdate,
+            "trip_end_date": trip_end_date,
+            "trip_privacy": trip_privacy
+        }
+
+        # Insert new_trip into database
+        mongo.db.trips.insert_one(new_trip)
+
+    # List of countries
+    countries = list(mongo.db.countries.find())
+
+    # List of trips
+    trips = list(mongo.db.trips.find())
+
+    return render_template('profile.html', countries=countries, trips=trips)
+
+
+# View to execute the Feed page
+@app.route('/feed')
+def feed():
+    return render_template("feed.html")
 
 
 # View to logout the user (Clear the session cookie)
