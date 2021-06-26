@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Feed Page</h1>
+<form method="POST" action="{{ url_for('feed') }}" enctype="multipart/form-data">
+    <label for="file" class="form-label">Multiple files input example</label>
+    <input class="form-control" type="file" id="file" name="file" accept="image/*" multiple/>
+    
+    <button type="submit">Submit</button>
+</form>
 {% endblock %}

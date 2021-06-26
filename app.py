@@ -6,6 +6,9 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime as dt
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 if os.path.exists('env.py'):
     import env
 
@@ -27,10 +30,21 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 
+# Configure Cloudinary API
+cloudinary.config( 
+  cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'), 
+  api_key = os.environ.get('CLOUDINARY_API_KEY'), 
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+  secure = True
+)
+
 # View for landpage
 @app.route("/")
 def landpage():
-    return render_template("landpage.html")
+    if 'user' not in session:
+        return render_template("landpage.html")
+    else:
+        return redirect(url_for('profile'))
 
 
 # View for Sign Up Page
@@ -95,11 +109,17 @@ def login():
 #  following and statistics)
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+
+    # Current user
+    current_user = mongo.db.users.find_one(
+        {'fname': session['user'].lower()})
+
+    # Current user ID
+    current_user_id = ObjectId(current_user['_id'])
+
     if request.method == "POST":
 
         # Catch data from form into variables
-        current_user = mongo.db.users.find_one(
-            {'fname': session['user'].lower()})
         trip_category = request.form.get("trip_category")
         trip_name = request.form.get("trip_name")
         trip_place_name = request.form.get("trip_place_name")
@@ -113,7 +133,7 @@ def profile():
 
         # New trip dictionary to insert into database
         new_trip = {
-            "user": ObjectId(current_user['_id']),
+            "user": current_user_id,
             "trip_category": trip_category,
             "trip_name": trip_name,
             "trip_place_name": trip_place_name,
@@ -133,13 +153,27 @@ def profile():
     # List of trips
     trips = list(mongo.db.trips.find())
 
-    return render_template('profile.html', countries=countries, trips=trips)
+    return render_template('profile.html', countries=countries, trips=trips,
+                           current_user_id=current_user_id)
 
 
 # View to execute the Feed page
-@app.route('/feed')
+@app.route('/feed', methods=["POST", "GET"])
 def feed():
-    return render_template("feed.html")
+    if request.method == "POST":
+        uploaded_files = request.files.getlist("file")
+
+        if len(uploaded_files) != 0:
+            for uploaded_file in range(len(uploaded_files)):
+                photo_trip = uploaded_files[uploaded_file]
+                trip_name = 'Cancun'
+                file_id = uploaded_file
+                filename = "trip_%s_%s" % (trip_name, file_id)
+                cloudinary.uploader.upload(photo_trip,
+                                           public_id = "users/trips/%s" % filename)
+
+    imgSample = cloudinary.CloudinaryImage("sample.jpg").url
+    return render_template("feed.html", imgSample=imgSample)
 
 
 # View to logout the user (Clear the session cookie)

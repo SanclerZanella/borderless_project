@@ -52,7 +52,7 @@
 
         <!-- Search Reset Button -->
         <div class="col-2">
-            <button class="btn btn-outline-danger my-2 my-sm-0">Reset</button>
+            <a href="{{ url_for('profile') }}" class="btn btn-outline-danger my-2 my-sm-0">Reset</a>
         </div>
 
         <!-- Search Button -->
@@ -68,10 +68,12 @@
                 <div class="row no-gutters content-alignment">
 
                     {% for trip in trips %}
+                    {% if trip.user == current_user_id %}
                     <!-- Trip Post -->
                     <div class="col-11 tripPostLink">
                         <a href="">
-                            <img class="postBackground" src="{{ url_for('static', filename='images/cancun.jpg') }}" alt="">
+                            <img class="postBackground" src="{{ url_for('static', filename='images/cancun.jpg') }}"
+                                alt="">
                             <div class="row no-gutters">
                                 <div class="col-12">
                                     <img class="postLinkProfilePic"
@@ -84,7 +86,9 @@
                                 <div class="col-12 text-center">
                                     <h1>{{ trip['trip_name'] }}</h1>
                                     <div>
-                                        <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d') }}</span> <span>to</span> <span id="endDate">{{ trip['trip_end_date'].strftime('%Y-%m-%d') }}</span>
+                                        <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d') }}</span>
+                                        <span>to</span> <span id="endDate">{{ trip['trip_end_date'].strftime('%Y-%m-%d')
+                                            }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +96,9 @@
                             <div class="row no-gutters postStatistic">
                                 <div class="col-12 text-center">
                                     <div>
-                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{ ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + ' days' }}</span></span>
+                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                                                ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + ' days'
+                                                }}</span></span>
                                         <span id="totalPhotos"><i class="fas fa-images"></i> <span>12</span></span>
                                     </div>
                                 </div>
@@ -100,6 +106,7 @@
                         </a>
 
                     </div>
+                    {% endif %}
                     {% endfor %}
 
                 </div>
@@ -127,7 +134,8 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="trip_category">Trip Category</label>
-                                        <select class="form-control" id="trip_category" name="trip_category" required>
+                                        <select class="form-control selectElNewTrip" id="trip_category"
+                                            name="trip_category" required>
                                             <option value="" selected disabled hidden>Choose one trip category</option>
                                             <option>Travel</option>
                                             <option>Vacation</option>
@@ -160,7 +168,8 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="trip_country">Country</label>
-                                        <select class="form-control" id="trip_country" name="trip_country" required>
+                                        <select class="form-control selectElNewTrip" id="trip_country"
+                                            name="trip_country" required>
                                             <option value="" selected disabled hidden>Choose one Country</option>
                                             {% for country in countries %}
                                             <option>{{ country['name'] }}</option>
@@ -196,12 +205,24 @@
                                 </div>
                             </div>
 
+                            <!-- Trip photos -->
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="formFileMultiple" class="form-label">Multiple files input
+                                            example</label>
+                                        <input class="form-control" type="file" id="formFileMultiple" name="formFileMultiple" multiple />
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Trip Privacy -->
                             <div class="form-row">
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="trip_privacy">Who Can See This Trip?</label>
-                                        <select class="form-control" id="trip_privacy" name="trip_privacy" required>
+                                        <select class="form-control selectElNewTrip" id="trip_privacy"
+                                            name="trip_privacy" required>
                                             <option selected disabled hidden>Choose one privacy category</option>
                                             <option>Public</option>
                                             <option>Followers</option>
@@ -213,10 +234,12 @@
 
                             <hr>
 
+                            <!-- Submit/reset button add new trip form -->
                             <div class="form-row">
                                 <div class="col content-alignment">
-                                    <a type="button" class="btn btn-danger tripFormBtn tripAddBtn">Clear Form</a>
-                                    <button type="submit" class="btn btn-primary tripFormBtn tripClearBtn">Add
+                                    <a href="{{ url_for('profile') }}" type="button"
+                                        class="btn btn-danger tripFormBtn tripClearBtn">Clear Form</a>
+                                    <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn" disabled>Add
                                         Trip</button>
                                 </div>
                             </div>

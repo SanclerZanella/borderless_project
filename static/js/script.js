@@ -18,6 +18,7 @@ $('#Rpassword').on('keyup', function () {
     }
 });
 
+// Show/hide different feeds on profile page
 $('.profileNavItem').each((key, value) => {
     $(value).click(() => {
         if ($(value).text() == "Trips") {
@@ -36,25 +37,20 @@ $('.profileNavItem').each((key, value) => {
     })
 });
 
-// Get the modal
+// Get the modal form to add new trip
 var addTripFormModal = $('#addTripFormModal');
 let addTripButton = $('.addTripBtn');
-
-// Get the <span> element that closes the modal
 var closeModal = $('.close').first();
 
 $(document).ready(() => {
-// When the user clicks on the button, open the modal
 addTripButton.click(() => {
     addTripFormModal.show(500);
 });
 
-// When the user clicks on <span> (x), close the modal
 closeModal.click(() => {
     addTripFormModal.hide(500);
 });
 
-// When the user clicks anywhere outside of the modal, close it
 $(document).click((event) => {
     if (!$(event.target).closest('#TripBtn,.modal-content').length) {
         addTripFormModal.hide(500);
@@ -62,3 +58,13 @@ $(document).click((event) => {
 });
 
 });
+
+// Enable Submit Button on add new trip form when there is any value in the select elements
+$('.selectElNewTrip').on('change', () => {
+    if ($('#trip_category').val() && $('#trip_country').val() && $('#trip_privacy').val()) {
+        $('.tripAddBtn').prop('disabled', false);
+    } else {
+        $('.tripAddBtn').prop('disabled', true);
+    }
+})
+
