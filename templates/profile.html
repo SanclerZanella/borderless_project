@@ -40,31 +40,34 @@
 
     <!-- Search Bar -->
     <form class="content-alignment profileSearchForm">
-        <div class="col-3">
-            <!-- Add new trip button -->
-            <a id="TripBtn" class="btn btn-outline-primary addTripBtn">New Trip <i class="fas fa-plus"></i></a>
-        </div>
+        <div class="row no-gutters">
 
-        <!-- Search Bar -->
-        <div class="col-8">
-            <input class="searchInput form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        </div>
+            <!-- Search Bar -->
+            <div class="col-6 col-md-6 col-lg-6 col-xl-6">
+                <input class="searchInput form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            </div>
 
-        <!-- Search Reset Button -->
-        <div class="col-2">
-            <a href="{{ url_for('profile') }}" class="btn btn-outline-danger my-2 my-sm-0">Reset</a>
-        </div>
+            <!-- Search Reset Button -->
+            <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
+                <a href="{{ url_for('profile') }}" class="btn btn-outline-danger my-sm-0">Reset</a>
+            </div>
 
-        <!-- Search Button -->
-        <div class="col-2">
-            <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Search</button>
+            <!-- Search Button -->
+            <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
+                <button type="submit" class="btn btn-outline-primary my-sm-0">Search</button>
+            </div>
         </div>
     </form>
+
+    <!-- Add new trip button -->
+    <div class="col-12 content-alignment">
+        <a id="TripBtn" class="btn btn-outline-primary addTripBtn">New Trip <i class="fas fa-plus"></i></a>
+    </div>
 
     <!-- Trips Profile Feed -->
     <div class="col-12">
         <div class="row no-gutters content-alignment">
-            <div class="col-8 feedProfile">
+            <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                 <div class="row no-gutters content-alignment">
 
                     {% for trip in trips %}
@@ -158,14 +161,14 @@
 
                             <!-- Place Name  and Country -->
                             <div class="form-row">
-                                <div class="col">
+                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="form-group">
                                         <label for="trip_place_name">Place Name</label>
                                         <input type="text" class="form-control" id="trip_place_name"
                                             name="trip_place_name" placeholder="Rome" required>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="form-group">
                                         <label for="trip_country">Country</label>
                                         <select class="form-control selectElNewTrip" id="trip_country"
@@ -211,7 +214,8 @@
                                     <div class="form-group">
                                         <label for="formFileMultiple" class="form-label">Multiple files input
                                             example</label>
-                                        <input class="form-control" type="file" id="formFileMultiple" name="formFileMultiple" multiple />
+                                        <input class="form-control" type="file" id="formFileMultiple"
+                                            name="formFileMultiple" multiple />
                                     </div>
                                 </div>
                             </div>
