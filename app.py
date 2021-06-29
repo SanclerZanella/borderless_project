@@ -31,12 +31,73 @@ mongo = PyMongo(app)
 
 
 # Configure Cloudinary API
-cloudinary.config( 
-  cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'), 
-  api_key = os.environ.get('CLOUDINARY_API_KEY'), 
-  api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
-  secure = True
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
 )
+
+
+# Get profile picture url
+def get_profile_pic():
+    current_user = mongo.db.users.find_one(
+        {'fname': session['user'].lower()})
+    current_user_id = current_user['_id']
+    profile_folder_id = "default_profile_pic"
+    profile_folder = "users/%s/profile/" % current_user_id
+    profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
+    profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
+
+    return profile_pic_url
+
+
+# Get cover picture url
+def get_cover_pic():
+    current_user = mongo.db.users.find_one(
+        {'fname': session['user'].lower()})
+    current_user_id = current_user['_id']
+    cover_folder_id = "default_cover_pic1"
+    cover_folder = "users/%s/cover/" % current_user_id
+    cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
+    cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
+
+    return cover_pic_url
+
+
+# Get trip post link background picture url
+def get_BGPost_pic(trip_id):
+    current_user = mongo.db.users.find_one(
+        {'fname': session['user'].lower()})
+    current_user_id = current_user['_id']
+    post = mongo.db.trips.find_one(
+        {'_id': trip_id})
+    post_category = post['trip_category']
+    folder_name = post['trip_name'].replace(" ", "_").lower()
+    photo_id = "%s_0" % folder_name
+    post_folder = "users/%s/trips/%s/%s/" % (current_user_id,
+                                             post_category,
+                                             folder_name)
+    post_BGpic_path = "%s/%s" % (post_folder, photo_id)
+    post_BGpic_url = cloudinary.CloudinaryImage(post_BGpic_path).url
+
+    return post_BGpic_url
+
+
+# Get number of pictures in a folder
+def get_no_pictures(trip_id):
+    current_user = mongo.db.users.find_one(
+        {'fname': session['user'].lower()})
+    current_user_id = current_user['_id']
+    post = mongo.db.trips.find_one(
+        {'_id': trip_id})
+
+    if current_user_id == post['user']:
+        search_exp = (post['trip_name']).replace(" ", " AND ")
+    search_cloud = cloudinary.Search().expression(search_exp).execute()
+    no_files = search_cloud['total_count']
+    return no_files
+
 
 # View for landpage
 @app.route("/")
@@ -67,9 +128,33 @@ def signup():
         }
         mongo.db.users.insert_one(register)
 
+        registered_user = mongo.db.users.find_one(
+            {"email": request.form.get("email")})
+
         # Put the new user into 'session' cookie
-        session['user'] = existing_user["fname"].capitalize()
+        session['user'] = registered_user["fname"].capitalize()
         flash("Registration Successful")
+
+        # Create a folder for the user to store images
+        # Create folder and file name
+        # for default profile and cover pictures
+        user_id = mongo.db.users.find_one(
+                {"fname": session["user"].lower()})
+        default_profile_pic = 'static/images/default_profile_pic.jpg'
+        default_cover_pic = 'static/images/default_cover_pic.jpg'
+        profile_folder_id = "default_profile_pic"
+        cover_folder_id = "default_cover_pic"
+        profile_folder = "users/%s/profile/" % user_id['_id']
+        cover_folder = "users/%s/cover/" % user_id['_id']
+
+        # Create folder in the cloud platform
+        cloudinary.uploader.upload(default_profile_pic,
+                                   folder=profile_folder,
+                                   public_id=profile_folder_id)
+        cloudinary.uploader.upload(default_cover_pic,
+                                   folder=cover_folder,
+                                   public_id=cover_folder_id)
+
         return redirect(url_for("profile"))
 
     return render_template("signup.html")
@@ -121,7 +206,7 @@ def profile():
 
         # Catch data from form into variables
         trip_category = request.form.get("trip_category")
-        trip_name = request.form.get("trip_name")
+        trip_name = request.form.get("trip_name").lower()
         trip_place_name = request.form.get("trip_place_name")
         trip_country = request.form.get("trip_country")
         trip_description = request.form.get("trip_description")
@@ -129,51 +214,84 @@ def profile():
             request.form.get("trip_startdate"), '%Y-%m-%d')
         trip_end_date = dt.datetime.strptime(
             request.form.get("trip_end_date"), '%Y-%m-%d')
+        trip_photos = request.files.getlist('trip_photos')
         trip_privacy = request.form.get("trip_privacy")
 
-        # New trip dictionary to insert into database
-        new_trip = {
-            "user": current_user_id,
-            "trip_category": trip_category,
-            "trip_name": trip_name,
-            "trip_place_name": trip_place_name,
-            "trip_country": trip_country,
-            "trip_description": trip_description,
-            "trip_startdate": trip_startdate,
-            "trip_end_date": trip_end_date,
-            "trip_privacy": trip_privacy
-        }
+        user_trips = mongo.db.trips.find_one(
+                                  {'user': current_user_id})
+        if user_trips['trip_name'] == trip_name:
+            flash('Trip Name Already Exists')
+        else:
+            # New trip dictionary to insert into database
+            new_trip = {
+                "user": current_user_id,
+                "trip_category": trip_category,
+                "trip_name": trip_name,
+                "trip_place_name": trip_place_name,
+                "trip_country": trip_country,
+                "trip_description": trip_description,
+                "trip_startdate": trip_startdate,
+                "trip_end_date": trip_end_date,
+                "trip_privacy": trip_privacy
+            }
 
-        # Insert new_trip into database
-        mongo.db.trips.insert_one(new_trip)
+            # Insert new_trip into database
+            mongo.db.trips.insert_one(new_trip)
+
+            # Create trip folder to host trip photos
+            if len(trip_photos) != 0:
+                for trip_photo in range(len(trip_photos)):
+                    file = trip_photos[trip_photo]
+                    category = trip_category.lower()
+                    folder_name = trip_name.replace(" ", "_")
+                    photo_id = "%s_%s" % (folder_name, trip_photo)
+                    folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                             category,
+                                                             folder_name)
+                    cloudinary.uploader.upload(file,
+                                               folder=folder_path,
+                                               public_id=photo_id)
 
     # List of countries
     countries = list(mongo.db.countries.find())
 
     # List of trips
-    trips = list(mongo.db.trips.find())
+    trips = list(mongo.db.trips.find().sort("trip_startdate", 1))
+
+    # Get full name
+    first_name = current_user['fname'].capitalize()
+    last_name = current_user['lname'].capitalize()
+    full_name = "%s %s" % (first_name, last_name)
+
+    # Verify if the user has trips recorded
+    user_trips = []
+    if len(trips):
+        for trip in trips:
+            if trip['user'] == current_user_id:
+                user_trips.append(trip)
 
     return render_template('profile.html', countries=countries, trips=trips,
-                           current_user_id=current_user_id)
+                           full_name=full_name,
+                           current_user_id=current_user_id,
+                           user_trips=user_trips,
+                           profile_pic=get_profile_pic(),
+                           cover_pic=get_cover_pic(),
+                           bg_post_url=get_BGPost_pic,
+                           no_files=get_no_pictures)
+
+
+# View to execute the Feed page
+@app.route('/edit_profile', methods=["POST", "GET"])
+def edit_profile():
+    return render_template("edit_profile.html",
+                           profile_pic=get_profile_pic(),)
 
 
 # View to execute the Feed page
 @app.route('/feed', methods=["POST", "GET"])
 def feed():
-    if request.method == "POST":
-        uploaded_files = request.files.getlist("file")
-
-        if len(uploaded_files) != 0:
-            for uploaded_file in range(len(uploaded_files)):
-                photo_trip = uploaded_files[uploaded_file]
-                trip_name = 'Cancun'
-                file_id = uploaded_file
-                filename = "trip_%s_%s" % (trip_name, file_id)
-                cloudinary.uploader.upload(photo_trip,
-                                           public_id = "users/trips/%s" % filename)
-
-    imgSample = cloudinary.CloudinaryImage("sample.jpg").url
-    return render_template("feed.html", imgSample=imgSample)
+    return render_template("feed.html",
+                           profile_pic=get_profile_pic(),)
 
 
 # View to logout the user (Clear the session cookie)

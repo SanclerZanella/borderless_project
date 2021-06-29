@@ -42,6 +42,14 @@ form label {
     object-position: center;
 }
 
+.content-wrapper {
+    min-height: 100vh;
+}
+
+.alertValidation {
+    border-color: red;
+}
+
 /* Navbar */
 
 nav {
@@ -57,6 +65,7 @@ nav {
 #profileLinkPic {
     height: 8vh;
     margin-left: 0.5rem;
+    border-radius: 100%;
 }
 
 #profileLinkPic:hover {
@@ -200,6 +209,10 @@ footer {
     position: absolute;
     top: 10px;
     left: 10px;
+    background-color: #ededed;
+    border-radius: 5%;
+    padding: 0 0.2rem;
+    margin: 0;
 }
 
 .profileNav {
@@ -222,7 +235,7 @@ footer {
 }
 
 .searchProfileButtons {
-    margin: 0 0.8rem;
+    margin-left: 0.7rem;
 }
 
 .addTripBtn {
@@ -314,6 +327,7 @@ footer {
     position: absolute;
     border: 1px solid #b6f8ff;
     border-radius: 5%;
+    opacity: 0.7;
 }
 
 .postNameDate {
@@ -497,7 +511,7 @@ footer {
     }
 
     .searchProfileButtons {
-        margin-left: 0.9rem;
+        margin: 0.5rem 0.7rem;
     }
 }
 
@@ -557,7 +571,7 @@ footer {
     }
 
     .searchProfileButtons {
-        margin-left: 0.7rem;
+        margin: 0.5rem 0.7rem;
     }
 
     .modal-content {
@@ -621,7 +635,7 @@ footer {
     }
 
     .searchProfileButtons {
-        margin-left: 0.7rem;
+        margin: 0.5rem 0.7rem;
     }
 
     .modal-content {

@@ -1,291 +1,309 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Cover and Profile picture  -->
-<div class="row no-gutters">
-    <div class="col-12 profilePics">
-        <img class="profileCover img-centered" src="{{ url_for('static', filename='images/profile_cover.jpg') }}"
-            alt="">
-        <img id="profilePic" src="{{ url_for('static', filename='images/profile_pic.png') }}" alt="">
-        <h2 class="profileName">{{ session.user|title }}</h2>
-    </div>
-</div>
-
-<!-- Profile navbar -->
-<div class="row no-gutters">
-    <div class="col-12">
-        <nav class="navbar navbar-expand content-alignment profileNav">
-            <div id="navbarTogglerDemo01">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link profileNavItem">Trips</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link profileNavItem">Followers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link profileNavItem">Following</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link profileNavItem">Statistics</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-</div>
-
-<!-- Trips feed -->
-<div class="row no-gutters profileFeed tripsprofileFeed">
-
-    <!-- Search Bar -->
-    <form class="content-alignment profileSearchForm">
-        <div class="row no-gutters">
-
-            <!-- Search Bar -->
-            <div class="col-6 col-md-6 col-lg-6 col-xl-6">
-                <input class="searchInput form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            </div>
-
-            <!-- Search Reset Button -->
-            <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
-                <a href="{{ url_for('profile') }}" class="btn btn-outline-danger my-sm-0">Reset</a>
-            </div>
-
-            <!-- Search Button -->
-            <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
-                <button type="submit" class="btn btn-outline-primary my-sm-0">Search</button>
+<div class="content-wrapper">
+    <!-- Cover and Profile picture  -->
+    <div class="row no-gutters">
+        <div class="col-12 profilePics">
+            <img class="profileCover img-centered" src="{{ cover_pic }}" alt="">
+            <img id="profilePic" src="{{ profile_pic }}" alt="">
+            <div class="profileName">
+                <h2>{{ full_name }}</h2>
             </div>
         </div>
-    </form>
-
-    <!-- Add new trip button -->
-    <div class="col-12 content-alignment">
-        <a id="TripBtn" class="btn btn-outline-primary addTripBtn">New Trip <i class="fas fa-plus"></i></a>
     </div>
 
-    <!-- Trips Profile Feed -->
-    <div class="col-12">
-        <div class="row no-gutters content-alignment">
-            <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
-                <div class="row no-gutters content-alignment">
+    <!-- Profile navbar -->
+    <div class="row no-gutters">
+        <div class="col-12">
+            <nav class="navbar navbar-expand content-alignment profileNav">
+                <div id="navbarTogglerDemo01">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link profileNavItem">Trips</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Followers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Following</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Statistics</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
 
-                    {% for trip in trips %}
-                    {% if trip.user == current_user_id %}
-                    <!-- Trip Post -->
-                    <div class="col-11 tripPostLink">
-                        <a href="">
-                            <img class="postBackground" src="{{ url_for('static', filename='images/cancun.jpg') }}"
-                                alt="">
-                            <div class="row no-gutters">
-                                <div class="col-12">
-                                    <img class="postLinkProfilePic"
-                                        src="{{ url_for('static', filename='images/profile_pic.png') }}" alt="">
+    <!-- Trips feed -->
+    <div class="row no-gutters profileFeed tripsprofileFeed">
+
+        <!-- Search Bar -->
+        <form class="content-alignment profileSearchForm">
+            <div class="row no-gutters">
+
+                <!-- Search Bar -->
+                <div class="col-11 col-md-6 col-lg-6 col-xl-6">
+                    <input class="searchInput form-control mr-sm-2" type="search" placeholder="Search"
+                        aria-label="Search">
+                </div>
+
+                <!-- Search Reset Button -->
+                <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-danger my-sm-0">Reset</a>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons resetSearchProfile">
+                    <button type="submit" class="btn btn-outline-primary my-sm-0">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Add new trip button -->
+        <div class="col-12 content-alignment">
+            <a id="TripBtn" class="btn btn-outline-primary addTripBtn">New Trip <i class="fas fa-plus"></i></a>
+        </div>
+
+        <!-- Trips Profile Feed -->
+        <div class="col-12">
+            <div class="row no-gutters content-alignment">
+                <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
+                    <div class="row no-gutters content-alignment">
+
+                        {% if user_trips|length %}
+                        {% for trip in trips %}
+                        {% if trip.user == current_user_id %}
+                        <!-- Trip Post -->
+                        <div class="col-11 tripPostLink">
+                            <a href="">
+                                <img class="postBackground img-centered" src="{{ bg_post_url(trip._id) }}" alt="">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <img class="postLinkProfilePic" src="{{ profile_pic }}" alt="">
+                                    </div>
+
                                 </div>
 
-                            </div>
-
-                            <div class="row no-gutters postNameDate">
-                                <div class="col-12 text-center">
-                                    <h1>{{ trip['trip_name'] }}</h1>
-                                    <div>
-                                        <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d') }}</span>
-                                        <span>to</span> <span id="endDate">{{ trip['trip_end_date'].strftime('%Y-%m-%d')
-                                            }}</span>
+                                <div class="row no-gutters postNameDate">
+                                    <div class="col-12 text-center">
+                                        <h1>{{ trip['trip_name']|title }}</h1>
+                                        <div>
+                                            <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
+                                                }}</span>
+                                            <span>to</span> <span id="endDate">{{
+                                                trip['trip_end_date'].strftime('%Y-%m-%d')
+                                                }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row no-gutters postStatistic">
-                                <div class="col-12 text-center">
-                                    <div>
-                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
-                                                ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + ' days'
-                                                }}</span></span>
-                                        <span id="totalPhotos"><i class="fas fa-images"></i> <span>12</span></span>
+                                <div class="row no-gutters postStatistic">
+                                    <div class="col-12 text-center">
+                                        <div>
+                                            <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                                                    ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
+                                                    days'
+                                                    }}</span></span>
+                                            <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
+                                                    no_files(trip._id) }}</span></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        <h1>NO TRIPS TO SHOW</h1>
+                        {% endif %}
 
                     </div>
-                    {% endif %}
-                    {% endfor %}
-
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12">
-        <!-- The Modal -->
-        <div id="addTripFormModal" class="modal">
+        <div class="col-12">
+            <!-- The Modal -->
+            <div id="addTripFormModal" class="modal">
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="row no-gutters">
-                    <div class="col-2 ml-auto">
-                        <span class="close">&times;</span>
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="row no-gutters">
+                        <div class="col-2 ml-auto">
+                            <span class="close">&times;</span>
+                        </div>
+
+                        <!-- New Trip Form -->
+                        <div class="col-12">
+                            <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+
+                                <!-- Trip Category -->
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="trip_category">Trip Category</label>
+                                            <select class="form-control selectElNewTrip" id="trip_category"
+                                                name="trip_category" required>
+                                                <option value="" selected disabled hidden>Choose one trip category
+                                                </option>
+                                                <option>Travel</option>
+                                                <option>Vacation</option>
+                                                <option>Short Trip</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Name -->
+                                <div class="form-row newTripForm">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="trip_name">Trip Name</label>
+                                            <input type="text" class="form-control" id="trip_name" name="trip_name"
+                                                minlength="5" maxlenght="30" pattern="^[a-zA-Z]{5,30}$"
+                                                placeholder="Holidays in Rome" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Place Name  and Country -->
+                                <div class="form-row">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="trip_place_name">Place Name</label>
+                                            <input type="text" class="form-control" id="trip_place_name"
+                                                name="trip_place_name" minlength="5" maxlenght="15"
+                                                pattern="^[a-zA-Z]{5,15}$" placeholder="Rome" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="trip_country">Country</label>
+                                            <select class="form-control selectElNewTrip" id="trip_country"
+                                                name="trip_country" required>
+                                                <option value="" selected disabled hidden>Choose one Country</option>
+                                                {% for country in countries %}
+                                                <option>{{ country['name'] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Description -->
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="trip_description">Trip Description</label>
+                                            <textarea class="form-control" name="trip_description" minlength="5"
+                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,200}$" id="trip_description"
+                                                cols="30" rows="10" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Start and End Date -->
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label for="trip_startdate">Start Date</label>
+                                        <input class="form-control" id="trip_startdate" name="trip_startdate"
+                                            type="date" required>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="trip_end_date">End Date</label>
+                                        <input class="form-control" id="trip_end_date" name="trip_end_date" type="date"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <!-- Trip photos -->
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="trip_photos" class="form-label">Add Photos</label>
+                                            <input class="form-control selectElNewTrip" type="file" id="trip_photos"
+                                                name="trip_photos" accept="image/jpg, image/jpeg, image/png" multiple />
+                                            <small>*15 pictures limit</small>
+                                            <small> *The first picture will be used as post background</small>
+                                        </div>
+                                        <div id="newTripPrev"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Trip Privacy -->
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="trip_privacy">Who Can See This Trip?</label>
+                                            <select class="form-control selectElNewTrip" id="trip_privacy"
+                                                name="trip_privacy" required>
+                                                <option selected disabled hidden>Choose one privacy category</option>
+                                                <option>Public</option>
+                                                <option>Followers</option>
+                                                <option>Private</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <!-- Submit/reset button add new trip form -->
+                                <div class="form-row">
+                                    <div class="col content-alignment">
+                                        <a href="{{ url_for('profile') }}" type="button"
+                                            class="btn btn-danger tripFormBtn tripClearBtn">Clear Form</a>
+                                        <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn"
+                                            disabled>Add
+                                            Trip</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
                     </div>
-
-                    <!-- New Trip Form -->
-                    <div class="col-12">
-                        <form method="POST" action="{{ url_for('profile') }}">
-
-                            <!-- Trip Category -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="trip_category">Trip Category</label>
-                                        <select class="form-control selectElNewTrip" id="trip_category"
-                                            name="trip_category" required>
-                                            <option value="" selected disabled hidden>Choose one trip category</option>
-                                            <option>Travel</option>
-                                            <option>Vacation</option>
-                                            <option>Short Trip</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Trip Name -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="trip_name">Trip Name</label>
-                                        <input type="text" class="form-control" id="trip_name" name="trip_name"
-                                            placeholder="Holidays in Rome" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Place Name  and Country -->
-                            <div class="form-row">
-                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="trip_place_name">Place Name</label>
-                                        <input type="text" class="form-control" id="trip_place_name"
-                                            name="trip_place_name" placeholder="Rome" required>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="trip_country">Country</label>
-                                        <select class="form-control selectElNewTrip" id="trip_country"
-                                            name="trip_country" required>
-                                            <option value="" selected disabled hidden>Choose one Country</option>
-                                            {% for country in countries %}
-                                            <option>{{ country['name'] }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Trip Description -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="trip_description">Trip Description</label>
-                                        <textarea class="form-control" name="trip_description" id="trip_description"
-                                            cols="30" rows="10" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Trip Start and End Date -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <label for="trip_startdate">Start Date</label>
-                                    <input class="form-control" id="trip_startdate" name="trip_startdate" type="date"
-                                        required>
-                                </div>
-
-                                <div class="col">
-                                    <label for="trip_end_date">End Date</label>
-                                    <input class="form-control" id="trip_end_date" name="trip_end_date" type="date"
-                                        required>
-                                </div>
-                            </div>
-
-                            <!-- Trip photos -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="formFileMultiple" class="form-label">Multiple files input
-                                            example</label>
-                                        <input class="form-control" type="file" id="formFileMultiple"
-                                            name="formFileMultiple" multiple />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Trip Privacy -->
-                            <div class="form-row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="trip_privacy">Who Can See This Trip?</label>
-                                        <select class="form-control selectElNewTrip" id="trip_privacy"
-                                            name="trip_privacy" required>
-                                            <option selected disabled hidden>Choose one privacy category</option>
-                                            <option>Public</option>
-                                            <option>Followers</option>
-                                            <option>Private</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <!-- Submit/reset button add new trip form -->
-                            <div class="form-row">
-                                <div class="col content-alignment">
-                                    <a href="{{ url_for('profile') }}" type="button"
-                                        class="btn btn-danger tripFormBtn tripClearBtn">Clear Form</a>
-                                    <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn" disabled>Add
-                                        Trip</button>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-
                 </div>
+
             </div>
-
         </div>
     </div>
-</div>
 
-<!-- Followers Feed -->
-<div class="row no-gutters profileFeed followersFeed text-center d-none">
-    <div class="col-12">
-        <h2 class="text-center">Followers</h2>
-        <div class="row no-gutters content-alignment">
-            <div class="col-8 feedProfile"></div>
+    <!-- Followers Feed -->
+    <div class="row no-gutters profileFeed followersFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">Followers</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Following Feed -->
-<div class="row no-gutters profileFeed followingFeed text-center d-none">
-    <div class="col-12">
-        <h2 class="text-center">Following</h2>
-        <div class="row no-gutters content-alignment">
-            <div class="col-8 feedProfile"></div>
+    <!-- Following Feed -->
+    <div class="row no-gutters profileFeed followingFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">Following</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Statistics Feed -->
-<div class="row no-gutters profileFeed statisticsFeed text-center d-none">
-    <div class="col-12">
-        <h2 class="text-center">Statistics</h2>
-        <div class="row no-gutters content-alignment">
-            <div class="col-8 feedProfile"></div>
+    <!-- Statistics Feed -->
+    <div class="row no-gutters profileFeed statisticsFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">Statistics</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile"></div>
+            </div>
         </div>
     </div>
+
 </div>
 
 {% endblock %}

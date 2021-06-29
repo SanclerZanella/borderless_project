@@ -59,12 +59,23 @@ $(document).click((event) => {
 
 });
 
-// Enable Submit Button on add new trip form when there is any value in the select elements
-$('.selectElNewTrip').on('change', () => {
-    if ($('#trip_category').val() && $('#trip_country').val() && $('#trip_privacy').val()) {
-        $('.tripAddBtn').prop('disabled', false);
-    } else {
-        $('.tripAddBtn').prop('disabled', true);
-    }
-})
+// Enable Submit Button on add new trip form when there is any value in the 
+// select elements and input file type limit is less than or equal 15
+$('.selectElNewTrip').each((key, value) => {
+    $(value).on('change', () => {
+        if (($('#trip_category').val() && $('#trip_country').val() && $('#trip_privacy').val()) && ($('#trip_photos')[0].files.length <= 15)) {
+            $('.tripAddBtn').prop('disabled', false);
+        } else {
+            $('.tripAddBtn').prop('disabled', true);
+        }
+    });
+});
 
+// Create a photo preview on new trip form
+$('#trip_photos').on('change', () => {
+    const uploadedFiles = trip_photos.files
+    $(uploadedFiles).each((key, value) => {
+        const img_url = URL.createObjectURL(value)
+        $(`<img src='${img_url}' alt=''>`).appendTo("#newTripPrev");
+    });
+});
