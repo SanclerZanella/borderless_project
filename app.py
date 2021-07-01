@@ -42,7 +42,7 @@ cloudinary.config(
 # Get profile picture url
 def get_profile_pic():
     current_user = mongo.db.users.find_one(
-        {'fname': session['user'].lower()})
+        {'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
     profile_folder_id = "default_profile_pic"
     profile_folder = "users/%s/profile/" % current_user_id
@@ -55,9 +55,9 @@ def get_profile_pic():
 # Get cover picture url
 def get_cover_pic():
     current_user = mongo.db.users.find_one(
-        {'fname': session['user'].lower()})
+        {'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
-    cover_folder_id = "default_cover_pic1"
+    cover_folder_id = "default_cover_pic"
     cover_folder = "users/%s/cover/" % current_user_id
     cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
     cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
@@ -68,7 +68,7 @@ def get_cover_pic():
 # Get trip post link background picture url
 def get_BGPost_pic(trip_id):
     current_user = mongo.db.users.find_one(
-        {'fname': session['user'].lower()})
+        {'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
@@ -87,7 +87,7 @@ def get_BGPost_pic(trip_id):
 # Get number of pictures in a folder
 def get_no_pictures(trip_id):
     current_user = mongo.db.users.find_one(
-        {'fname': session['user'].lower()})
+        {'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
@@ -97,6 +97,33 @@ def get_no_pictures(trip_id):
     search_cloud = cloudinary.Search().expression(search_exp).execute()
     no_files = search_cloud['total_count']
     return no_files
+
+
+# Update profile and cover pictures
+def update_profile_cover_pic(profile_photo, cover_photo):
+    user_id = mongo.db.users.find_one(
+            {"_id": ObjectId(session["user"])})
+    default_profile_pic = profile_photo
+    default_cover_pic = cover_photo
+    profile_folder_id = "default_profile_pic"
+    cover_folder_id = "default_cover_pic"
+    profile_folder = "users/%s/profile/" % user_id['_id']
+    cover_folder = "users/%s/cover/" % user_id['_id']
+
+    cloudinary.uploader.upload(default_profile_pic,
+                               folder=profile_folder,
+                               public_id=profile_folder_id,
+                               format='jpg',
+                               overwrite=True,
+                               invalidate=True,
+                               use_filename=True)
+    cloudinary.uploader.upload(default_cover_pic,
+                               folder=cover_folder,
+                               public_id=cover_folder_id,
+                               format='jpg',
+                               overwrite=True,
+                               invalidate=True,
+                               use_filename=True)
 
 
 # View for landpage
@@ -132,15 +159,15 @@ def signup():
             {"email": request.form.get("email")})
 
         # Put the new user into 'session' cookie
-        session['user'] = registered_user["fname"].capitalize()
+        session['user'] = str(registered_user["_id"])
         flash("Registration Successful")
 
         # Create a folder for the user to store images
         # Create folder and file name
         # for default profile and cover pictures
         user_id = mongo.db.users.find_one(
-                {"fname": session["user"].lower()})
-        default_profile_pic = 'static/images/default_profile_pic.jpg'
+            {"_id": ObjectId(session["user"])})
+        default_profile_pic = 'static/images/default_profile_pic.png'
         default_cover_pic = 'static/images/default_cover_pic.jpg'
         profile_folder_id = "default_profile_pic"
         cover_folder_id = "default_cover_pic"
@@ -150,10 +177,12 @@ def signup():
         # Create folder in the cloud platform
         cloudinary.uploader.upload(default_profile_pic,
                                    folder=profile_folder,
-                                   public_id=profile_folder_id)
+                                   public_id=profile_folder_id,
+                                   format='jpg')
         cloudinary.uploader.upload(default_cover_pic,
                                    folder=cover_folder,
-                                   public_id=cover_folder_id)
+                                   public_id=cover_folder_id,
+                                   format='jpg')
 
         return redirect(url_for("profile"))
 
@@ -172,10 +201,11 @@ def login():
             # Ensure hashed password matches user input
             if check_password_hash(
                     existing_user["password"], request.form.get("password")):
-                session["user"] = existing_user["fname"].capitalize()
+                session["user"] = str(existing_user["_id"])
                 flash("Welcome, {}".format(
                     existing_user["fname"].capitalize()))
                 return redirect(url_for("profile"))
+
             else:
                 # Invalid password
                 flash("Incorrect username and/or password")
@@ -197,10 +227,10 @@ def profile():
 
     # Current user
     current_user = mongo.db.users.find_one(
-        {'fname': session['user'].lower()})
+        {'_id': ObjectId(session['user'])})
 
     # Current user ID
-    current_user_id = ObjectId(current_user['_id'])
+    current_user_id = current_user['_id']
 
     if request.method == "POST":
 
@@ -218,7 +248,7 @@ def profile():
         trip_privacy = request.form.get("trip_privacy")
 
         user_trips = mongo.db.trips.find_one(
-                                  {'user': current_user_id})
+            {'user': current_user_id})
         if user_trips['trip_name'] == trip_name:
             flash('Trip Name Already Exists')
         else:
@@ -250,7 +280,8 @@ def profile():
                                                              folder_name)
                     cloudinary.uploader.upload(file,
                                                folder=folder_path,
-                                               public_id=photo_id)
+                                               public_id=photo_id,
+                                               format='jpg')
 
     # List of countries
     countries = list(mongo.db.countries.find())
@@ -283,8 +314,14 @@ def profile():
 # View to execute the Feed page
 @app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
+    if request.method == 'POST':
+        profile_photo = request.files['profile_photo']
+        cover_photo = request.files['cover_photo']
+
+        update_profile_cover_pic(profile_photo, cover_photo)
+
     return render_template("edit_profile.html",
-                           profile_pic=get_profile_pic(),)
+                           profile_pic=get_profile_pic())
 
 
 # View to execute the Feed page

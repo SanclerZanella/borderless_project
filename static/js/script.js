@@ -43,19 +43,19 @@ let addTripButton = $('.addTripBtn');
 var closeModal = $('.close').first();
 
 $(document).ready(() => {
-addTripButton.click(() => {
-    addTripFormModal.show(500);
-});
+    addTripButton.click(() => {
+        addTripFormModal.show(500);
+    });
 
-closeModal.click(() => {
-    addTripFormModal.hide(500);
-});
-
-$(document).click((event) => {
-    if (!$(event.target).closest('#TripBtn,.modal-content').length) {
+    closeModal.click(() => {
         addTripFormModal.hide(500);
-    };
-});
+    });
+
+    $(document).click((event) => {
+        if (!$(event.target).closest('#TripBtn,.modal-content').length) {
+            addTripFormModal.hide(500);
+        };
+    });
 
 });
 
@@ -74,8 +74,26 @@ $('.selectElNewTrip').each((key, value) => {
 // Create a photo preview on new trip form
 $('#trip_photos').on('change', () => {
     const uploadedFiles = trip_photos.files
-    $(uploadedFiles).each((key, value) => {
-        const img_url = URL.createObjectURL(value)
-        $(`<img src='${img_url}' alt=''>`).appendTo("#newTripPrev");
-    });
+
+    let numberPics = Object.keys(uploadedFiles)
+
+    if (numberPics.length > 15) {
+        $('.previewImages').hide(500)
+        $("#trip_photos").addClass('alertValidation')
+        $('.previewPicture').remove()
+    } else if (numberPics.length == 0) {
+        $('.previewImages').hide(500)
+        $("#trip_photos").removeClass('alertValidation')
+        $('.previewPicture').remove()
+    } else {
+        $('.previewImages').show(500)
+        $("#trip_photos").removeClass('alertValidation')
+        $('.previewPicture').remove()
+        $(uploadedFiles).each((key, value) => {
+            let img_url = URL.createObjectURL(value)
+            $(`<div>
+                 <img class="previewPicture img-centered" src="${img_url}" alt="">
+               </div>`).appendTo("#newTripPrev");
+        });
+    };
 });

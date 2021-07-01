@@ -50,6 +50,27 @@ form label {
     border-color: red;
 }
 
+.previewImages {
+    background-color: #ededed;
+    width: 90%;
+    height: 100%;
+    margin: 1rem 1rem;
+    border-radius: 5%;
+}
+
+.previewImages .previewPicture {
+    width: 20%;
+    height: 15vh;
+    padding: 0 0.5rem;
+    margin-top: 0.8rem;
+    display:block;
+    float:left;
+}
+
+.form-row {
+    overflow: hidden;
+}
+
 /* Navbar */
 
 nav {
