@@ -97,3 +97,4 @@ $('#trip_photos').on('change', () => {
         });
     };
 });
+

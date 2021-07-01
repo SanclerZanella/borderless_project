@@ -9,6 +9,7 @@ import datetime as dt
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from streamlit import caching
 if os.path.exists('env.py'):
     import env
 
@@ -99,16 +100,13 @@ def get_no_pictures(trip_id):
     return no_files
 
 
-# Update profile and cover pictures
-def update_profile_cover_pic(profile_photo, cover_photo):
+# Update profile
+def update_profile_pic(profile_photo):
     user_id = mongo.db.users.find_one(
             {"_id": ObjectId(session["user"])})
     default_profile_pic = profile_photo
-    default_cover_pic = cover_photo
     profile_folder_id = "default_profile_pic"
-    cover_folder_id = "default_cover_pic"
     profile_folder = "users/%s/profile/" % user_id['_id']
-    cover_folder = "users/%s/cover/" % user_id['_id']
 
     cloudinary.uploader.upload(default_profile_pic,
                                folder=profile_folder,
@@ -117,6 +115,16 @@ def update_profile_cover_pic(profile_photo, cover_photo):
                                overwrite=True,
                                invalidate=True,
                                use_filename=True)
+
+
+# Update profile and cover pictures
+def update_cover_pic(cover_photo):
+    user_id = mongo.db.users.find_one(
+            {"_id": ObjectId(session["user"])})
+    default_cover_pic = cover_photo
+    cover_folder_id = "default_cover_pic"
+    cover_folder = "users/%s/cover/" % user_id['_id']
+
     cloudinary.uploader.upload(default_cover_pic,
                                folder=cover_folder,
                                public_id=cover_folder_id,
@@ -301,6 +309,7 @@ def profile():
             if trip['user'] == current_user_id:
                 user_trips.append(trip)
 
+    caching.clear_cache()
     return render_template('profile.html', countries=countries, trips=trips,
                            full_name=full_name,
                            current_user_id=current_user_id,
@@ -314,14 +323,32 @@ def profile():
 # View to execute the Feed page
 @app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
+    current_user = mongo.db.users.find_one({'_id': ObjectId(session['user'])})
+    current_user_id = current_user['_id']
     if request.method == 'POST':
-        profile_photo = request.files['profile_photo']
-        cover_photo = request.files['cover_photo']
 
-        update_profile_cover_pic(profile_photo, cover_photo)
+        profile_photo = request.files['profile_photo']
+        if profile_photo.filename != "":
+            update_profile_pic(profile_photo)
+
+        cover_photo = request.files['cover_photo']
+        if cover_photo.filename != "":
+            update_cover_pic(cover_photo)
+
+        updated_data = {
+            'fname': request.form.get('fname'),
+            'lname': request.form.get('lname')
+        }
+
+        mongo.db.users.update({"_id": ObjectId(current_user_id)},
+                              updated_data)
+        flash('Profile Updated')
+        return redirect(url_for('profile'))
 
     return render_template("edit_profile.html",
-                           profile_pic=get_profile_pic())
+                           profile_pic=get_profile_pic(),
+                           cover_pic=get_cover_pic(),
+                           current_user=current_user)
 
 
 # View to execute the Feed page

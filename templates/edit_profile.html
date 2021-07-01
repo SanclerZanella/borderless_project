@@ -13,8 +13,9 @@
                 <div class="row no-gutters content-alignment">
                     <div class="col-8">
                         <label for="fname">First Name</label>
-                        <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="First name" required>
+                        <input type="text" id="fname" name="fname" minlength="3" maxlenght="15"
+                            pattern="^[a-zA-Z0-9]{3,15}$" class="form-control"
+                            value="{{ current_user.fname|title }}" required>
                     </div>
                 </div>
 
@@ -23,50 +24,39 @@
                     <div class="col-8">
                         <label for="lname">Last Name</label>
                         <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Last name" required>
+                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                            value="{{ current_user.lname|title }}" required>
                     </div>
                 </div>
 
                 <!-- Profile Photo -->
-                <div class="row no-gutters content-alignment">
-                    <div class="col-8">
+                <div class="row no-gutters content-alignment newProfile">
+                    <div class="col-2">
+                        <img class="currentProfilePic" src="{{ profile_pic }}" alt="">
+                    </div>
+                    <div class="col-6">
                         <label for="profile_photo" class="form-label">New Profile Picture</label>
                         <input class="form-control" type="file" id="profile_photo" name="profile_photo"
-                            accept="image/jpg, image/jpeg, image/png" />
+                            class="newProfileCover" accept="image/jpg, image/jpeg, image/png" />
                     </div>
                 </div>
 
                 <!-- New Cover Picture -->
-                <div class="row no-gutters content-alignment">
-                    <div class="col-8">
+                <div class="row no-gutters content-alignment newCover">
+                    <div class="col-2">
+                        <img class="currentCoverPic" src="{{ cover_pic }}" alt="">
+                    </div>
+                    <div class="col-6">
                         <label for="cover_photo" class="form-label">New Cover Picture</label>
                         <input class="form-control" type="file" id="cover_photo" name="cover_photo"
-                            accept="image/jpg, image/jpeg, image/png" />
-                    </div>
-                </div>
-
-                <!-- Password Field -->
-                <div class="row no-gutters content-alignment">
-                    <div class="col-8">
-                        <label for="password">New Password</label>
-                        <input type="password" id="password" name="password" minlenght="5" maxlenght="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password" required>
-                    </div>
-                </div>
-
-                <!-- Repeat Password Field -->
-                <div class="row no-gutters content-alignment">
-                    <div class="col-8">
-                        <label for="Rpassword">Confirm New Password</label>
-                        <input type="password" id="Rpassword" name="Rpassword" minlenght="5" maxlenght="15"
-                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password" required>
+                            class="newProfileCover" accept="image/jpg, image/jpeg, image/png" />
                     </div>
                 </div>
 
                 <!-- Register Button -->
                 <div class="row no-gutters text-center">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-lg registerBtn" disabled>Edit Profile</button>
+                        <button type="submit" class="btn btn-primary btn-lg registerBtn">Edit Profile</button>
                     </div>
                 </div>
             </div>

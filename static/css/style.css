@@ -355,6 +355,29 @@ footer {
     font-weight: 700;
 }
 
+/* Edit Profile page */
+
+.currentProfilePic {
+    height: 15vh;
+    margin-top: 0.3rem;
+    border: 1px solid #000;
+    border-radius: 100%;
+}
+
+.currentCoverPic {
+    height: 10vh;
+    margin-top: 0.3rem;
+    border: 1px solid #000;
+}
+
+.newProfile, .newCover {
+    margin-top: 1rem;
+}
+
+.newCover {
+    margin-bottom: 1rem;
+}
+
 /* Media Queries */
 /* Width */
 
