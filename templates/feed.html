@@ -1,6 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="content-wrapper">
-    <h1>Feed Page</h1>
+    <div class="row no-gutters">
+        <!-- Trips Feed -->
+        <div class="col-12">
+            <div class="row no-gutters content-alignment">
+                <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
+                    <div class="row no-gutters content-alignment">
+
+                        {% if trips|length %}
+                        {% for trip in trips %}
+                        {% if trip.trip_privacy != 'Private' %}
+                        <!-- Trip Post -->
+                        <div class="col-11 tripPostLink">
+                            <a href="">
+                                <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
+                                    alt="">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}" alt="">
+                                    </div>
+
+                                </div>
+
+                                <div class="row no-gutters postNameDate">
+                                    <div class="col-12 text-center">
+                                        <h1>{{ trip['trip_name']|title }}</h1>
+                                        <div>
+                                            <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
+                                                }}</span>
+                                            <span>to</span> <span id="endDate">{{
+                                                trip['trip_end_date'].strftime('%Y-%m-%d')
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row no-gutters postStatistic">
+                                    <div class="col-12 text-center">
+                                        <div>
+                                            <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                                                    ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
+                                                    days'
+                                                    }}</span></span>
+                                            <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
+                                                    no_files(trip.user, trip._id) }}</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        <h1>NO TRIPS TO SHOW</h1>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

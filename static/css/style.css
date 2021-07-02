@@ -358,6 +358,7 @@ footer {
 /* Edit Profile page */
 
 .currentProfilePic {
+    width: 8vw;
     height: 15vh;
     margin-top: 0.3rem;
     border: 1px solid #000;
@@ -365,6 +366,7 @@ footer {
 }
 
 .currentCoverPic {
+    width: 8vw;
     height: 10vh;
     margin-top: 0.3rem;
     border: 1px solid #000;
@@ -382,6 +384,9 @@ footer {
 /* Width */
 
 @media screen and (min-width: 1600px) {
+    .content-wrapper {
+        min-height: 10vh;
+    }
     a.navSmFont {
         font-size: 2em;
     }
@@ -406,7 +411,7 @@ footer {
     }
 
     #profilePic {
-        left: 550px;
+        left: 600px;
     }
 
     .postStatistic {
@@ -416,9 +421,19 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+    .currentProfilePic {
+        width: 10vw;
+    }
+    
+    .currentCoverPic {
+        width: 10vw;
+    }
 }
 
 @media screen and (min-width: 1440px) and (max-width: 1599px) {
+    .content-wrapper {
+        min-height: 85vh;
+    }
     .signUpCard {
         margin: 4rem 0;
     }
@@ -428,7 +443,7 @@ footer {
     }
 
     #profilePic {
-        left: 550px;
+        left: 500px;
     }
 
     .postStatistic {
@@ -438,9 +453,18 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+    .currentProfilePic {
+        height: 10vh;
+    }
+    .currentCoverPic {
+        height: 6.5vh;
+    }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
+    .content-wrapper {
+        min-height: 85vh;
+    }
     .signUpCard {
         margin: 4rem;
     }
@@ -459,6 +483,12 @@ footer {
 
     .searchProfileButtons {
         margin-left: 0.9rem;
+    }
+    .currentProfilePic {
+        height: 10.5vh;
+    }
+    .currentCoverPic {
+        height: 7vh;
     }
 }
 
@@ -488,7 +518,7 @@ footer {
     }
 
     #profilePic {
-        left: 250px;
+        left: 200px;
     }
 
     .profileNav .nav-item {
@@ -501,6 +531,17 @@ footer {
 
     .searchProfileButtons {
         margin-left: 0.9rem;
+    }
+    .currentProfilePic {
+        width: 15vw;
+        height: 15vh;
+    }
+    .currentCoverPic {
+        width: 20vw;
+        height: 15vh;
+    }
+    .previewImages .previewPicture {
+        width: 33%;
     }
 }
 
@@ -557,6 +598,17 @@ footer {
     .searchProfileButtons {
         margin: 0.5rem 0.7rem;
     }
+    .currentProfilePic {
+        width: 20vw;
+        height: 15vh;
+    }
+    .currentCoverPic {
+        width: 25vw;
+        height: 15vh;
+    }
+    .previewImages .previewPicture {
+        width: 50%;
+    }
 }
 
 @media screen and (min-width: 375px) and (max-width: 424px) {
@@ -594,7 +646,7 @@ footer {
     #profilePic {
         height: 30vh;
         top: 80px;
-        left: 80px;
+        left: 100px;
     }
 
     .profileNav .nav-item {
@@ -620,6 +672,17 @@ footer {
 
     .modal-content {
         width: 100%;
+    }
+    .currentProfilePic {
+        width: 23vw;
+        height: 15vh;
+    }
+    .currentCoverPic {
+        width: 25vw;
+        height: 15vh;
+    }
+    .previewImages .previewPicture {
+        width: 50%;
     }
 }
 
@@ -684,6 +747,18 @@ footer {
 
     .modal-content {
         width: 100%;
+    }
+    .currentProfilePic {
+        width: 25vw;
+        height: 15vh;
+    }
+    .currentCoverPic {
+        width: 25vw;
+        height: 15vh;
+    }
+    .previewImages .previewPicture {
+        width: 50%;
+        height: 15vh;
     }
 }
 
@@ -773,73 +848,17 @@ footer {
     .loginCard {
         margin: 21rem 0;
     }
-}
-
-@media screen and (min-height: 1024px) and (max-height: 1365px) {
-    .landCover {
-        margin-top: 14rem;
+    .currentProfilePic {
+        width: 15vw;
+        height: 10vh;
     }
 
-    .cardLandPage {
-        margin-bottom: 3rem;
-    }
-
-    .signUpCard {
-        margin: 10rem 0;
-    }
-
-    .loginCard {
-        margin: 12rem 0;
-    }
-}
-
-@media screen and (min-height: 568px) and (max-height: 569px) {
-    #profilePic {
-        height: 30vh;
-        top: 80px;
-        left: 60px;
-    }
-
-    .postNameDate h1 {
-        font-size: 2em;
-    }
-
-    .postStatistic {
-        margin-top: 1.5rem;
-    }
-}
-
-@media screen and (min-height: 667px) and (max-height: 735px) {
-    .postNameDate h1 {
-        font-size: 3em;
-    }
-
-    .postStatistic {
-        margin-top: 2.5rem;
-    }
-}
-
-@media screen and (min-height: 1024px) and (max-height: 1025px) {
-    #profilePic {
-        left: 140px;
-    }
-
-    .postNameDate h1 {
-        margin-top: 4rem;
-    }
-
-    .postStatistic {
-        margin-top: 7rem;
-    }
-}
-
-@media screen and (min-height: 1366px) {
     #profilePic {
         left: 200px;
     }
 
     .postNameDate h1 {
-        font-size: 5em;
+        font-size: 3em;
         margin-top: 4rem;
     }
 
@@ -850,5 +869,8 @@ footer {
     .postStatistic {
         font-size: 2em;
         margin-top: 7rem;
+    }
+    .previewImages .previewPicture {
+        width: 33%;
     }
 }

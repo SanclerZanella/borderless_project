@@ -79,7 +79,8 @@
                         <!-- Trip Post -->
                         <div class="col-11 tripPostLink">
                             <a href="">
-                                <img class="postBackground img-centered" src="{{ bg_post_url(trip._id) }}" alt="">
+                                <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
+                                    alt="">
                                 <div class="row no-gutters">
                                     <div class="col-12">
                                         <img class="postLinkProfilePic" src="{{ profile_pic }}" alt="">
@@ -108,7 +109,7 @@
                                                     days'
                                                     }}</span></span>
                                             <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
-                                                    no_files(trip._id) }}</span></span>
+                                                    no_files(trip.user, trip._id) }}</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -164,8 +165,7 @@
                                         <div class="form-group">
                                             <label for="trip_name">Trip Name</label>
                                             <input type="text" class="form-control" id="trip_name" name="trip_name"
-                                                minlength="5" maxlenght="30" pattern="^[a-zA-Z]{5,30}$"
-                                                placeholder="Holidays in Rome" required>
+                                                minlength="5" maxlenght="30" placeholder="Holidays in Rome" required>
                                         </div>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@
                                             <label for="trip_place_name">Place Name</label>
                                             <input type="text" class="form-control" id="trip_place_name"
                                                 name="trip_place_name" minlength="5" maxlenght="15"
-                                                pattern="^[a-zA-Z]{5,15}$" placeholder="Rome" required>
+                                                placeholder="Rome" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -200,7 +200,7 @@
                                         <div class="form-group">
                                             <label for="trip_description">Trip Description</label>
                                             <textarea class="form-control" name="trip_description" minlength="5"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,200}$" id="trip_description"
+                                                maxlenght="200" id="trip_description"
                                                 cols="30" rows="10" required></textarea>
                                         </div>
                                     </div>
@@ -255,7 +255,6 @@
                                                 name="trip_privacy" required>
                                                 <option selected disabled hidden>Choose one privacy category</option>
                                                 <option>Public</option>
-                                                <option>Followers</option>
                                                 <option>Private</option>
                                             </select>
                                         </div>

@@ -67,13 +67,13 @@ def get_cover_pic():
 
 
 # Get trip post link background picture url
-def get_BGPost_pic(trip_id):
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(session['user'])})
-    current_user_id = current_user['_id']
+def get_BGPost_pic(user_id, trip_id):
+    user = mongo.db.users.find_one(
+        {'_id': ObjectId(user_id)})
+    current_user_id = user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
-    post_category = post['trip_category']
+    post_category = post['trip_category'].replace(" ", "_").lower()
     folder_name = post['trip_name'].replace(" ", "_").lower()
     photo_id = "%s_0" % folder_name
     post_folder = "users/%s/trips/%s/%s/" % (current_user_id,
@@ -81,15 +81,16 @@ def get_BGPost_pic(trip_id):
                                              folder_name)
     post_BGpic_path = "%s/%s" % (post_folder, photo_id)
     post_BGpic_url = cloudinary.CloudinaryImage(post_BGpic_path).url
+    print(post_BGpic_url)
 
     return post_BGpic_url
 
 
 # Get number of pictures in a folder
-def get_no_pictures(trip_id):
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(session['user'])})
-    current_user_id = current_user['_id']
+def get_no_pictures(trip_user, trip_id):
+    user = mongo.db.users.find_one(
+        {'_id': trip_user})
+    current_user_id = user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
 
@@ -103,7 +104,7 @@ def get_no_pictures(trip_id):
 # Update profile
 def update_profile_pic(profile_photo):
     user_id = mongo.db.users.find_one(
-            {"_id": ObjectId(session["user"])})
+        {"_id": ObjectId(session["user"])})
     default_profile_pic = profile_photo
     profile_folder_id = "default_profile_pic"
     profile_folder = "users/%s/profile/" % user_id['_id']
@@ -120,7 +121,7 @@ def update_profile_pic(profile_photo):
 # Update profile and cover pictures
 def update_cover_pic(cover_photo):
     user_id = mongo.db.users.find_one(
-            {"_id": ObjectId(session["user"])})
+        {"_id": ObjectId(session["user"])})
     default_cover_pic = cover_photo
     cover_folder_id = "default_cover_pic"
     cover_folder = "users/%s/cover/" % user_id['_id']
@@ -132,6 +133,19 @@ def update_cover_pic(cover_photo):
                                overwrite=True,
                                invalidate=True,
                                use_filename=True)
+
+
+# Get the profile photo of the post author
+def user_post_photo(user_id):
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(user_id)})
+    current_user_id = current_user['_id']
+    profile_folder_id = "default_profile_pic"
+    profile_folder = "users/%s/profile/" % current_user_id
+    profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
+    profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
+
+    return profile_pic_url
 
 
 # View for landpage
@@ -255,47 +269,54 @@ def profile():
         trip_photos = request.files.getlist('trip_photos')
         trip_privacy = request.form.get("trip_privacy")
 
-        user_trips = mongo.db.trips.find_one(
-            {'user': current_user_id})
-        if user_trips['trip_name'] == trip_name:
-            flash('Trip Name Already Exists')
+        # New trip dictionary to insert into database
+        new_trip = {
+            "user": current_user_id,
+            "trip_category": trip_category,
+            "trip_name": trip_name,
+            "trip_place_name": trip_place_name,
+            "trip_country": trip_country,
+            "trip_description": trip_description,
+            "trip_startdate": trip_startdate,
+            "trip_end_date": trip_end_date,
+            "trip_privacy": trip_privacy
+        }
+
+        # Insert new_trip into database
+        mongo.db.trips.insert_one(new_trip)
+
+        # Create trip folder to host trip photos
+        if trip_photos[0].filename != "":
+            for trip_photo in range(len(trip_photos)):
+                file = trip_photos[trip_photo]
+                category = trip_category.lower().replace(" ", "_")
+                folder_name = trip_name.replace(" ", "_")
+                photo_id = "%s_%s" % (folder_name, trip_photo)
+                folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                         category,
+                                                         folder_name)
+                cloudinary.uploader.upload(file,
+                                           folder=folder_path,
+                                           public_id=photo_id,
+                                           format='jpg')
         else:
-            # New trip dictionary to insert into database
-            new_trip = {
-                "user": current_user_id,
-                "trip_category": trip_category,
-                "trip_name": trip_name,
-                "trip_place_name": trip_place_name,
-                "trip_country": trip_country,
-                "trip_description": trip_description,
-                "trip_startdate": trip_startdate,
-                "trip_end_date": trip_end_date,
-                "trip_privacy": trip_privacy
-            }
-
-            # Insert new_trip into database
-            mongo.db.trips.insert_one(new_trip)
-
-            # Create trip folder to host trip photos
-            if len(trip_photos) != 0:
-                for trip_photo in range(len(trip_photos)):
-                    file = trip_photos[trip_photo]
-                    category = trip_category.lower()
-                    folder_name = trip_name.replace(" ", "_")
-                    photo_id = "%s_%s" % (folder_name, trip_photo)
-                    folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
-                                                             category,
-                                                             folder_name)
-                    cloudinary.uploader.upload(file,
-                                               folder=folder_path,
-                                               public_id=photo_id,
-                                               format='jpg')
+            file = 'static/images/default_post_cover.jpg'
+            category = trip_category.lower().replace(" ", "_")
+            folder_name = trip_name.replace(" ", "_")
+            photo_id = "%s_0" % folder_name
+            folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                     category,
+                                                     folder_name)
+            cloudinary.uploader.upload(file,
+                                       folder=folder_path,
+                                       public_id=photo_id,
+                                       format='jpg')
 
     # List of countries
     countries = list(mongo.db.countries.find())
 
     # List of trips
-    trips = list(mongo.db.trips.find().sort("trip_startdate", 1))
+    trips = list(mongo.db.trips.find().sort("trip_startdate", -1))
 
     # Get full name
     first_name = current_user['fname'].capitalize()
@@ -325,8 +346,10 @@ def profile():
 def edit_profile():
     current_user = mongo.db.users.find_one({'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
+
     if request.method == 'POST':
 
+        # Update profile and cover pictures
         profile_photo = request.files['profile_photo']
         if profile_photo.filename != "":
             update_profile_pic(profile_photo)
@@ -335,13 +358,16 @@ def edit_profile():
         if cover_photo.filename != "":
             update_cover_pic(cover_photo)
 
+        # Data from form
         updated_data = {
             'fname': request.form.get('fname'),
             'lname': request.form.get('lname')
         }
 
+        # Update Name and last name
         mongo.db.users.update({"_id": ObjectId(current_user_id)},
-                              updated_data)
+                              {'$set': updated_data},
+                              multi=True)
         flash('Profile Updated')
         return redirect(url_for('profile'))
 
@@ -354,8 +380,14 @@ def edit_profile():
 # View to execute the Feed page
 @app.route('/feed', methods=["POST", "GET"])
 def feed():
+    trips = list(mongo.db.trips.find().sort("_id", -1))
+
     return render_template("feed.html",
-                           profile_pic=get_profile_pic(),)
+                           trips=trips,
+                           bg_post_url=get_BGPost_pic,
+                           no_files=get_no_pictures,
+                           user_photo=user_post_photo,
+                           profile_pic=get_profile_pic())
 
 
 # View to logout the user (Clear the session cookie)
