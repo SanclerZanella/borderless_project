@@ -71,6 +71,10 @@ form label {
     overflow: hidden;
 }
 
+textarea {
+    resize: none;
+}
+
 /* Navbar */
 
 nav {
@@ -353,6 +357,20 @@ footer {
 
 .postNameDate {
     font-weight: 700;
+}
+
+.deleteTrip, .editTrip {
+    margin: auto 0;
+    font-size: 1.5em;
+}
+
+.deletePost {
+    cursor: pointer;
+}
+
+.deleteBtnModal a {
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Edit Profile page */
@@ -738,7 +756,7 @@ footer {
     }
 
     .postStatistic {
-        margin-top: 3.5rem;
+        margin-top: 1.5rem;
     }
 
     .searchProfileButtons {

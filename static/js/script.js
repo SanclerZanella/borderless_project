@@ -37,27 +37,25 @@ $('.profileNavItem').each((key, value) => {
     })
 });
 
+// Open modal
+function modal(openButton, modal, closeBtn) {
+
+    openButton.click(() => {
+        modal.show(500);
+    });
+
+    closeBtn.click(() => {
+        modal.hide(500);
+    });
+};
+
 // Get the modal form to add new trip
-var addTripFormModal = $('#addTripFormModal');
+let addTripFormModal = $('#addTripFormModal');
 let addTripButton = $('.addTripBtn');
-var closeModal = $('.close').first();
+let tripBtn = $('#TripBtn');
+let closeAddTripBtn = $('#addTripClose')
 
-$(document).ready(() => {
-    addTripButton.click(() => {
-        addTripFormModal.show(500);
-    });
-
-    closeModal.click(() => {
-        addTripFormModal.hide(500);
-    });
-
-    $(document).click((event) => {
-        if (!$(event.target).closest('#TripBtn,.modal-content').length) {
-            addTripFormModal.hide(500);
-        };
-    });
-
-});
+modal(addTripButton, addTripFormModal, closeAddTripBtn);
 
 // Enable Submit Button on add new trip form when there is any value in the 
 // select elements and input file type limit is less than or equal 15
@@ -98,3 +96,19 @@ $('#trip_photos').on('change', () => {
     };
 });
 
+// Open delete confirmation
+$('.deletePost').each((key, value) => {
+    let button_id = $(value).attr('id');
+    let button_el = $(`#${button_id}`);
+
+    $(button_el).click(() => {
+        let closeBtn = $('.closeDeleteConfirm');
+        let delete_btn_id = $(button_el).attr('id');
+        let delete_btn = $(`#${delete_btn_id}`);
+        let id = delete_btn_id.slice(-1);
+        let modal_id = `deleteTripModal_${id}`;
+        let modal_el = $(`#${modal_id}`);
+
+        modal(delete_btn, modal_el, closeBtn);
+    });
+});

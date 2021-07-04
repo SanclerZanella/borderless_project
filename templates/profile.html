@@ -78,18 +78,25 @@
                         {% if trip.user == current_user_id %}
                         <!-- Trip Post -->
                         <div class="col-11 tripPostLink">
-                            <a href="">
-                                <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
-                                    alt="">
-                                <div class="row no-gutters">
-                                    <div class="col-12">
-                                        <img class="postLinkProfilePic" src="{{ profile_pic }}" alt="">
-                                    </div>
-
+                            <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
+                                alt="">
+                            <div class="row no-gutters">
+                                <div class="col-10">
+                                    <a href=""><img class="postLinkProfilePic" src="{{ profile_pic }}" alt=""></a>
+                                </div>
+                                <div class="col-1 deleteTrip">
+                                    <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
+                                            class="fas fa-trash-alt"></i></a>
+                                </div>
+                                <div class="col-1 editTrip">
+                                    <a href=""><i class="fas fa-pencil-alt"></i></a>
                                 </div>
 
-                                <div class="row no-gutters postNameDate">
-                                    <div class="col-12 text-center">
+                            </div>
+
+                            <div class="row no-gutters postNameDate">
+                                <div class="col-12 text-center">
+                                    <a href="">
                                         <h1>{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
@@ -98,22 +105,62 @@
                                                 trip['trip_end_date'].strftime('%Y-%m-%d')
                                                 }}</span>
                                         </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row no-gutters postStatistic">
+                                <div class="col-12 text-center">
+                                    <div>
+                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                                                ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
+                                                days'
+                                                }}</span></span>
+                                        <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
+                                                no_files(trip.user, trip._id) }}</span></span>
                                     </div>
                                 </div>
 
-                                <div class="row no-gutters postStatistic">
-                                    <div class="col-12 text-center">
-                                        <div>
-                                            <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
-                                                    ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
-                                                    days'
-                                                    }}</span></span>
-                                            <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
-                                                    no_files(trip.user, trip._id) }}</span></span>
+                                <!-- The delete trip confirmation modal -->
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <div id="deleteTripModal_{{ loop.index }}" class="modal deleteTripModal">
+
+                                            <!-- Modal content -->
+                                            <div class="modal-content">
+                                                <div class="row no-gutters">
+                                                    <div class="col-2 ml-auto">
+                                                        <span class="close closeDeleteConfirm">&times;</span>
+                                                    </div>
+
+                                                    <!-- Confirmation message -->
+                                                    <div class="col-12">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-12">
+                                                                <h2 class="text-center">You are going to delete this
+                                                                    trip! Are you sure?</h2>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row no-gutters content-alignment deleteBtnModal">
+                                                            <div class="col-2 content-alignment">
+                                                                <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
+                                                            </div>
+                                                            <div class="col-2 content-alignment">
+                                                                <a class="btn btn-danger"
+                                                                    href="{{ url_for('delete_trip', trip_id=trip._id) }}">Delete</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+
+                            </div>
 
                         </div>
                         {% endif %}
@@ -128,14 +175,14 @@
         </div>
 
         <div class="col-12">
-            <!-- The Modal -->
+            <!-- The add new trip form modal -->
             <div id="addTripFormModal" class="modal">
 
                 <!-- Modal content -->
                 <div class="modal-content">
                     <div class="row no-gutters">
                         <div class="col-2 ml-auto">
-                            <span class="close">&times;</span>
+                            <span id="addTripClose" class="close">&times;</span>
                         </div>
 
                         <!-- New Trip Form -->
@@ -176,8 +223,8 @@
                                         <div class="form-group">
                                             <label for="trip_place_name">Place Name</label>
                                             <input type="text" class="form-control" id="trip_place_name"
-                                                name="trip_place_name" minlength="5" maxlenght="15"
-                                                placeholder="Rome" required>
+                                                name="trip_place_name" minlength="5" maxlenght="15" placeholder="Rome"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -200,8 +247,8 @@
                                         <div class="form-group">
                                             <label for="trip_description">Trip Description</label>
                                             <textarea class="form-control" name="trip_description" minlength="5"
-                                                maxlenght="200" id="trip_description"
-                                                cols="30" rows="10" required></textarea>
+                                                maxlenght="200" id="trip_description" cols="30" rows="10"
+                                                required></textarea>
                                         </div>
                                     </div>
                                 </div>

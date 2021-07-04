@@ -13,18 +13,28 @@
                         {% if trip.trip_privacy != 'Private' %}
                         <!-- Trip Post -->
                         <div class="col-11 tripPostLink">
-                            <a href="">
-                                <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
-                                    alt="">
-                                <div class="row no-gutters">
-                                    <div class="col-12">
-                                        <img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}" alt="">
-                                    </div>
-
+                            <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
+                                alt="">
+                            <div class="row no-gutters">
+                                <div class="col-10">
+                                    <a href=""><img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}"
+                                            alt=""></a>
                                 </div>
 
-                                <div class="row no-gutters postNameDate">
-                                    <div class="col-12 text-center">
+                                {% if trip.user == current_user_id %}
+                                <div class="col-1 deleteTrip">
+                                    <a href=""><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                                <div class="col-1 editTrip">
+                                    <a href=""><i class="fas fa-pencil-alt"></i></a>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="row no-gutters postNameDate">
+                                <div class="col-12 text-center">
+                                    <a href="">
                                         <h1>{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
@@ -33,22 +43,22 @@
                                                 trip['trip_end_date'].strftime('%Y-%m-%d')
                                                 }}</span>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
+                            </div>
 
-                                <div class="row no-gutters postStatistic">
-                                    <div class="col-12 text-center">
-                                        <div>
-                                            <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
-                                                    ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
-                                                    days'
-                                                    }}</span></span>
-                                            <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
-                                                    no_files(trip.user, trip._id) }}</span></span>
-                                        </div>
+                            <div class="row no-gutters postStatistic">
+                                <div class="col-12 text-center">
+                                    <div>
+                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                                                ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
+                                                days'
+                                                }}</span></span>
+                                        <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
+                                                no_files(trip.user, trip._id) }}</span></span>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
 
                         </div>
                         {% endif %}

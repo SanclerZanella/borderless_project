@@ -9,7 +9,6 @@ import datetime as dt
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from streamlit import caching
 if os.path.exists('env.py'):
     import env
 
@@ -81,7 +80,6 @@ def get_BGPost_pic(user_id, trip_id):
                                              folder_name)
     post_BGpic_path = "%s/%s" % (post_folder, photo_id)
     post_BGpic_url = cloudinary.CloudinaryImage(post_BGpic_path).url
-    print(post_BGpic_url)
 
     return post_BGpic_url
 
@@ -330,7 +328,6 @@ def profile():
             if trip['user'] == current_user_id:
                 user_trips.append(trip)
 
-    caching.clear_cache()
     return render_template('profile.html', countries=countries, trips=trips,
                            full_name=full_name,
                            current_user_id=current_user_id,
@@ -377,12 +374,28 @@ def edit_profile():
                            current_user=current_user)
 
 
+# View to execute the delete_trip
+@app.route('/delete_trip/<trip_id>')
+def delete_trip(trip_id):
+    mongo.db.trips.remove({"_id": ObjectId(trip_id)})
+    flash("Trip Successfuly Deleted")
+    return redirect(url_for('profile'))
+
+
 # View to execute the Feed page
 @app.route('/feed', methods=["POST", "GET"])
 def feed():
+    # Current user
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(session['user'])})
+
+    # Current user ID
+    current_user_id = current_user['_id']
+
     trips = list(mongo.db.trips.find().sort("_id", -1))
 
     return render_template("feed.html",
+                           current_user_id=current_user_id,
                            trips=trips,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
