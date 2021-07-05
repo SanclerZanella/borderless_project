@@ -23,7 +23,8 @@
 
                                 {% if trip.user == current_user_id %}
                                 <div class="col-1 deleteTrip">
-                                    <a href=""><i class="fas fa-trash-alt"></i></a>
+                                    <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
+                                            class="fas fa-trash-alt"></i></a>
                                 </div>
                                 <div class="col-1 editTrip">
                                     <a href=""><i class="fas fa-pencil-alt"></i></a>
@@ -56,6 +57,45 @@
                                                 }}</span></span>
                                         <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
                                                 no_files(trip.user, trip._id) }}</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- The delete trip confirmation modal -->
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <div id="deleteTripModal_{{ loop.index }}" class="modal deleteTripModal">
+
+                                        <!-- Modal content -->
+                                        <div class="modal-content">
+                                            <div class="row no-gutters">
+                                                <div class="col-2 ml-auto">
+                                                    <span class="close closeDeleteConfirm">&times;</span>
+                                                </div>
+
+                                                <!-- Confirmation message -->
+                                                <div class="col-12">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-12">
+                                                            <h2 class="text-center">You are going to delete this
+                                                                trip! Are you sure?</h2>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row no-gutters content-alignment deleteBtnModal">
+                                                        <div class="col-2 content-alignment">
+                                                            <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
+                                                        </div>
+                                                        <div class="col-2 content-alignment">
+                                                            <a class="btn btn-danger"
+                                                                href="{{ url_for('delete_trip', trip_id=trip._id) }}">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

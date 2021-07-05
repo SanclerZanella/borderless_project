@@ -377,6 +377,24 @@ def edit_profile():
 # View to execute the delete_trip
 @app.route('/delete_trip/<trip_id>')
 def delete_trip(trip_id):
+    trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    search_exp = (trip['trip_name']).replace(" ", " AND ")
+    trip_path = cloudinary.Search().expression(search_exp).execute()
+
+    # Delete trip pictures and folder from cloud
+    if trip_path['total_count'] > 0:
+        res = trip_path['resources']
+        for img in range(len(res)):
+            resources = res[img]
+            delete_folder = 'users/%s/delete/del_img_%s' % (trip['user'],
+                                                            img)
+            cloudinary.uploader.rename(resources['public_id'], delete_folder)
+            cloudinary.uploader.destroy(delete_folder)
+
+        trip_folder = trip_path['resources'][0]['folder']
+        cloudinary.api.delete_folder(trip_folder)
+
+    # Delete trip from database
     mongo.db.trips.remove({"_id": ObjectId(trip_id)})
     flash("Trip Successfuly Deleted")
     return redirect(url_for('profile'))
