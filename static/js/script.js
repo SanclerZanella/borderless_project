@@ -112,3 +112,23 @@ $('.deletePost').each((key, value) => {
         modal(delete_btn, modal_el, closeBtn);
     });
 });
+
+// Ajax to count the trips likes without refresh the page
+$(document).ready(() => {
+    $('.like').each((key, value) => {
+        $(value).click((event) => {
+            event.preventDefault();
+            let trip_id = $(value).data('trip');
+    
+            req = $.ajax({
+                url: `/likes/${trip_id}`,
+                type: 'POST',
+                data: {trip: trip_id}
+            });
+    
+            req.done((data) => {
+                console.log(JSON.stringify(data));
+            });
+        });
+    });
+});

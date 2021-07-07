@@ -1,7 +1,8 @@
 import os
 from flask import (Flask, flash,
                    render_template, redirect,
-                   request, session, url_for)
+                   request, session, url_for,
+                   jsonify)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -277,6 +278,7 @@ def profile():
             "trip_description": trip_description,
             "trip_startdate": trip_startdate,
             "trip_end_date": trip_end_date,
+            "trip_likes": [],
             "trip_privacy": trip_privacy
         }
 
@@ -338,6 +340,17 @@ def profile():
                            no_files=get_no_pictures)
 
 
+# Count likes
+@app.route('/likes/<trip_id>', methods=["GET", "POST"])
+def likes(trip_id):
+    user = session['user']
+    trip = trip_id
+
+    return jsonify({'result': 'success',
+                    'user': user,
+                    'trip': trip})
+
+
 # View to execute the Feed page
 @app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
@@ -396,8 +409,9 @@ def delete_trip(trip_id):
 
     # Delete trip from database
     mongo.db.trips.remove({"_id": ObjectId(trip_id)})
+    print(request.url)
     flash("Trip Successfuly Deleted")
-    return redirect(url_for('profile'))
+    return redirect(request.referrer)
 
 
 # View to execute the Feed page

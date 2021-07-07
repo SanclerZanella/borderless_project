@@ -342,8 +342,20 @@ footer {
 }
 
 .postStatistic {
-    margin-top: 4rem;
     font-size: 1.5em;
+    color: #000;
+}
+
+.postLikes {
+    margin-top: 1.5rem;
+    font-size: 1.5em;
+    color: #000;
+}
+
+.like {
+    border: none;
+    background-color: transparent;
+    padding: 0;
 }
 
 .postBackground {
@@ -432,10 +444,6 @@ footer {
         left: 600px;
     }
 
-    .postStatistic {
-        margin-top: 10rem;
-    }
-
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
@@ -464,10 +472,6 @@ footer {
         left: 500px;
     }
 
-    .postStatistic {
-        margin-top: 12rem;
-    }
-
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
@@ -493,10 +497,6 @@ footer {
 
     #profilePic {
         left: 350px;
-    }
-
-    .postStatistic {
-        margin-top: 6rem;
     }
 
     .searchProfileButtons {
@@ -541,10 +541,6 @@ footer {
 
     .profileNav .nav-item {
         margin-left: 2.5rem;
-    }
-
-    .postStatistic {
-        margin-top: 2rem;
     }
 
     .searchProfileButtons {
@@ -603,10 +599,6 @@ footer {
 
     .postNameDate h1 {
         font-size: 2em;
-    }
-
-    .postStatistic {
-        margin-top: 3rem;
     }
 
     .modal-content {
@@ -680,10 +672,6 @@ footer {
         font-size: 2em;
     }
 
-    .postStatistic {
-        margin-top: 3.5rem;
-    }
-
     .searchProfileButtons {
         margin: 0.5rem 0.7rem;
     }
@@ -755,10 +743,6 @@ footer {
         font-size: 2em;
     }
 
-    .postStatistic {
-        margin-top: 1.5rem;
-    }
-
     .searchProfileButtons {
         margin: 0.5rem 0.7rem;
     }
@@ -795,11 +779,6 @@ footer {
     .postNameDate h1 {
         font-size: 2em;
     }
-
-    .postStatistic {
-        font-size: 1em;
-        margin-top: 0;
-    }
 }
 
 @media screen and (min-width: 667px) and (max-width: 668px) {
@@ -818,7 +797,6 @@ footer {
 
     .postStatistic {
         font-size: 1em;
-        margin-top: 0;
     }
 }
 
@@ -838,7 +816,6 @@ footer {
 
     .postStatistic {
         font-size: 1em;
-        margin-top: 0;
     }
 }
 
@@ -886,7 +863,6 @@ footer {
 
     .postStatistic {
         font-size: 2em;
-        margin-top: 7rem;
     }
     .previewImages .previewPicture {
         width: 33%;

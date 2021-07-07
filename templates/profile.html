@@ -162,6 +162,16 @@
 
                             </div>
 
+                            <!-- Likes Button -->
+                            <div class="row no-gutters postLikes">
+                                <div class="col-12 text-center">
+                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}"><i class="fas fa-heart"></i></a>
+                                        <!-- <input type="submit"  name="like" value="{{ session.user }}"
+                                            data-trip="{{ trip._id }}"> -->
+                                        <span name="like_count" id="like_count">12</span>
+                                </div>
+                            </div>
+
                         </div>
                         {% endif %}
                         {% endfor %}
