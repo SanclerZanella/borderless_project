@@ -165,10 +165,10 @@
                             <!-- Likes Button -->
                             <div class="row no-gutters postLikes">
                                 <div class="col-12 text-center">
-                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}"><i class="fas fa-heart"></i></a>
-                                        <!-- <input type="submit"  name="like" value="{{ session.user }}"
-                                            data-trip="{{ trip._id }}"> -->
-                                        <span name="like_count" id="like_count">12</span>
+                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}">
+                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart"></i>
+                                    </a>
+                                        <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{ trip.trip_likes|length }}</span>
                                 </div>
                             </div>
 

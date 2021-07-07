@@ -279,6 +279,7 @@ def profile():
             "trip_startdate": trip_startdate,
             "trip_end_date": trip_end_date,
             "trip_likes": [],
+            "count_likes": 0,
             "trip_privacy": trip_privacy
         }
 
@@ -343,12 +344,50 @@ def profile():
 # Count likes
 @app.route('/likes/<trip_id>', methods=["GET", "POST"])
 def likes(trip_id):
-    user = session['user']
-    trip = trip_id
+    current_user = session['user']
+    trip_id = trip_id
+    trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    likes = trip['trip_likes']
+
+    lk = {
+        'user': current_user,
+    }
+
+    if len(likes) > 0:
+        for like in range(len(likes)):
+            user = likes[like]['user']
+            if user != current_user:
+                mongo.db.trips.update({'_id': ObjectId(trip_id)}, {
+                    '$push': {
+                        'trip_likes': lk
+                    }})
+                like_icon = "true"
+                print('UPDATED')
+            else:
+                mongo.db.trips.update({'_id': ObjectId(trip_id)}, {
+                    '$pull': {
+                        'trip_likes': lk
+                    }})
+                like_icon = "false"
+                print('DELETED')
+    else:
+        mongo.db.trips.update({'_id': ObjectId(trip_id)}, {
+            '$push': {
+                'trip_likes': lk
+            }})
+        like_icon = "true"
+        print('UPDATED')
+
+    updated_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    updated_likes = updated_trip['trip_likes']
+    count_likes = len(updated_likes)
+    print(count_likes)
 
     return jsonify({'result': 'success',
-                    'user': user,
-                    'trip': trip})
+                    'current_user': current_user,
+                    'trip_id': trip_id,
+                    'like_icon': like_icon,
+                    'count_likes': count_likes})
 
 
 # View to execute the Feed page

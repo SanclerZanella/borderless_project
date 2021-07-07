@@ -118,17 +118,19 @@ $(document).ready(() => {
     $('.like').each((key, value) => {
         $(value).click((event) => {
             event.preventDefault();
+
             let trip_id = $(value).data('trip');
-    
-            req = $.ajax({
+
+            let req = $.ajax({
                 url: `/likes/${trip_id}`,
                 type: 'POST',
-                data: {trip: trip_id}
+                data: { trip: trip_id }
             });
-    
+
             req.done((data) => {
-                console.log(JSON.stringify(data));
+                $(`#like_count_${trip_id}`).text(data.count_likes);
             });
+
         });
     });
 });
