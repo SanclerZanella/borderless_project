@@ -16,18 +16,26 @@
                             <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
                                 alt="">
                             <div class="row no-gutters">
+                                {% if trip.user == current_user_id %}
                                 <div class="col-10">
-                                    <a href=""><img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}"
+                                    <img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}" alt="">
+                                </div>
+                                {% else %}
+                                <div class="col-10">
+                                    <a href=""><img class="postLinkProfilePic shadowEffect" src="{{ user_photo(trip.user) }}"
                                             alt=""></a>
                                 </div>
-
+                                {% endif %}
                                 {% if trip.user == current_user_id %}
+                                <!-- Delete trip Button -->
                                 <div class="col-1 deleteTrip">
                                     <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
-                                            class="fas fa-trash-alt"></i></a>
+                                            class="fas fa-trash-alt shakeEffect"></i></a>
                                 </div>
+
+                                <!-- Edit trip button -->
                                 <div class="col-1 editTrip">
-                                    <a href=""><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="{{ url_for('edit_trip', trip_id=trip._id) }}"><i class="fas fa-pencil-alt shakeEffect"></i></a>
                                 </div>
                                 {% endif %}
 
@@ -36,7 +44,7 @@
                             <div class="row no-gutters postNameDate">
                                 <div class="col-12 text-center">
                                     <a href="">
-                                        <h1>{{ trip['trip_name']|title }}</h1>
+                                        <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
                                                 }}</span>
@@ -105,7 +113,7 @@
                                 <div class="col-12 text-center">
                                     <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like"
                                         data-trip="{{ trip._id }}">
-                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart"></i>
+                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart shakeEffect"></i>
                                     </a>
                                     <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{
                                         trip.trip_likes|length }}</span>

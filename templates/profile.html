@@ -82,14 +82,19 @@
                                 alt="">
                             <div class="row no-gutters">
                                 <div class="col-10">
-                                    <a href=""><img class="postLinkProfilePic" src="{{ profile_pic }}" alt=""></a>
+                                    <img class="postLinkProfilePic" src="{{ profile_pic }}" alt="">
                                 </div>
+
+                                <!-- Delete trip button -->
                                 <div class="col-1 deleteTrip">
                                     <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
-                                            class="fas fa-trash-alt"></i></a>
+                                            class="fas fa-trash-alt shakeEffect"></i></a>
                                 </div>
+
+                                <!-- Edit trip button -->
                                 <div class="col-1 editTrip">
-                                    <a href=""><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="{{ url_for('edit_trip', trip_id=trip._id) }}"><i
+                                            class="fas fa-pencil-alt shakeEffect"></i></a>
                                 </div>
 
                             </div>
@@ -97,7 +102,7 @@
                             <div class="row no-gutters postNameDate">
                                 <div class="col-12 text-center">
                                     <a href="">
-                                        <h1>{{ trip['trip_name']|title }}</h1>
+                                        <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
                                                 }}</span>
@@ -165,10 +170,12 @@
                             <!-- Likes Button -->
                             <div class="row no-gutters postLikes">
                                 <div class="col-12 text-center">
-                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}">
-                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart"></i>
+                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like"
+                                        data-trip="{{ trip._id }}">
+                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart shakeEffect"></i>
                                     </a>
-                                        <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{ trip.trip_likes|length }}</span>
+                                    <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{
+                                        trip.trip_likes|length }}</span>
                                 </div>
                             </div>
 

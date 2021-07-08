@@ -96,7 +96,7 @@ $('#trip_photos').on('change', () => {
     };
 });
 
-// Open delete confirmation
+// Open delete trip confirmation
 $('.deletePost').each((key, value) => {
     let button_id = $(value).attr('id');
     let button_el = $(`#${button_id}`);
@@ -132,5 +132,51 @@ $(document).ready(() => {
             });
 
         });
+    });
+});
+
+// Blocks the pop up asking for form resubmission on refresh
+// Code from https://www.webtrickshome.com/forum/how-to-stop-form-resubmission-on-page-refresh
+if ( window.history.replaceState ) {
+    window.history.replaceState( null, null, window.location.href );
+  };
+
+// Ajax to delete photos without refresh the page
+$(document).ready(() => {
+    $('.delEditImg').each((key, value) => {
+        $(value).click((event) => {
+            event.preventDefault();
+
+            let trip_id = $(value).data('trip');
+            let filename = $(value).data('flname');
+            console.log(filename)
+
+            let req = $.ajax({
+                url: `/delete_img/${trip_id}/${filename}`,
+                type: 'POST',
+                data: { trip: trip_id, filename: filename }
+            });
+
+            req.done((data) => {
+                console.log(data)
+            });
+
+        });
+    });
+});
+
+// Open delete photo confirmation
+$('.delEditImg').each((key, value) => {
+    let button_id = $(value).attr('id');
+    let button_el = $(`#${button_id}`);
+
+    $(button_el).click(() => {
+        let closeBtn = $('.closeDeleteConfirm');
+        let delete_btn_id = $(button_el).attr('id');
+        let delete_btn = $(`#${delete_btn_id}`);
+        let modal_id = `deletePhotoModal_${delete_btn_id}`;
+        let modal_el = $(`#${modal_id}`);
+
+        modal(delete_btn, modal_el, closeBtn);
     });
 });

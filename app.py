@@ -40,6 +40,12 @@ cloudinary.config(
 )
 
 
+# Get image url from cloud
+def img_url(public_id):
+    pic_url = cloudinary.CloudinaryImage(public_id).url
+    return pic_url
+
+
 # Get profile picture url
 def get_profile_pic():
     current_user = mongo.db.users.find_one(
@@ -68,21 +74,20 @@ def get_cover_pic():
 
 # Get trip post link background picture url
 def get_BGPost_pic(user_id, trip_id):
-    user = mongo.db.users.find_one(
-        {'_id': ObjectId(user_id)})
-    current_user_id = user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
-    post_category = post['trip_category'].replace(" ", "_").lower()
-    folder_name = post['trip_name'].replace(" ", "_").lower()
-    photo_id = "%s_0" % folder_name
-    post_folder = "users/%s/trips/%s/%s/" % (current_user_id,
-                                             post_category,
-                                             folder_name)
-    post_BGpic_path = "%s/%s" % (post_folder, photo_id)
-    post_BGpic_url = cloudinary.CloudinaryImage(post_BGpic_path).url
+    num_pic = get_no_pictures(user_id, trip_id)
 
-    return post_BGpic_url
+    if num_pic > 0:
+        search_exp = (post['trip_name']).replace(" ", " AND ")
+        trip_path = cloudinary.Search().expression(search_exp).execute()
+        res = trip_path['resources'][-1]
+        first_pic = res['public_id']
+        post_BGpic_url = cloudinary.CloudinaryImage('%s.jpg' % first_pic).url
+        return post_BGpic_url
+    else:
+        local_img = 'static/images/default_post_cover.jpg'
+        return local_img
 
 
 # Get number of pictures in a folder
@@ -284,6 +289,7 @@ def profile():
         }
 
         # Insert new_trip into database
+        flash('Trip successfully added')
         mongo.db.trips.insert_one(new_trip)
 
         # Create trip folder to host trip photos
@@ -301,17 +307,12 @@ def profile():
                                            public_id=photo_id,
                                            format='jpg')
         else:
-            file = 'static/images/default_post_cover.jpg'
-            category = trip_category.lower().replace(" ", "_")
-            folder_name = trip_name.replace(" ", "_")
-            photo_id = "%s_0" % folder_name
-            folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
-                                                     category,
-                                                     folder_name)
-            cloudinary.uploader.upload(file,
-                                       folder=folder_path,
-                                       public_id=photo_id,
-                                       format='jpg')
+            category = trip_category.lower().replace(" ", "_").lower()
+            folder_name = trip_name.replace(" ", "_").lower()
+            folder_path = "users/%s/trips/%s/%s" % (current_user_id,
+                                                    category,
+                                                    folder_name)
+            cloudinary.api.create_folder(folder_path)
 
     # List of countries
     countries = list(mongo.db.countries.find())
@@ -362,26 +363,22 @@ def likes(trip_id):
                         'trip_likes': lk
                     }})
                 like_icon = "true"
-                print('UPDATED')
             else:
                 mongo.db.trips.update({'_id': ObjectId(trip_id)}, {
                     '$pull': {
                         'trip_likes': lk
                     }})
                 like_icon = "false"
-                print('DELETED')
     else:
         mongo.db.trips.update({'_id': ObjectId(trip_id)}, {
             '$push': {
                 'trip_likes': lk
             }})
         like_icon = "true"
-        print('UPDATED')
 
     updated_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     updated_likes = updated_trip['trip_likes']
     count_likes = len(updated_likes)
-    print(count_likes)
 
     return jsonify({'result': 'success',
                     'current_user': current_user,
@@ -426,6 +423,45 @@ def edit_profile():
                            current_user=current_user)
 
 
+# View to edit a trip
+@app.route('/edit_trip/<trip_id>', methods=['GET', 'POST'])
+def edit_trip(trip_id):
+    current_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    current_user = session['user']
+    search_exp = (current_trip['trip_name']).replace(" ", " AND ")
+    trip_path = cloudinary.Search().expression(search_exp).execute()
+
+    # List of countries
+    countries = list(mongo.db.countries.find())
+
+    return render_template('edit_trip.html',
+                           profile_pic=get_profile_pic(),
+                           cover_pic=get_cover_pic(),
+                           current_user=current_user,
+                           current_trip=current_trip,
+                           countries=countries,
+                           trip_path=trip_path,
+                           img_url=img_url)
+
+
+# Delete one image from cloud
+@app.route('/delete_img/<trip_id>/<filename>', methods=["GET", "POST"])
+def delete_img(trip_id, filename):
+    trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    trip_user = trip['user']
+    trip_catg = trip['trip_category'].replace(" ", "_").lower()
+    trip_name = trip['trip_name'].replace(" ", "_").lower()
+    public_id = 'users/%s/trips/%s/%s/%s' % (trip_user,
+                                             trip_catg,
+                                             trip_name,
+                                             filename)
+    delete_folder = 'users/%s/delete' % trip_user
+    # cloudinary.uploader.rename(public_id, delete_folder)
+    # cloudinary.uploader.destroy(delete_folder)
+
+    return jsonify({'result': 'success'})
+
+
 # View to execute the delete_trip
 @app.route('/delete_trip/<trip_id>')
 def delete_trip(trip_id):
@@ -438,17 +474,24 @@ def delete_trip(trip_id):
         res = trip_path['resources']
         for img in range(len(res)):
             resources = res[img]
-            delete_folder = 'users/%s/delete/del_img_%s' % (trip['user'],
-                                                            img)
+            delete_folder = 'users/%s/delete' % trip['user']
+
             cloudinary.uploader.rename(resources['public_id'], delete_folder)
             cloudinary.uploader.destroy(delete_folder)
 
         trip_folder = trip_path['resources'][0]['folder']
         cloudinary.api.delete_folder(trip_folder)
+    else:
+        trip_user = trip['user']
+        trip_catg = trip['trip_category'].replace(" ", "_").lower()
+        trip_name = trip['trip_name'].replace(" ", "_").lower()
+        trip_folder = 'users/%s/trips/%s/%s' % (trip_user,
+                                                trip_catg,
+                                                trip_name)
+        cloudinary.api.delete_folder(trip_folder)
 
     # Delete trip from database
     mongo.db.trips.remove({"_id": ObjectId(trip_id)})
-    print(request.url)
     flash("Trip Successfuly Deleted")
     return redirect(request.referrer)
 

@@ -58,13 +58,17 @@ form label {
     border-radius: 5%;
 }
 
+.previewImages img {
+    margin: 0.5rem;
+}
+
 .previewImages .previewPicture {
     width: 20%;
     height: 15vh;
     padding: 0 0.5rem;
     margin-top: 0.8rem;
-    display:block;
-    float:left;
+    display: block;
+    float: left;
 }
 
 .form-row {
@@ -73,6 +77,62 @@ form label {
 
 textarea {
     resize: none;
+}
+
+/* Shake effect got from w3schools */
+.shakeEffect:hover {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(0.5px, 0.5px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-0.5px, -1px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-1.5px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(1.5px, 1px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(0.5px, -0.5px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-0.5px, 1px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-1.5px, 0.5px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(1.5px, 0.5px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-0.5px, -0.5px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(0.5px, 1px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(0.5px, -1px) rotate(-1deg);
+    }
+}
+
+.shadowEffect:hover {
+    filter: drop-shadow(3px 6px 9px rgb(0, 114, 114));
 }
 
 /* Navbar */
@@ -371,7 +431,8 @@ footer {
     font-weight: 700;
 }
 
-.deleteTrip, .editTrip {
+.deleteTrip,
+.editTrip {
     margin: auto 0;
     font-size: 1.5em;
 }
@@ -402,11 +463,25 @@ footer {
     border: 1px solid #000;
 }
 
-.newProfile, .newCover {
+.newProfile,
+.newCover {
     margin-top: 1rem;
 }
 
 .newCover {
+    margin-bottom: 1rem;
+}
+
+/* Edit trip page */
+
+.edit_trip_wrapper {
+    background-color: #b6f8ff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5%;
+}
+
+.edit_buttons {
     margin-bottom: 1rem;
 }
 
@@ -417,6 +492,7 @@ footer {
     .content-wrapper {
         min-height: 10vh;
     }
+
     a.navSmFont {
         font-size: 2em;
     }
@@ -447,10 +523,11 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+
     .currentProfilePic {
         width: 10vw;
     }
-    
+
     .currentCoverPic {
         width: 10vw;
     }
@@ -460,6 +537,7 @@ footer {
     .content-wrapper {
         min-height: 85vh;
     }
+
     .signUpCard {
         margin: 4rem 0;
     }
@@ -475,9 +553,11 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+
     .currentProfilePic {
         height: 10vh;
     }
+
     .currentCoverPic {
         height: 6.5vh;
     }
@@ -487,6 +567,7 @@ footer {
     .content-wrapper {
         min-height: 85vh;
     }
+
     .signUpCard {
         margin: 4rem;
     }
@@ -502,9 +583,11 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+
     .currentProfilePic {
         height: 10.5vh;
     }
+
     .currentCoverPic {
         height: 7vh;
     }
@@ -546,14 +629,17 @@ footer {
     .searchProfileButtons {
         margin-left: 0.9rem;
     }
+
     .currentProfilePic {
         width: 15vw;
         height: 15vh;
     }
+
     .currentCoverPic {
         width: 20vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture {
         width: 33%;
     }
@@ -608,14 +694,17 @@ footer {
     .searchProfileButtons {
         margin: 0.5rem 0.7rem;
     }
+
     .currentProfilePic {
         width: 20vw;
         height: 15vh;
     }
+
     .currentCoverPic {
         width: 25vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture {
         width: 50%;
     }
@@ -679,14 +768,17 @@ footer {
     .modal-content {
         width: 100%;
     }
+
     .currentProfilePic {
         width: 23vw;
         height: 15vh;
     }
+
     .currentCoverPic {
         width: 25vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture {
         width: 50%;
     }
@@ -750,14 +842,17 @@ footer {
     .modal-content {
         width: 100%;
     }
+
     .currentProfilePic {
         width: 25vw;
         height: 15vh;
     }
+
     .currentCoverPic {
         width: 25vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture {
         width: 50%;
         height: 15vh;
@@ -772,6 +867,7 @@ footer {
         top: 25px;
         left: 200px;
     }
+
     .postNameDate {
         font-size: 0.8em;
     }
@@ -787,6 +883,7 @@ footer {
         top: 25px;
         left: 250px;
     }
+
     .postNameDate {
         font-size: 0.8em;
     }
@@ -806,6 +903,7 @@ footer {
         top: 25px;
         left: 270px;
     }
+
     .postNameDate {
         font-size: 0.8em;
     }
@@ -843,6 +941,7 @@ footer {
     .loginCard {
         margin: 21rem 0;
     }
+
     .currentProfilePic {
         width: 15vw;
         height: 10vh;
@@ -864,6 +963,7 @@ footer {
     .postStatistic {
         font-size: 2em;
     }
+
     .previewImages .previewPicture {
         width: 33%;
     }

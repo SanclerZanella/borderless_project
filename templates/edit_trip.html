@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="content-wrapper">
+
+    <div class="row no-gutters content-alignment">
+
+        <!-- Edit Trip Form -->
+        <div class="col-6 edit_trip_wrapper content-alignment">
+            <form method="POST" action="{{ url_for('edit_trip', trip_id=current_trip._id) }}"
+                enctype="multipart/form-data">
+
+                <legend class="text-center">Edit Trip</legend>
+
+                <!-- Trip Category -->
+                <div class="form-row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="trip_category">Trip Category</label>
+                            <select class="form-control" id="trip_category" name="trip_category" required>
+                                <option selected hidden>{{ current_trip.trip_category }}</option>
+                                <option>Travel</option>
+                                <option>Vacation</option>
+                                <option>Short Trip</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Name -->
+                <div class="form-row newTripForm">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="trip_name">Trip Name</label>
+                            <input type="text" class="form-control" id="trip_name" name="trip_name" minlength="5"
+                                maxlenght="30" placeholder="Holidays in Rome" value="{{ current_trip.trip_name }}"
+                                required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Place Name  and Country -->
+                <div class="form-row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            <label for="trip_place_name">Place Name</label>
+                            <input type="text" class="form-control" id="trip_place_name" name="trip_place_name"
+                                minlength="5" maxlenght="15" placeholder="Rome"
+                                value="{{ current_trip.trip_place_name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            <label for="trip_country">Country</label>
+                            <select class="form-control" id="trip_country" name="trip_country" required>
+                                <option selected hidden>{{ current_trip.trip_country }}</option>
+                                {% for country in countries %}
+                                <option>{{ country['name'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Description -->
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="trip_description">Trip Description</label>
+                            <textarea class="form-control" name="trip_description" minlength="5" maxlenght="200"
+                                id="trip_description" cols="30" rows="10"
+                                required>{{ current_trip.trip_description }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Start and End Date -->
+                <div class="form-row">
+                    <div class="col">
+                        <label for="trip_startdate">Start Date</label>
+                        <input class="form-control" id="trip_startdate" name="trip_startdate" type="date"
+                            value="{{ current_trip.trip_startdate.strftime('%Y-%m-%d') }}" required>
+                    </div>
+
+                    <div class="col">
+                        <label for="trip_end_date">End Date</label>
+                        <input class="form-control" id="trip_end_date" name="trip_end_date" type="date"
+                            value="{{ current_trip.trip_end_date.strftime('%Y-%m-%d') }}" required>
+                    </div>
+                </div>
+
+                <!-- Trip photos -->
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="trip_photos" class="form-label">Add Photos</label>
+                            <input class="form-control" type="file" id="trip_photos" name="trip_photos"
+                                accept="image/jpg, image/jpeg, image/png" multiple />
+                            <small>*15 pictures limit</small>
+                            <small> *The first picture will be used as post background</small>
+                        </div>
+
+                        <!-- Photos Preview -->
+                        <div id="editTripPrev" class="previewImages">
+                            {% for res in trip_path['resources'] %}
+                            <a id="{{ res.asset_id }}" class="delEditImg" data-flname="{{ res.filename }}" data-trip="{{ current_trip._id }}"
+                                href=""><img
+                                    class="previewPicture previewPictureEdit img-centered shakeEffect"
+                                    src="{{ '%s.jpg' % img_url(res.public_id) }}" alt=""></a>
+
+                            <!-- The delete photo confirmation modal -->
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <div id="deletePhotoModal_{{ res.asset_id }}" class="modal deletePhotoModal">
+
+                                        <!-- Modal content -->
+                                        <div class="modal-content">
+                                            <div class="row no-gutters">
+                                                <div class="col-2 ml-auto">
+                                                    <span class="close closeDeleteConfirm">&times;</span>
+                                                </div>
+
+                                                <!-- Confirmation message -->
+                                                <div class="col-12">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-12">
+                                                            <h2 class="text-center">You are going to delete this
+                                                                photo! Are you sure?</h2>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row no-gutters content-alignment deleteBtnModal">
+                                                        <div class="col-2 content-alignment">
+                                                            <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
+                                                        </div>
+                                                        <div class="col-2 content-alignment">
+                                                            <a class="btn btn-danger"
+                                                                href="{{ url_for('delete_img', trip_id=current_trip._id, filename=res.filename) }}">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Privacy -->
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="trip_privacy">Who Can See This Trip?</label>
+                            <select class="form-control" id="trip_privacy" name="trip_privacy" required>
+                                <option selected hidden>{{ current_trip.trip_privacy }}</option>
+                                <option>Public</option>
+                                <option>Private</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Submit/reset button add new trip form -->
+                <div class="form-row edit_buttons">
+                    <div class="col content-alignment">
+                        <a href="" type="button" class="btn btn-danger tripFormBtn tripClearBtn">Clear Form</a>
+                        <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn">Edit
+                            Trip</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
