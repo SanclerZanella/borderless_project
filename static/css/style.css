@@ -50,19 +50,18 @@ form label {
     border-color: red;
 }
 
-.previewImages {
+.previewImages, .previewCurrentImages {
     background-color: #ededed;
-    width: 90%;
     height: 100%;
     margin: 1rem 1rem;
     border-radius: 5%;
 }
 
-.previewImages img {
+.previewImages img, .previewCurrentImages img {
     margin: 0.5rem;
 }
 
-.previewImages .previewPicture {
+.previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
     width: 20%;
     height: 15vh;
     padding: 0 0.5rem;
@@ -476,12 +475,22 @@ footer {
 
 .edit_trip_wrapper {
     background-color: #b6f8ff;
+    padding: 1rem !important;
     margin-top: 1rem;
     margin-bottom: 1rem;
     border-radius: 5%;
 }
 
 .edit_buttons {
+    margin-bottom: 1rem;
+}
+
+.delEditImg {
+    cursor: pointer;
+}
+
+.currentPhotos {
+    margin-top: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -640,7 +649,7 @@ footer {
         height: 15vh;
     }
 
-    .previewImages .previewPicture {
+    .previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
         width: 33%;
     }
 }
@@ -705,7 +714,7 @@ footer {
         height: 15vh;
     }
 
-    .previewImages .previewPicture {
+    .previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
         width: 50%;
     }
 }
@@ -779,7 +788,7 @@ footer {
         height: 15vh;
     }
 
-    .previewImages .previewPicture {
+    .previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
         width: 50%;
     }
 }
@@ -853,7 +862,7 @@ footer {
         height: 15vh;
     }
 
-    .previewImages .previewPicture {
+    .previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
         width: 50%;
         height: 15vh;
     }
@@ -964,7 +973,7 @@ footer {
         font-size: 2em;
     }
 
-    .previewImages .previewPicture {
+    .previewImages .previewPicture, .previewCurrentImages .previewPictureEdit {
         width: 33%;
     }
 }

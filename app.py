@@ -41,8 +41,9 @@ cloudinary.config(
 
 
 # Get image url from cloud
-def img_url(public_id):
-    pic_url = cloudinary.CloudinaryImage(public_id).url
+def img_url(folder, filename):
+    pic_url = cloudinary.CloudinaryImage('%s/%s' % (folder,
+                                                    filename)).url
     return pic_url
 
 
@@ -150,6 +151,81 @@ def user_post_photo(user_id):
     profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
 
     return profile_pic_url
+
+
+# Provide a list of all images in a trip folder in
+# the cloud
+def trip_folder_resources(trip_name):
+    search_exp = (trip_name).replace(" ", " AND ")
+    trip_path = cloudinary.Search().expression(search_exp).execute()
+    resources = trip_path['resources']
+
+    return resources
+
+
+# Update trip photos in the cloud
+def update_trip_photos(trip_photos,
+                       resources,
+                       trip_category,
+                       trip_name,
+                       current_user_id):
+
+    # Check if there is any photo in the trip folder in the cloud
+    if len(resources) > 0:
+
+        # Check if the user uploaded any photo
+        if trip_photos[0].filename != "":
+            ids = []
+            last_file = resources[0]['filename']
+            last_file_id = int(last_file[-1])
+            ids.append(last_file_id)
+
+            # Send uploded photos to the cloud
+            for trip_photo in range(len(trip_photos)):
+                file = trip_photos[trip_photo]
+                category = trip_category.lower().replace(" ", "_")
+                folder_name = trip_name.replace(" ", "_").lower()
+
+                last_id = ids[-1]
+                id = last_id + 1
+                ids.append(id)
+                photo_id = "%s_%s" % (folder_name, id)
+
+                folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                         category,
+                                                         folder_name)
+                cloudinary.uploader.upload(file,
+                                           folder=folder_path,
+                                           public_id=photo_id,
+                                           format='jpg',
+                                           overwrite=True,
+                                           invalidate=True,
+                                           use_filename=True)
+
+    # If there isn't photo in the folder
+    else:
+
+        # Check if the user uploaded any photo
+        if trip_photos[0].filename != "":
+
+            # Send uploded photos to the cloud
+            for trip_photo in range(len(trip_photos)):
+                file = trip_photos[trip_photo]
+                category = trip_category.lower().replace(" ", "_")
+                folder_name = trip_name.replace(" ", "_").lower()
+
+                photo_id = "%s_%s" % (folder_name, trip_photo)
+
+                folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                         category,
+                                                         folder_name)
+                cloudinary.uploader.upload(file,
+                                           folder=folder_path,
+                                           public_id=photo_id,
+                                           format='jpg',
+                                           overwrite=True,
+                                           invalidate=True,
+                                           use_filename=True)
 
 
 # View for landpage
@@ -284,7 +360,6 @@ def profile():
             "trip_startdate": trip_startdate,
             "trip_end_date": trip_end_date,
             "trip_likes": [],
-            "count_likes": 0,
             "trip_privacy": trip_privacy
         }
 
@@ -427,9 +502,103 @@ def edit_profile():
 @app.route('/edit_trip/<trip_id>', methods=['GET', 'POST'])
 def edit_trip(trip_id):
     current_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    current_catg = current_trip['trip_category'].lower()
+    current_name = current_trip['trip_name'].lower()
     current_user = session['user']
     search_exp = (current_trip['trip_name']).replace(" ", " AND ")
     trip_path = cloudinary.Search().expression(search_exp).execute()
+    resources = trip_path['resources']
+
+    if request.method == "POST":
+        # Catch data from form into variables
+        trip_category = request.form.get("trip_category").lower()
+        trip_name = request.form.get("trip_name").lower()
+        trip_place_name = request.form.get("trip_place_name")
+        trip_country = request.form.get("trip_country")
+        trip_description = request.form.get("trip_description")
+        trip_startdate = dt.datetime.strptime(
+            request.form.get("trip_startdate"), '%Y-%m-%d')
+        trip_end_date = dt.datetime.strptime(
+            request.form.get("trip_end_date"), '%Y-%m-%d')
+        trip_photos = request.files.getlist('trip_photos')
+        trip_privacy = request.form.get("trip_privacy")
+
+        # Edit trip dictionary to update into database
+        edit_trip = {
+            "user": current_trip['user'],
+            "trip_category": trip_category,
+            "trip_name": trip_name,
+            "trip_place_name": trip_place_name,
+            "trip_country": trip_country,
+            "trip_description": trip_description,
+            "trip_startdate": trip_startdate,
+            "trip_end_date": trip_end_date,
+            "trip_privacy": trip_privacy
+        }
+
+        # If the user keeps the trip category and trip name
+        if trip_category == current_catg and trip_name == current_name:
+
+            # Update trip data in database
+            flash('Trip Updated')
+            mongo.db.trips.update({"_id": ObjectId(current_trip['_id'])},
+                                  {'$set': edit_trip},
+                                  multi=True)
+
+            # Send trip photos to folder in the cloud
+            update_trip_photos(trip_photos,
+                               resources,
+                               trip_category,
+                               trip_name,
+                               current_user)
+
+            return redirect(url_for('profile'))
+
+        # If the user changes the trip category and trip name
+        elif trip_category != current_catg or trip_name != current_name:
+            # Create new folder with the new trip category and trip name
+            category = trip_category.lower().replace(" ", "_").lower()
+            folder_name = trip_name.replace(" ", "_").lower()
+            folder_path = "users/%s/trips/%s/%s" % (current_trip['user'],
+                                                    category,
+                                                    folder_name)
+            cloudinary.api.create_folder(folder_path)
+
+            # If there is any photo in the old folder
+            # Then tranfer these photos to the new folder
+            if len(resources) > 0:
+                for res in range(len(resources)):
+                    public_id = resources[res]['public_id']
+                    filename = '%s_%s' % (folder_name,
+                                          res)
+                    new_folder = '%s/%s' % (folder_path,
+                                            filename)
+                    cloudinary.uploader.rename(public_id,
+                                               new_folder,
+                                               overwrite=True,
+                                               invalidate=True,
+                                               use_filename=True)
+
+            # Delete the old folder
+            old_folder = resources[0]['folder']
+            cloudinary.api.delete_folder(old_folder)
+
+            # List of all photos in the new folder
+            new_resources = trip_folder_resources(trip_name)
+
+            # Send new photos to the new folder
+            update_trip_photos(trip_photos,
+                               new_resources,
+                               trip_category,
+                               trip_name,
+                               current_user)
+
+            # Update trip data in database
+            flash('Trip Updated')
+            mongo.db.trips.update({"_id": ObjectId(current_trip['_id'])},
+                                  {'$set': edit_trip},
+                                  multi=True)
+            return redirect(url_for('profile'))
 
     # List of countries
     countries = list(mongo.db.countries.find())
@@ -456,8 +625,8 @@ def delete_img(trip_id, filename):
                                              trip_name,
                                              filename)
     delete_folder = 'users/%s/delete' % trip_user
-    # cloudinary.uploader.rename(public_id, delete_folder)
-    # cloudinary.uploader.destroy(delete_folder)
+    cloudinary.uploader.rename(public_id, delete_folder)
+    cloudinary.uploader.destroy(delete_folder)
 
     return jsonify({'result': 'success'})
 

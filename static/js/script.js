@@ -143,22 +143,22 @@ if ( window.history.replaceState ) {
 
 // Ajax to delete photos without refresh the page
 $(document).ready(() => {
-    $('.delEditImg').each((key, value) => {
+    $('.deletePhotoBtn').each((key, value) => {
         $(value).click((event) => {
             event.preventDefault();
 
             let trip_id = $(value).data('trip');
             let filename = $(value).data('flname');
-            console.log(filename)
+            let imgId = $(value).data('img');
 
             let req = $.ajax({
                 url: `/delete_img/${trip_id}/${filename}`,
                 type: 'POST',
-                data: { trip: trip_id, filename: filename }
+                data: { trip: trip_id, filename: filename, imgId: imgId }
             });
 
             req.done((data) => {
-                console.log(data)
+                $(`#${imgId}`).remove();
             });
 
         });
