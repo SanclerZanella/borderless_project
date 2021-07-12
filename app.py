@@ -48,9 +48,9 @@ def img_url(folder, filename):
 
 
 # Get profile picture url
-def get_profile_pic():
+def get_profile_pic(user_id):
     current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(session['user'])})
+        {'_id': ObjectId(user_id)})
     current_user_id = current_user['_id']
     profile_folder_id = "default_profile_pic"
     profile_folder = "users/%s/profile/" % current_user_id
@@ -61,9 +61,9 @@ def get_profile_pic():
 
 
 # Get cover picture url
-def get_cover_pic():
+def get_cover_pic(user_id):
     current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(session['user'])})
+        {'_id': ObjectId(user_id)})
     current_user_id = current_user['_id']
     cover_folder_id = "default_cover_pic"
     cover_folder = "users/%s/cover/" % current_user_id
@@ -76,7 +76,7 @@ def get_cover_pic():
 # Get trip post link background picture url
 def get_BGPost_pic(user_id, trip_id):
     post = mongo.db.trips.find_one(
-        {'_id': trip_id})
+        {'_id': ObjectId(trip_id)})
     num_pic = get_no_pictures(user_id, trip_id)
 
     if num_pic > 0:
@@ -87,23 +87,24 @@ def get_BGPost_pic(user_id, trip_id):
         post_BGpic_url = cloudinary.CloudinaryImage('%s.jpg' % first_pic).url
         return post_BGpic_url
     else:
-        local_img = 'static/images/default_post_cover.jpg'
+        local_img = '../static/images/default_post_cover.jpg'
+        print(local_img)
         return local_img
 
 
 # Get number of pictures in a folder
 def get_no_pictures(trip_user, trip_id):
     user = mongo.db.users.find_one(
-        {'_id': trip_user})
+        {'_id': ObjectId(trip_user)})
     current_user_id = user['_id']
     post = mongo.db.trips.find_one(
         {'_id': trip_id})
 
     if current_user_id == post['user']:
         search_exp = (post['trip_name']).replace(" ", " AND ")
-    search_cloud = cloudinary.Search().expression(search_exp).execute()
-    no_files = search_cloud['total_count']
-    return no_files
+        search_cloud = cloudinary.Search().expression(search_exp).execute()
+        no_files = search_cloud['total_count']
+        return no_files
 
 
 # Update profile
@@ -411,10 +412,32 @@ def profile():
                            full_name=full_name,
                            current_user_id=current_user_id,
                            user_trips=user_trips,
-                           profile_pic=get_profile_pic(),
-                           cover_pic=get_cover_pic(),
+                           profile_pic=get_profile_pic,
+                           cover_pic=get_cover_pic,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures)
+
+
+# Public profile view
+@app.route('/public_profile/<trip_user>')
+def public_profile(trip_user):
+    trips = list(mongo.db.trips.find(
+        {'user': ObjectId(trip_user)}).sort("trip_startdate", -1))
+    user = mongo.db.users.find_one({'_id': ObjectId(trip_user)})
+
+    # Get full name
+    first_name = user['fname'].capitalize()
+    last_name = user['lname'].capitalize()
+    full_name = "%s %s" % (first_name, last_name)
+
+    return render_template('public_profile.html',
+                           profile_pic=get_profile_pic,
+                           cover_pic=get_cover_pic,
+                           bg_post_url=get_BGPost_pic,
+                           no_files=get_no_pictures,
+                           trips=trips,
+                           user=user,
+                           full_name=full_name)
 
 
 # Count likes
@@ -493,8 +516,8 @@ def edit_profile():
         return redirect(url_for('profile'))
 
     return render_template("edit_profile.html",
-                           profile_pic=get_profile_pic(),
-                           cover_pic=get_cover_pic(),
+                           profile_pic=get_profile_pic,
+                           cover_pic=get_cover_pic,
                            current_user=current_user)
 
 
@@ -604,8 +627,7 @@ def edit_trip(trip_id):
     countries = list(mongo.db.countries.find())
 
     return render_template('edit_trip.html',
-                           profile_pic=get_profile_pic(),
-                           cover_pic=get_cover_pic(),
+                           profile_pic=get_profile_pic,
                            current_user=current_user,
                            current_trip=current_trip,
                            countries=countries,
@@ -683,7 +705,7 @@ def feed():
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
                            user_photo=user_post_photo,
-                           profile_pic=get_profile_pic())
+                           profile_pic=get_profile_pic)
 
 
 # View to logout the user (Clear the session cookie)

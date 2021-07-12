@@ -32,7 +32,7 @@
                 <!-- Profile Photo -->
                 <div class="row no-gutters content-alignment newProfile">
                     <div class="col-12 col-lg-2 col-xl-2 content-alignment">
-                        <img class="currentProfilePic" src="{{ profile_pic }}" alt="">
+                        <img class="currentProfilePic" src="{{ profile_pic(session.user) }}" alt="">
                     </div>
                     <div class="col-8 col-lg-6 col-xl-6">
                         <label for="profile_photo" class="form-label">New Profile Picture</label>
@@ -44,7 +44,7 @@
                 <!-- New Cover Picture -->
                 <div class="row no-gutters content-alignment newCover">
                     <div class="col-12 col-lg-2 col-xl-2 content-alignment">
-                        <img class="currentCoverPic" src="{{ cover_pic }}" alt="">
+                        <img class="currentCoverPic" src="{{ cover_pic(session.user) }}" alt="">
                     </div>
                     <div class="col-8 col-lg-6 col-xl-6">
                         <label for="cover_photo" class="form-label">New Cover Picture</label>

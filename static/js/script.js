@@ -137,9 +137,9 @@ $(document).ready(() => {
 
 // Blocks the pop up asking for form resubmission on refresh
 // Code from https://www.webtrickshome.com/forum/how-to-stop-form-resubmission-on-page-refresh
-if ( window.history.replaceState ) {
-    window.history.replaceState( null, null, window.location.href );
-  };
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+};
 
 // Ajax to delete photos without refresh the page
 $(document).ready(() => {
@@ -161,8 +161,46 @@ $(document).ready(() => {
                 $(`#${imgId}`).remove();
             });
 
+            let countPrevImg = $('.imgPrevWrapper').children().length - 1;
+            if (countPrevImg > 15) {
+                $('#trip_photos').hide(500);
+            } else if (countPrevImg == 0) {
+                $(`<h3 class="text-center">No photos to show</h3>`).appendTo('#editTripPrev');
+            } else {
+                $('#trip_photos').show(500);
+            };
+
         });
     });
+
+    let countPrevImg = $('.imgPrevWrapper').children().length;
+    if (countPrevImg > 15) {
+        $('#trip_photos').hide(500);
+    } else {
+        $('#trip_photos').show(500);
+    };
+
+    $('#trip_photos').on('change', () => {
+        countInputFiles = $('#trip_photos')[0].files.length;
+        totalInputFiles = countInputFiles + countPrevImg;
+        if (totalInputFiles > 15) {
+            $('.updateTripBtn').prop('disabled', true);
+            $('.previewImages').hide(500)
+            $('.previewPicture').remove()
+            $('#trip_photos').addClass('alertValidation');
+        } else if (totalInputFiles = 0) {
+            $('.updateTripBtn').prop('disabled', false);
+            $('.previewImages').hide(500)
+            $('.previewPicture').remove()
+            $('#trip_photos').removeClass('alertValidation');
+        } else {
+            $('.updateTripBtn').prop('disabled', false);
+            $('.previewImages').show(500)
+            $('#trip_photos').removeClass('alertValidation');
+        };
+
+    });
+
 });
 
 // Open delete photo confirmation

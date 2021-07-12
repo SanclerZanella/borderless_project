@@ -33,8 +33,8 @@
                         <div class="form-group">
                             <label for="trip_name">Trip Name</label>
                             <input type="text" class="form-control" id="trip_name" name="trip_name" minlength="5"
-                                maxlenght="30" placeholder="Holidays in Rome" value="{{ current_trip['trip_name']|title }}"
-                                required>
+                                maxlenght="30" placeholder="Holidays in Rome"
+                                value="{{ current_trip['trip_name']|title }}" required>
                         </div>
                     </div>
                 </div>
@@ -93,11 +93,14 @@
                 <div class="form-row currentPhotos">
                     <div class="col">
                         <label for="editTripPrev">Current Photos</label>
+                        {% if trip_path['resources']|length > 0 %}
                         <div id="editTripPrev" class="previewCurrentImages">
                             {% for res in trip_path['resources'] %}
-                            <a id="{{ res.asset_id }}" class="delEditImg"><img
-                                    class="previewPictureEdit img-centered shakeEffect"
-                                    src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt=""></a>
+                            <div class="imgPrevWrapper">
+                                <a id="{{ res.asset_id }}" class="delEditImg"><img
+                                        class="previewPictureEdit img-centered shakeEffect"
+                                        src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt=""></a>
+                            </div>
 
                             <!-- The delete photo confirmation modal -->
                             <div class="row no-gutters">
@@ -145,6 +148,11 @@
 
                             {% endfor %}
                         </div>
+                        {% else %}
+                        <div id="editTripPrev" class="previewCurrentImages">
+                            <h3 class="text-center">No photos to show</h3>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -155,7 +163,7 @@
                             <label for="trip_photos" class="form-label">Add New Photos</label>
                             <input class="form-control" type="file" id="trip_photos" name="trip_photos"
                                 accept="image/jpg, image/jpeg, image/png" multiple />
-                            <small>*15 pictures limit</small>
+                            <small>*15 pictures limit per trip</small>
                             <small> *The first picture will be used as post background</small>
                         </div>
 
@@ -183,7 +191,7 @@
                 <!-- Submit/reset button add new trip form -->
                 <div class="form-row edit_buttons">
                     <div class="col content-alignment">
-                        <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn">Update
+                        <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn updateTripBtn">Update
                             Trip</button>
                     </div>
                 </div>

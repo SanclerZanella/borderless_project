@@ -5,8 +5,8 @@
     <!-- Cover and Profile picture  -->
     <div class="row no-gutters">
         <div class="col-12 profilePics">
-            <img class="profileCover img-centered" src="{{ cover_pic }}" alt="">
-            <img id="profilePic" src="{{ profile_pic }}" alt="">
+            <img class="profileCover img-centered" src="{{ cover_pic(session.user) }}" alt="">
+            <img id="profilePic" src="{{ profile_pic(session.user) }}" alt="">
             <div class="profileName">
                 <h2>{{ full_name }}</h2>
             </div>
@@ -82,7 +82,7 @@
                                 alt="">
                             <div class="row no-gutters">
                                 <div class="col-10">
-                                    <img class="postLinkProfilePic" src="{{ profile_pic }}" alt="">
+                                    <img class="postLinkProfilePic" src="{{ profile_pic(trip.user) }}" alt="">
                                 </div>
 
                                 <!-- Delete trip button -->
@@ -292,7 +292,7 @@
                                             <label for="trip_photos" class="form-label">Add Photos</label>
                                             <input class="form-control selectElNewTrip" type="file" id="trip_photos"
                                                 name="trip_photos" accept="image/jpg, image/jpeg, image/png" multiple />
-                                            <small>*15 pictures limit</small>
+                                            <small>*15 pictures limit per trip</small>
                                             <small> *The first picture will be used as post background</small>
                                         </div>
                                         <div id="newTripPrev" class="previewImages">

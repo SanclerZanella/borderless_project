@@ -22,7 +22,7 @@
                                 </div>
                                 {% else %}
                                 <div class="col-10">
-                                    <a href=""><img class="postLinkProfilePic shadowEffect" src="{{ user_photo(trip.user) }}"
+                                    <a href="{{ url_for('public_profile', trip_user=trip.user) }}"><img class="postLinkProfilePic shadowEffect" src="{{ user_photo(trip.user) }}"
                                             alt=""></a>
                                 </div>
                                 {% endif %}
