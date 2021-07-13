@@ -70,9 +70,24 @@
         <!-- Trips Profile Feed -->
         <div class="col-12">
             <div class="row no-gutters content-alignment">
+
+                <!-- Pagination links -->
+                <div class="col-12 pagination content-alignment">
+                    {% if page != 1 %}
+                    <a href="{{ prev_pag }}">&laquo;</a>
+                    {% endif %}
+                    {% set count = namespace(value=0) %}
+                    {% for page in range(num_pages) %}
+                    <a class="pageLink" href="{{ '/profile?limit=%s&offset=%s&page=%s' % (limit, count.value, loop.index) }}">{{ loop.index }}</a>
+                    {% set count.value = count.value + 5 %}
+                    {% endfor %}
+                    {% if num_pages != page %}
+                    <a href="{{ next_pag }}">&raquo;</a>
+                    {% endif %}
+                </div>
+
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                     <div class="row no-gutters content-alignment">
-
                         {% if user_trips|length %}
                         {% for trip in trips %}
                         {% if trip.user == current_user_id %}

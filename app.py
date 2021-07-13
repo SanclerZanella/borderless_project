@@ -1,4 +1,5 @@
 import os
+import math
 from flask import (Flask, flash,
                    render_template, redirect,
                    request, session, url_for,
@@ -393,8 +394,46 @@ def profile():
     # List of countries
     countries = list(mongo.db.countries.find())
 
-    # List of trips
-    trips = list(mongo.db.trips.find().sort("trip_startdate", -1))
+    # List of all user trips
+    trip_db = mongo.db.trips
+    all_trips = list(trip_db.find(
+        {'user': ObjectId(session['user'])}).sort('trip_startdate', -1))
+
+    # Define pagination
+    if request.args:
+        offset = int(request.args['offset'])
+        limit = int(request.args['limit'])
+        page = int(request.args['page'])
+        trips = list(trip_db.find(
+            {'user': ObjectId(
+                session['user'])}).sort(
+            'trip_startdate', -1).skip(offset).limit(limit))
+    else:
+        offset = 0
+        limit = 5
+        page = 1
+        trips = list(trip_db.find(
+            {'user': ObjectId(
+                session['user'])}).sort(
+            'trip_startdate', -1).skip(offset).limit(limit))
+
+    output = []
+    for trip in trips:
+        output.append(trip)
+
+    # List of trips per page
+    trips_pag = output
+
+    # Number of pages
+    num_pages = math.ceil(len(all_trips)/5)
+
+    prev_pag = '/profile?limit=%s&offset=%s&page=%s' % (limit,
+                                                        offset - limit,
+                                                        page - 1)
+
+    next_pag = '/profile?limit=%s&offset=%s&page=%s' % (limit,
+                                                        offset + limit,
+                                                        page + 1)
 
     # Get full name
     first_name = current_user['fname'].capitalize()
@@ -405,21 +444,27 @@ def profile():
     user_trips = []
     if len(trips):
         for trip in trips:
-            if trip['user'] == current_user_id:
-                user_trips.append(trip)
+            user_trips.append(trip)
 
-    return render_template('profile.html', countries=countries, trips=trips,
+    return render_template('profile.html', countries=countries,
+                           trips=trips_pag,
                            full_name=full_name,
                            current_user_id=current_user_id,
                            user_trips=user_trips,
                            profile_pic=get_profile_pic,
                            cover_pic=get_cover_pic,
                            bg_post_url=get_BGPost_pic,
-                           no_files=get_no_pictures)
+                           no_files=get_no_pictures,
+                           num_pages=num_pages,
+                           limit=limit,
+                           offset=offset,
+                           page=page,
+                           prev_pag=prev_pag,
+                           next_pag=next_pag)
 
 
 # Public profile view
-@app.route('/public_profile/<trip_user>')
+@ app.route('/public_profile/<trip_user>')
 def public_profile(trip_user):
     trips = list(mongo.db.trips.find(
         {'user': ObjectId(trip_user)}).sort("trip_startdate", -1))
@@ -441,7 +486,7 @@ def public_profile(trip_user):
 
 
 # Count likes
-@app.route('/likes/<trip_id>', methods=["GET", "POST"])
+@ app.route('/likes/<trip_id>', methods=["GET", "POST"])
 def likes(trip_id):
     current_user = session['user']
     trip_id = trip_id
@@ -486,7 +531,7 @@ def likes(trip_id):
 
 
 # View to execute the Feed page
-@app.route('/edit_profile', methods=["POST", "GET"])
+@ app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
     current_user = mongo.db.users.find_one({'_id': ObjectId(session['user'])})
     current_user_id = current_user['_id']
@@ -522,7 +567,7 @@ def edit_profile():
 
 
 # View to edit a trip
-@app.route('/edit_trip/<trip_id>', methods=['GET', 'POST'])
+@ app.route('/edit_trip/<trip_id>', methods=['GET', 'POST'])
 def edit_trip(trip_id):
     current_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     current_catg = current_trip['trip_category'].lower()
@@ -636,7 +681,7 @@ def edit_trip(trip_id):
 
 
 # Delete one image from cloud
-@app.route('/delete_img/<trip_id>/<filename>', methods=["GET", "POST"])
+@ app.route('/delete_img/<trip_id>/<filename>', methods=["GET", "POST"])
 def delete_img(trip_id, filename):
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     trip_user = trip['user']
@@ -654,7 +699,7 @@ def delete_img(trip_id, filename):
 
 
 # View to execute the delete_trip
-@app.route('/delete_trip/<trip_id>')
+@ app.route('/delete_trip/<trip_id>')
 def delete_trip(trip_id):
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     search_exp = (trip['trip_name']).replace(" ", " AND ")
@@ -688,7 +733,7 @@ def delete_trip(trip_id):
 
 
 # View to execute the Feed page
-@app.route('/feed', methods=["POST", "GET"])
+@ app.route('/feed', methods=["POST", "GET"])
 def feed():
     # Current user
     current_user = mongo.db.users.find_one(
@@ -709,7 +754,7 @@ def feed():
 
 
 # View to logout the user (Clear the session cookie)
-@app.route("/logout")
+@ app.route("/logout")
 def logout():
     # Remove user from session cookie
     flash("You have been logged out")
