@@ -218,3 +218,12 @@ $('.delEditImg').each((key, value) => {
         modal(delete_btn, modal_el, closeBtn);
     });
 });
+
+$('.pageLink').each((key, value) => {
+    let pageText = $(value).text();
+    let pageData = $(value).data('page');
+
+    if(pageData == pageText) {
+        $(value).addClass('active');
+    };
+});

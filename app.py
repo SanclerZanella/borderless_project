@@ -89,7 +89,6 @@ def get_BGPost_pic(user_id, trip_id):
         return post_BGpic_url
     else:
         local_img = '../static/images/default_post_cover.jpg'
-        print(local_img)
         return local_img
 
 
@@ -228,6 +227,98 @@ def update_trip_photos(trip_photos,
                                            overwrite=True,
                                            invalidate=True,
                                            use_filename=True)
+
+
+class Pagination:
+    """
+    Handle pagination
+    """
+
+    def __init__(self,
+                 db,
+                 db_field,
+                 db_field_data,
+                 sort_data,
+                 sort_direction,
+                 offset,
+                 limit):
+
+        self.db = db
+        self.db_field = db_field
+        self.db_field_data = db_field_data
+        self.sort_data = sort_data
+        self.sort_direction = sort_direction
+        self.offset = offset
+        self.limit = limit
+
+    def all_data(self):
+        """
+        Return all data in db
+        """
+        db = self.db
+        if self.db_field is None or self.db_field_data is None:
+            all_data = list(db.find().sort(
+                self.sort_data, self.sort_direction))
+        else:
+            all_data = list(db.find(
+                {self.db_field: self.db_field_data}).sort(
+                self.sort_data, self.sort_direction))
+
+        return all_data
+
+    def pag_data(self):
+        """
+        Define the number of data will
+        be shown per page
+        """
+
+        offset = int(self.offset)
+        limit = int(self.limit)
+        db = self.db
+
+        if self.db_field is None or self.db_field_data is None:
+            data = list(db.find().sort(
+                self.sort_data, self.sort_direction).skip(
+                offset).limit(limit))
+        else:
+            data = list(db.find(
+                {self.db_field: self.db_field_data}).sort(
+                self.sort_data, self.sort_direction).skip(
+                offset).limit(limit))
+
+        output = []
+        for d in data:
+            output.append(d)
+
+        return output
+
+    def num_pages(self):
+        """
+        return the number of pages
+        """
+
+        num_pages = math.ceil(len(self.all_data())/self.limit)
+
+        return num_pages
+
+    def pag_link(self, pag_name, sec_arg, limit, offset, page):
+        """
+        Return the link for each page
+        """
+
+        if sec_arg is None:
+            link = '/%s?limit=%s&offset=%s&page=%s' % (pag_name,
+                                                       limit,
+                                                       offset,
+                                                       page)
+        else:
+            link = '/%s/%s?limit=%s&offset=%s&page=%s' % (pag_name,
+                                                          sec_arg,
+                                                          limit,
+                                                          offset,
+                                                          page)
+
+        return link
 
 
 # View for landpage
@@ -394,46 +485,50 @@ def profile():
     # List of countries
     countries = list(mongo.db.countries.find())
 
-    # List of all user trips
-    trip_db = mongo.db.trips
-    all_trips = list(trip_db.find(
-        {'user': ObjectId(session['user'])}).sort('trip_startdate', -1))
+    # Pagination
+    db = mongo.db.trips
+    db_field = 'user'
+    db_field_data = ObjectId(session['user'])
+    sort_data = 'trip_startdate'
+    sort_direction = -1
 
-    # Define pagination
     if request.args:
         offset = int(request.args['offset'])
         limit = int(request.args['limit'])
         page = int(request.args['page'])
-        trips = list(trip_db.find(
-            {'user': ObjectId(
-                session['user'])}).sort(
-            'trip_startdate', -1).skip(offset).limit(limit))
+
+        profile_pag = Pagination(db,
+                                 db_field,
+                                 db_field_data,
+                                 sort_data,
+                                 sort_direction,
+                                 offset,
+                                 limit)
     else:
         offset = 0
         limit = 5
         page = 1
-        trips = list(trip_db.find(
-            {'user': ObjectId(
-                session['user'])}).sort(
-            'trip_startdate', -1).skip(offset).limit(limit))
 
-    output = []
-    for trip in trips:
-        output.append(trip)
+        profile_pag = Pagination(db,
+                                 db_field,
+                                 db_field_data,
+                                 sort_data,
+                                 sort_direction,
+                                 offset,
+                                 limit)
 
-    # List of trips per page
-    trips_pag = output
-
-    # Number of pages
-    num_pages = math.ceil(len(all_trips)/5)
-
-    prev_pag = '/profile?limit=%s&offset=%s&page=%s' % (limit,
-                                                        offset - limit,
-                                                        page - 1)
-
-    next_pag = '/profile?limit=%s&offset=%s&page=%s' % (limit,
-                                                        offset + limit,
-                                                        page + 1)
+    trips_pag = profile_pag.pag_data()
+    num_pages = profile_pag.num_pages()
+    prev_pag = profile_pag.pag_link('profile',
+                                    None,
+                                    limit,
+                                    (offset - limit),
+                                    (page - 1))
+    next_pag = profile_pag.pag_link('profile',
+                                    None,
+                                    limit,
+                                    (offset + limit),
+                                    (page + 1))
 
     # Get full name
     first_name = current_user['fname'].capitalize()
@@ -442,8 +537,8 @@ def profile():
 
     # Verify if the user has trips recorded
     user_trips = []
-    if len(trips):
-        for trip in trips:
+    if len(profile_pag.all_data()):
+        for trip in profile_pag.all_data():
             user_trips.append(trip)
 
     return render_template('profile.html', countries=countries,
@@ -460,15 +555,59 @@ def profile():
                            offset=offset,
                            page=page,
                            prev_pag=prev_pag,
-                           next_pag=next_pag)
+                           next_pag=next_pag,
+                           pag_link=profile_pag.pag_link)
 
 
 # Public profile view
 @ app.route('/public_profile/<trip_user>')
 def public_profile(trip_user):
-    trips = list(mongo.db.trips.find(
-        {'user': ObjectId(trip_user)}).sort("trip_startdate", -1))
     user = mongo.db.users.find_one({'_id': ObjectId(trip_user)})
+
+    # Pagination
+    db = mongo.db.trips
+    db_field = 'user'
+    db_field_data = ObjectId(trip_user)
+    sort_data = 'trip_startdate'
+    sort_direction = -1
+
+    if request.args:
+        offset = int(request.args['offset'])
+        limit = int(request.args['limit'])
+        page = int(request.args['page'])
+
+        pprofile_pag = Pagination(db,
+                                  db_field,
+                                  db_field_data,
+                                  sort_data,
+                                  sort_direction,
+                                  offset,
+                                  limit)
+    else:
+        offset = 0
+        limit = 5
+        page = 1
+
+        pprofile_pag = Pagination(db,
+                                  db_field,
+                                  db_field_data,
+                                  sort_data,
+                                  sort_direction,
+                                  offset,
+                                  limit)
+
+    trips_pag = pprofile_pag.pag_data()
+    num_pages = pprofile_pag.num_pages()
+    prev_pag = pprofile_pag.pag_link('public_profile',
+                                     trip_user,
+                                     limit,
+                                     (offset - limit),
+                                     (page - 1))
+    next_pag = pprofile_pag.pag_link('public_profile',
+                                     trip_user,
+                                     limit,
+                                     (offset + limit),
+                                     (page + 1))
 
     # Get full name
     first_name = user['fname'].capitalize()
@@ -480,9 +619,16 @@ def public_profile(trip_user):
                            cover_pic=get_cover_pic,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
-                           trips=trips,
+                           trips=trips_pag,
                            user=user,
-                           full_name=full_name)
+                           full_name=full_name,
+                           num_pages=num_pages,
+                           limit=limit,
+                           offset=offset,
+                           page=page,
+                           prev_pag=prev_pag,
+                           next_pag=next_pag,
+                           pag_link=pprofile_pag.pag_link)
 
 
 # Count likes
@@ -742,15 +888,65 @@ def feed():
     # Current user ID
     current_user_id = current_user['_id']
 
-    trips = list(mongo.db.trips.find().sort("_id", -1))
+    # Pagination
+    db = mongo.db.trips
+    db_field = None
+    db_field_data = None
+    sort_data = '_id'
+    sort_direction = -1
+
+    if request.args:
+        offset = int(request.args['offset'])
+        limit = int(request.args['limit'])
+        page = int(request.args['page'])
+
+        feed_pag = Pagination(db,
+                              db_field,
+                              db_field_data,
+                              sort_data,
+                              sort_direction,
+                              offset,
+                              limit)
+    else:
+        offset = 0
+        limit = 10
+        page = 1
+
+        feed_pag = Pagination(db,
+                              db_field,
+                              db_field_data,
+                              sort_data,
+                              sort_direction,
+                              offset,
+                              limit)
+
+    trips_pag = feed_pag.pag_data()
+    num_pages = feed_pag.num_pages()
+    prev_pag = feed_pag.pag_link('feed',
+                                 None,
+                                 limit,
+                                 (offset - limit),
+                                 (page - 1))
+    next_pag = feed_pag.pag_link('feed',
+                                 None,
+                                 limit,
+                                 (offset + limit),
+                                 (page + 1))
 
     return render_template("feed.html",
                            current_user_id=current_user_id,
-                           trips=trips,
+                           trips=trips_pag,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
                            user_photo=user_post_photo,
-                           profile_pic=get_profile_pic)
+                           profile_pic=get_profile_pic,
+                           num_pages=num_pages,
+                           limit=limit,
+                           offset=offset,
+                           page=page,
+                           prev_pag=prev_pag,
+                           next_pag=next_pag,
+                           pag_link=feed_pag.pag_link)
 
 
 # View to logout the user (Clear the session cookie)

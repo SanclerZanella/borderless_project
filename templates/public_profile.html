@@ -52,7 +52,8 @@
 
                 <!-- Search Reset Button -->
                 <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
-                    <a href="{{ url_for('public_profile', trip_user=user._id) }}" class="btn btn-outline-danger my-sm-0">Reset</a>
+                    <a href="{{ url_for('public_profile', trip_user=user._id) }}"
+                        class="btn btn-outline-danger my-sm-0">Reset</a>
                 </div>
 
                 <!-- Search Button -->
@@ -65,6 +66,22 @@
         <!-- Trips Profile Feed -->
         <div class="col-12">
             <div class="row no-gutters content-alignment">
+
+                <div class="col-12 pagination paginationTop content-alignment">
+                    {% if page != 1 %}
+                    <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
+                    {% endif %}
+                    {% set count = namespace(value=0) %}
+                    {% for pageNum in range(num_pages) %}
+                    <a class="pageLink page-link" data-page='{{ page }}'
+                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index }}</a>
+                    {% set count.value = count.value + 5 %}
+                    {% endfor %}
+                    {% if num_pages != page %}
+                    <a class="page-link" href="{{ next_pag }}">&raquo;</a>
+                    {% endif %}
+                </div>
+
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                     <div class="row no-gutters content-alignment">
 
@@ -130,6 +147,22 @@
 
                     </div>
                 </div>
+
+                <div class="col-12 pagination paginationBottom content-alignment">
+                    {% if page != 1 %}
+                    <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
+                    {% endif %}
+                    {% set count = namespace(value=0) %}
+                    {% for pageNum in range(num_pages) %}
+                    <a class="pageLink page-link" data-page='{{ page }}'
+                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index }}</a>
+                    {% set count.value = count.value + 5 %}
+                    {% endfor %}
+                    {% if num_pages != page %}
+                    <a class="page-link" href="{{ next_pag }}">&raquo;</a>
+                    {% endif %}
+                </div>
+
             </div>
         </div>
     </div>
