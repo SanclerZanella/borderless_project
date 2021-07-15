@@ -526,6 +526,44 @@ footer {
     margin-bottom: 1rem;
 }
 
+/* Trip */
+
+.tripWrapper {
+    background-color: #b6f8ff;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 3%;
+}
+
+div#map {
+    min-height: 50vh;
+}
+
+.tripDate {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
+.descText {
+    width: 80%;
+    background-color: #ededed;
+    padding: 1rem;
+    border-radius: 3%;
+}
+
+.tripPhotos {
+    background-color: #ededed;
+    margin: 0.5rem 0;
+    border-radius: 3%;
+}
+
+.tripPhoto {
+    width: 95%;
+    height: 25vh;
+    cursor: pointer;
+    margin: 0.5rem 0;
+}
+
 /* Media Queries */
 /* Width */
 

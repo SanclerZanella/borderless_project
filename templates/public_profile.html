@@ -100,7 +100,7 @@
 
                             <div class="row no-gutters postNameDate">
                                 <div class="col-12 text-center">
-                                    <a href="">
+                                    <a href="{{ url_for('trip', trip_id=trip._id) }}">
                                         <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')

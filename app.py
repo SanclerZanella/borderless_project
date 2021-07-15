@@ -41,6 +41,10 @@ cloudinary.config(
 )
 
 
+# Map API key
+map_key = os.environ.get("MAP_KEY")
+
+
 # Get image url from cloud
 def img_url(folder, filename):
     pic_url = cloudinary.CloudinaryImage('%s/%s' % (folder,
@@ -541,7 +545,8 @@ def profile():
         for trip in profile_pag.all_data():
             user_trips.append(trip)
 
-    return render_template('profile.html', countries=countries,
+    return render_template('profile.html',
+                           countries=countries,
                            trips=trips_pag,
                            full_name=full_name,
                            current_user_id=current_user_id,
@@ -947,6 +952,23 @@ def feed():
                            prev_pag=prev_pag,
                            next_pag=next_pag,
                            pag_link=feed_pag.pag_link)
+
+
+# View to open the trip post
+@app.route('/trip/<trip_id>')
+def trip(trip_id):
+    trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
+    resources = trip_folder_resources(trip['trip_name'])
+
+    num_photos = get_no_pictures(trip['user'], trip['_id'])
+    map = map_key
+    return render_template('trip.html',
+                           trip=trip,
+                           profile_pic=get_profile_pic,
+                           resources=resources,
+                           img_url=img_url,
+                           map=map,
+                           num_photos=num_photos)
 
 
 # View to logout the user (Clear the session cookie)
