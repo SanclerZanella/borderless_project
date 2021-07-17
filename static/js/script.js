@@ -219,6 +219,7 @@ $('.delEditImg').each((key, value) => {
     });
 });
 
+// Apply active style to pagination button
 $('.pageLink').each((key, value) => {
     let pageText = $(value).text();
     let pageData = $(value).data('page');
@@ -264,3 +265,19 @@ function createMarker(place) {
         infowindow.open(map);
     });
 }
+
+// Open photo modal
+$('.tripPhoto').each((key, value) => {
+    let button_id = $(value).attr('id');
+    let button_el = $(`#${button_id}`);
+
+    $(button_el).click(() => {
+        let closeBtn = $('.closetripPhotoModal');
+        let photo_btn_id = $(button_el).attr('id');
+        let photo_btn = $(`#${photo_btn_id}`);
+        let modal_id = `tripPhotoModal_${photo_btn_id}`;
+        let modal_el = $(`#${modal_id}`);
+
+        modal(photo_btn, modal_el, closeBtn);
+    });
+});

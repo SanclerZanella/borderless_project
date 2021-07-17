@@ -44,15 +44,60 @@
                     <h3>Photos</h3>
                     <div class="row no-gutters content-alignment">
                         <div class="col-11 tripPhotos">
+
+                            {% if num_photos != 0 %}
                             <div class="row no-gutters content-alignment">
 
                                 {% for res in resources %}
                                 <div class="col-3">
-                                    <img class="tripPhoto" src="{{ img_url(res.folder, res.filename) }}" alt="">
+                                    <img id="{{ res.asset_id }}" class="tripPhoto"
+                                        src="{{ img_url(res.folder, res.filename) }}" alt="">
                                 </div>
+
+                                <!-- Trip photo modal -->
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <div id="tripPhotoModal_{{ res.asset_id }}" class="modal tripPhotoModal">
+
+                                            <!-- Modal content -->
+                                            <div class="modal-content">
+                                                <div class="row no-gutters">
+                                                    <div class="col-2 ml-auto">
+                                                        <span class="close closetripPhotoModal">&times;</span>
+                                                    </div>
+
+                                                    <!-- Photo Modal -->
+                                                    <div class="col-12">
+                                                        <div class="row no-gutters">
+                                                            <hr>
+                                                            <div class="col-12">
+                                                                <img id="{{ res.asset_id }}" class="tripPhotoView"
+                                                                    src="{{ img_url(res.folder, res.filename) }}"
+                                                                    alt="">
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row no-gutters content-alignment">
+                                                            <div class="col-2 content-alignment">
+                                                                <button class="btn btn-danger closetripPhotoModal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {% endfor %}
 
                             </div>
+                            {% else %}
+                            <h3>No photos to show</h3>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
