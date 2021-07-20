@@ -153,6 +153,7 @@ textarea {
     padding: 8px 16px;
     text-decoration: none;
     transition: background-color .3s;
+    overflow-wrap: break-word;
 }
 
 /* Style the active/current link */
@@ -645,6 +646,11 @@ div#map {
     .currentCoverPic {
         height: 6.5vh;
     }
+
+    .previewImages .previewPicture,
+    .previewCurrentImages .previewPictureEdit {
+        width: 30%;
+    }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
@@ -674,6 +680,10 @@ div#map {
 
     .currentCoverPic {
         height: 7vh;
+    }
+    .previewImages .previewPicture,
+    .previewCurrentImages .previewPictureEdit {
+        width: 30%;
     }
 }
 
@@ -723,10 +733,9 @@ div#map {
         width: 20vw;
         height: 15vh;
     }
-
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
-        width: 33%;
+        width: 30%;
     }
 }
 
@@ -769,7 +778,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
 
     .modal-content {
@@ -789,10 +798,9 @@ div#map {
         width: 25vw;
         height: 15vh;
     }
-
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
-        width: 50%;
+        width: 28%;
     }
 }
 
@@ -844,7 +852,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
 
     .searchProfileButtons {
@@ -867,7 +875,7 @@ div#map {
 
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
-        width: 50%;
+        width: 28%;
     }
 }
 
@@ -919,7 +927,8 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 2em;
+        font-size: 1.3em;
+        overflow-wrap: break-word;
     }
 
     .searchProfileButtons {
@@ -942,8 +951,8 @@ div#map {
 
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
-        width: 50%;
-        height: 15vh;
+        width: 25%;
+        padding: 0;
     }
 }
 
@@ -1051,9 +1060,8 @@ div#map {
     .postStatistic {
         font-size: 2em;
     }
-
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
-        width: 33%;
+        width: 30%;
     }
 }

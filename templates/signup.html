@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Sign Up Form from bootstrap -->
+<div class="content-wrapper">
+    <!-- Sign Up Form from bootstrap -->
     <form method="POST" action="{{ url_for('signup') }}">
         <fieldset class="content-alignment">
             <div class="card signUpCard">
@@ -21,8 +22,8 @@
                 <div class="row no-gutters content-alignment">
                     <div class="col-8">
                         <label for="lname">Last Name</label>
-                        <input type="text" id="lname" name="lname"  minlength="5" maxlenght="15"
-                        pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Last name" required>
+                        <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
+                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Last name" required>
                     </div>
                 </div>
 
@@ -39,8 +40,7 @@
                     <div class="col-8">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" minlenght="5" maxlenght="15"
-                        pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password"
-                            required>
+                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password" required>
                     </div>
                 </div>
 
@@ -49,8 +49,7 @@
                     <div class="col-8">
                         <label for="Rpassword">Confirm Password</label>
                         <input type="password" id="Rpassword" name="Rpassword" minlenght="5" maxlenght="15"
-                        pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password"
-                            required>
+                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password" required>
                     </div>
                 </div>
 
@@ -73,4 +72,5 @@
             </p>
         </div>
     </div>
+</div>
 {% endblock %}

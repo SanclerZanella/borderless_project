@@ -97,18 +97,18 @@
                             <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
                                 alt="">
                             <div class="row no-gutters">
-                                <div class="col-10">
+                                <div class="col-8 col-md-10">
                                     <img class="postLinkProfilePic" src="{{ profile_pic(trip.user) }}" alt="">
                                 </div>
 
                                 <!-- Delete trip button -->
-                                <div class="col-1 deleteTrip">
+                                <div class="col-2 col-md-1 deleteTrip">
                                     <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
                                             class="fas fa-trash-alt shakeEffect"></i></a>
                                 </div>
 
                                 <!-- Edit trip button -->
-                                <div class="col-1 editTrip">
+                                <div class="col-2 col-md-1 editTrip">
                                     <a href="{{ url_for('edit_trip', trip_id=trip._id) }}"><i
                                             class="fas fa-pencil-alt shakeEffect"></i></a>
                                 </div>
@@ -164,10 +164,10 @@
                                                         </div>
                                                         <hr>
                                                         <div class="row no-gutters content-alignment deleteBtnModal">
-                                                            <div class="col-2 content-alignment">
+                                                            <div class="col-4 col-md-2 content-alignment">
                                                                 <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
                                                             </div>
-                                                            <div class="col-2 content-alignment">
+                                                            <div class="col-4 col-md-2 content-alignment">
                                                                 <a class="btn btn-danger"
                                                                     href="{{ url_for('delete_trip', trip_id=trip._id) }}">Delete</a>
                                                             </div>

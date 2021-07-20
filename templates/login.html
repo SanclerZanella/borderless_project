@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Login Form from bootstrap -->
+<div class="content-wrapper">
+    <!-- Login Form from bootstrap -->
     <form id="loginForm" method="POST" action="{{ url_for('login') }}">
         <fieldset class="content-alignment">
             <div class="card loginCard">
@@ -21,8 +22,7 @@
                     <div class="col-8">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" minlenght="5" maxlenght="15"
-                        pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password"
-                            required>
+                            pattern="^[a-zA-Z0-9]{5,15}$" class="form-control" placeholder="Password" required>
                     </div>
                 </div>
 
@@ -45,4 +45,5 @@
             </p>
         </div>
     </div>
+</div>
 {% endblock %}

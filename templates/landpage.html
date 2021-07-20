@@ -1,29 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row no-gutters text-center">
-    <div class="col-12 landCover">
-        <img src="{{ url_for('static', filename='images/landpage_cover.png') }}" alt="">
-    </div>
-    <div class="col-12 landTitle">
-        <img src="{{ url_for('static', filename='images/landpage_title.png') }}" alt="">
-    </div>
-    <hr>
-</div>
-<div class="row no-gutters content-alignment">
-    <div class="cardLandPage">
-        <div class="col-12 text-center">
-            <h2>Your Best Memories In One Place</h2>
+<div class="content-wrapper">
+    <div class="row no-gutters text-center">
+        <div class="col-12 landCover">
+            <img src="{{ url_for('static', filename='images/landpage_cover.png') }}" alt="">
         </div>
-        <div class="col-12 text-center content-alignment">
-            <p>Your best moments worth be a memory, BorderLess is a platform to record
-                your travels, tracks or any adventure around the world. Be without limits,
-                Be borderless, enjoy a whole world with breathtaking landscapes, different colors,
-                cultures and share with your friends with your notes, advices and suggestions. <br>
-                Start right now...
-            </p>
+        <div class="col-12 landTitle">
+            <img src="{{ url_for('static', filename='images/landpage_title.png') }}" alt="">
         </div>
-        <div class="col-12 text-center">
-            <a href="{{ url_for('signup') }}" class="btn btn-lg btn-primary signUpBtn">Sign Up!</a>
+        <hr>
+    </div>
+    <div class="row no-gutters content-alignment">
+        <div class="cardLandPage">
+            <div class="col-12 text-center">
+                <h2>Your Best Memories In One Place</h2>
+            </div>
+            <div class="col-12 text-center content-alignment">
+                <p>Your best moments worth be a memory, BorderLess is a platform to record
+                    your travels, tracks or any adventure around the world. Be without limits,
+                    Be borderless, enjoy a whole world with breathtaking landscapes, different colors,
+                    cultures and share with your friends with your notes, advices and suggestions. <br>
+                    Start right now...
+                </p>
+            </div>
+            <div class="col-12 text-center">
+                <a href="{{ url_for('signup') }}" class="btn btn-lg btn-primary signUpBtn">Sign Up!</a>
+            </div>
         </div>
     </div>
 </div>
