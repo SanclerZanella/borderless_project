@@ -48,7 +48,34 @@
                         <a class="nav-link" href="{{ url_for('feed') }}"><i class="fas fa-globe-americas"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                        <div class="dropdown dropleft">
+                            <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-item">
+
+                                    <!-- Notification container -->
+                                    <div class="row no-gutters">
+                                        <div class="col-12 notifContainer">
+                                            <div class="row no-gutters">
+                                                <div class="col-12 requestText">
+                                                    <p>Sancler sent a follow request</p>
+                                                </div>
+                                                <div class="col-6 content-alignment requestBtn">
+                                                    <button class="btn btn-danger btn-sm">Refuse</button>
+                                                </div>
+                                                <div class="col-6 content-alignment requestBtn">
+                                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='/page2'">Accept</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -59,8 +86,8 @@
                 {% if session.user %}
                 <div>
                     <div class="dropdown dropleft">
-                        <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
+                        <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
                             <img id="profileLinkPic" src="{{ profile_pic(session.user) }}" alt="Profile Link Photo">
                         </a>
 

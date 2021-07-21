@@ -350,6 +350,9 @@ def signup():
             "fname": request.form.get("fname").lower(),
             "lname": request.form.get("lname").lower(),
             "email": request.form.get("email"),
+            "following": [],
+            "followers": [],
+            "notifications": [],
             "password": generate_password_hash(request.form.get("password"))
         }
         mongo.db.users.insert_one(register)

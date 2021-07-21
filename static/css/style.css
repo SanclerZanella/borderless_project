@@ -137,6 +137,24 @@ textarea {
     filter: drop-shadow(3px 6px 9px rgb(0, 114, 114));
 }
 
+/* Notifications */
+.notifContainer {
+    background-color: #b6f8ff;
+    overflow: hidden;
+    border: 1px solid #888;
+    border-radius: 3%;
+    margin-bottom: 0.5rem;
+    height: auto;
+}
+
+.requestText {
+    margin: 0 0.5rem;
+}
+
+.requestBtn {
+    margin-bottom: 0.5rem;
+}
+
 /* Pagination */
 /* Pagination links */
 .paginationTop {
@@ -681,6 +699,7 @@ div#map {
     .currentCoverPic {
         height: 7vh;
     }
+
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
@@ -733,6 +752,7 @@ div#map {
         width: 20vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
@@ -798,6 +818,7 @@ div#map {
         width: 25vw;
         height: 15vh;
     }
+
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 28%;
@@ -1060,6 +1081,7 @@ div#map {
     .postStatistic {
         font-size: 2em;
     }
+
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
