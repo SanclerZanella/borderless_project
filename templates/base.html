@@ -56,22 +56,34 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="dropdown-item">
 
+                                    {% if notifications|length != 0 %}
+                                    {% for ntf in notifications %}
                                     <!-- Notification container -->
                                     <div class="row no-gutters">
                                         <div class="col-12 notifContainer">
                                             <div class="row no-gutters">
                                                 <div class="col-12 requestText">
-                                                    <p>Sancler sent a follow request</p>
+                                                    <p><a href="{{ url_for('public_profile', trip_user=ntf._id) }}">{{
+                                                            ntf.name }}</a> sent a follow request</p>
                                                 </div>
                                                 <div class="col-6 content-alignment requestBtn">
-                                                    <button class="btn btn-danger btn-sm">Refuse</button>
+                                                    <a class="btn btn-danger btn-sm">Refuse</a>
                                                 </div>
                                                 <div class="col-6 content-alignment requestBtn">
-                                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='/page2'">Accept</button>
+                                                    <a class="btn btn-primary btn-sm"
+                                                        href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    {% endfor %}
+                                    {% else %}
+                                    <div class="row no-gutters">
+                                        <div class="col-12 notifContainer">
+                                            <p>No notifications at the moment</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
 
                                 </div>
                             </div>

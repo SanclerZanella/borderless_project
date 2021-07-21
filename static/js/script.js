@@ -281,3 +281,33 @@ $('.tripPhoto').each((key, value) => {
         modal(photo_btn, modal_el, closeBtn);
     });
 });
+
+// Ajax to follow request
+$(document).ready(() => {
+    $('#followBtn').click((event) => {
+        event.preventDefault();
+
+        let user_id = $('#followBtn').data('id');
+        let button = $('#followBtn');
+        let buttonHtml = $('#followBtn').html();
+
+        let req = $.ajax({
+            url: `/notification/${user_id}`,
+            type: 'POST',
+            data: { user_id: user_id }
+        });
+
+        req.done((data) => {
+            if (buttonHtml == 'Follow <i class="fas fa-user-plus" aria-hidden="true"></i>') {
+                button.removeClass('btn-outline-primary');
+                button.addClass('btn-outline-warning');
+                $(button).html('Remove follow request');
+            } else {
+                button.removeClass('btn-outline-warning');
+                button.addClass('btn-outline-primary');
+                $(button).html('Follow <i class="fas fa-user-plus"></i>');
+            };
+        });
+
+    });
+});

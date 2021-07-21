@@ -148,7 +148,7 @@ textarea {
 }
 
 .requestText {
-    margin: 0 0.5rem;
+    margin: 0.5rem 0.5rem 0 0.5rem;
 }
 
 .requestBtn {
@@ -520,6 +520,15 @@ footer {
 
 .newCover {
     margin-bottom: 1rem;
+}
+
+/* Public Profile */
+#followBtn {
+    margin-top: 1rem;
+}
+
+#followBtn:hover {
+    color: #fff;
 }
 
 /* Edit trip page */

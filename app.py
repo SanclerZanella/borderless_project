@@ -49,7 +49,7 @@ map_key = os.environ.get("MAP_KEY")
 def img_url(folder, filename):
     pic_url = cloudinary.CloudinaryImage('%s/%s' % (folder,
                                                     filename)).url
-    return pic_url
+    # return pic_url
 
 
 # Get profile picture url
@@ -62,7 +62,7 @@ def get_profile_pic(user_id):
     profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
     profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
 
-    return profile_pic_url
+    # return profile_pic_url
 
 
 # Get cover picture url
@@ -75,7 +75,7 @@ def get_cover_pic(user_id):
     cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
     cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
 
-    return cover_pic_url
+    # return cover_pic_url
 
 
 # Get trip post link background picture url
@@ -90,10 +90,10 @@ def get_BGPost_pic(user_id, trip_id):
         res = trip_path['resources'][-1]
         first_pic = res['public_id']
         post_BGpic_url = cloudinary.CloudinaryImage('%s.jpg' % first_pic).url
-        return post_BGpic_url
+        # return post_BGpic_url
     else:
         local_img = '../static/images/default_post_cover.jpg'
-        return local_img
+        # return local_img
 
 
 # Get number of pictures in a folder
@@ -328,8 +328,14 @@ class Pagination:
 # View for landpage
 @app.route("/")
 def landpage():
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    notifications = current_user['notifications']
+
     if 'user' not in session:
-        return render_template("landpage.html")
+        return render_template("landpage.html",
+                               notifications=notifications)
     else:
         return redirect(url_for('profile'))
 
@@ -548,6 +554,8 @@ def profile():
         for trip in profile_pag.all_data():
             user_trips.append(trip)
 
+    notifications = current_user['notifications']
+
     return render_template('profile.html',
                            countries=countries,
                            trips=trips_pag,
@@ -564,7 +572,8 @@ def profile():
                            page=page,
                            prev_pag=prev_pag,
                            next_pag=next_pag,
-                           pag_link=profile_pag.pag_link)
+                           pag_link=profile_pag.pag_link,
+                           notifications=notifications)
 
 
 # Public profile view
@@ -622,6 +631,21 @@ def public_profile(trip_user):
     last_name = user['lname'].capitalize()
     full_name = "%s %s" % (first_name, last_name)
 
+    # Get notifications for the current user
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    notifications = current_user['notifications']
+
+    # Public profile user
+    user = mongo.db.users.find_one(
+        {'_id': ObjectId(trip_user)})
+    user_ntf = user['notifications']
+
+    ntf_id = []
+    for ntf in range(len(user_ntf)):
+        ntf_id.append(user_ntf[ntf]['_id'])
+
     return render_template('public_profile.html',
                            profile_pic=get_profile_pic,
                            cover_pic=get_cover_pic,
@@ -636,7 +660,9 @@ def public_profile(trip_user):
                            page=page,
                            prev_pag=prev_pag,
                            next_pag=next_pag,
-                           pag_link=pprofile_pag.pag_link)
+                           pag_link=pprofile_pag.pag_link,
+                           notifications=notifications,
+                           ntf_id=ntf_id)
 
 
 # Count likes
@@ -714,10 +740,13 @@ def edit_profile():
         flash('Profile Updated')
         return redirect(url_for('profile'))
 
+    notifications = current_user['notifications']
+
     return render_template("edit_profile.html",
                            profile_pic=get_profile_pic,
                            cover_pic=get_cover_pic,
-                           current_user=current_user)
+                           current_user=current_user,
+                           notifications=notifications)
 
 
 # View to edit a trip
@@ -825,13 +854,19 @@ def edit_trip(trip_id):
     # List of countries
     countries = list(mongo.db.countries.find())
 
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    notifications = current_user['notifications']
+
     return render_template('edit_trip.html',
                            profile_pic=get_profile_pic,
                            current_user=current_user,
                            current_trip=current_trip,
                            countries=countries,
                            trip_path=trip_path,
-                           img_url=img_url)
+                           img_url=img_url,
+                           notifications=notifications)
 
 
 # Delete one image from cloud
@@ -941,6 +976,8 @@ def feed():
                                  (offset + limit),
                                  (page + 1))
 
+    notifications = current_user['notifications']
+
     return render_template("feed.html",
                            current_user_id=current_user_id,
                            trips=trips_pag,
@@ -954,7 +991,8 @@ def feed():
                            page=page,
                            prev_pag=prev_pag,
                            next_pag=next_pag,
-                           pag_link=feed_pag.pag_link)
+                           pag_link=feed_pag.pag_link,
+                           notifications=notifications)
 
 
 # View to open the trip post
@@ -965,17 +1003,77 @@ def trip(trip_id):
 
     num_photos = get_no_pictures(trip['user'], trip['_id'])
     map = map_key
+
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    notifications = current_user['notifications']
+
     return render_template('trip.html',
                            trip=trip,
                            profile_pic=get_profile_pic,
                            resources=resources,
                            img_url=img_url,
                            map=map,
-                           num_photos=num_photos)
+                           num_photos=num_photos,
+                           notifications=notifications)
+
+
+# Notifications
+@app.route("/notification/<user_id>", methods=["POST", "GET"])
+def notification(user_id):
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    user = mongo.db.users.find_one(
+        {'_id': ObjectId(user_id)})
+    ntf_user = user['notifications']
+
+    ntf = {
+        '_id': current_user_id,
+        'name': current_user['fname'].capitalize()
+    }
+
+    if len(ntf_user) > 0:
+        for notif in ntf_user:
+            # Add notification
+            if session['user'] != notif['_id']:
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$push': {
+                        'notifications': ntf
+                    }})
+
+            # Remove notification
+            else:
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$pull': {
+                        'notifications': ntf
+                    }})
+    else:
+        # Add notification
+        mongo.db.users.update({'_id': ObjectId(user_id)}, {
+            '$push': {
+                'notifications': ntf
+            }})
+
+    return jsonify({
+        'result': 'success',
+        'user_id': user_id,
+        'current_user': current_user_id
+    })
+
+
+# Follow request
+@app.route("/follow_request/<user_id>")
+def follow_request(user_id):
+    return jsonify({
+        'result': 'success',
+        'user': user_id
+    })
 
 
 # View to logout the user (Clear the session cookie)
-@ app.route("/logout")
+@app.route("/logout")
 def logout():
     # Remove user from session cookie
     flash("You have been logged out")
