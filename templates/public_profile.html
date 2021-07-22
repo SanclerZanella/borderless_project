@@ -64,13 +64,20 @@
         </form>
 
         <!-- Follow/Unfollow Button -->
-        {% if session.user not in ntf_id %}
+        {% if session.user not in ntf_id and session.user not in user_followers %}
         <div class="col-12 content-alignment">
-            <a href="{{ url_for('notification', user_id=user._id) }}" id="followBtn" class="btn btn-outline-primary" data-id="{{ user._id }}">Follow <i class="fas fa-user-plus"></i></a>
+            <a href="{{ url_for('notification', user_id=user._id) }}" id="followBtn" class="btn btn-outline-primary"
+                data-id="{{ user._id }}">Follow <i class="fas fa-user-plus"></i></a>
         </div>
-        {% else %}
+        {% elif session.user not in ntf_id and session.user in user_followers %}
         <div class="col-12 content-alignment">
-            <a href="{{ url_for('notification', user_id=user._id) }}" id="followBtn" class="btn btn-outline-warning" data-id="{{ user._id }}">Remove follow request</a>
+            <a href="" id="followBtn" class="btn btn-outline-primary" data-id="{{ user._id }}">Unfollow <i
+                    class="fas fa-user-plus"></i></a>
+        </div>
+        {% elif session.user in ntf_id %}
+        <div class="col-12 content-alignment">
+            <a href="{{ url_for('notification', user_id=user._id) }}" id="followBtn" class="btn btn-outline-warning"
+                data-id="{{ user._id }}">Remove follow request</a>
         </div>
         {% endif %}
 

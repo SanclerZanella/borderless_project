@@ -311,3 +311,33 @@ $(document).ready(() => {
 
     });
 });
+
+// Ajax to delete photos without refresh the page
+$(document).ready(() => {
+    $('.accept_btn').each((key, value) => {
+        $(value).click((event) => {
+            event.preventDefault();
+
+            let button = $(value);
+            let user_id = $(value).data('id');
+            let ntf_id;
+
+            $('.notification').each((key, value) => {
+                $(value).click(() => {
+                    ntf_id = $(value).attr('id');
+                });
+            });
+
+            let req = $.ajax({
+                url: `/follow_request/${user_id}`,
+                type: 'POST',
+                data: { user: user_id }
+            });
+
+            req.done((data) => {
+                $(`#${ntf_id}`).remove();
+            });
+
+        });
+    });
+});

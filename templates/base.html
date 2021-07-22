@@ -59,7 +59,7 @@
                                     {% if notifications|length != 0 %}
                                     {% for ntf in notifications %}
                                     <!-- Notification container -->
-                                    <div class="row no-gutters">
+                                    <div id="ntf_{{ ntf._id }}" class="row no-gutters notification">
                                         <div class="col-12 notifContainer">
                                             <div class="row no-gutters">
                                                 <div class="col-12 requestText">
@@ -70,8 +70,8 @@
                                                     <a class="btn btn-danger btn-sm">Refuse</a>
                                                 </div>
                                                 <div class="col-6 content-alignment requestBtn">
-                                                    <a class="btn btn-primary btn-sm"
-                                                        href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
+                                                    <a id="accept_btn_{{ ntf._id }}" class="btn btn-primary btn-sm accept_btn"
+                                                        data-id="{{ ntf._id }}" href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
                                                 </div>
                                             </div>
                                         </div>

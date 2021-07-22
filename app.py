@@ -49,7 +49,7 @@ map_key = os.environ.get("MAP_KEY")
 def img_url(folder, filename):
     pic_url = cloudinary.CloudinaryImage('%s/%s' % (folder,
                                                     filename)).url
-    # return pic_url
+    return pic_url
 
 
 # Get profile picture url
@@ -62,7 +62,7 @@ def get_profile_pic(user_id):
     profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
     profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
 
-    # return profile_pic_url
+    return profile_pic_url
 
 
 # Get cover picture url
@@ -75,7 +75,7 @@ def get_cover_pic(user_id):
     cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
     cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
 
-    # return cover_pic_url
+    return cover_pic_url
 
 
 # Get trip post link background picture url
@@ -90,10 +90,10 @@ def get_BGPost_pic(user_id, trip_id):
         res = trip_path['resources'][-1]
         first_pic = res['public_id']
         post_BGpic_url = cloudinary.CloudinaryImage('%s.jpg' % first_pic).url
-        # return post_BGpic_url
+        return post_BGpic_url
     else:
         local_img = '../static/images/default_post_cover.jpg'
-        # return local_img
+        return local_img
 
 
 # Get number of pictures in a folder
@@ -328,14 +328,8 @@ class Pagination:
 # View for landpage
 @app.route("/")
 def landpage():
-    current_user_id = session['user']
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(current_user_id)})
-    notifications = current_user['notifications']
-
     if 'user' not in session:
-        return render_template("landpage.html",
-                               notifications=notifications)
+        return render_template("landpage.html")
     else:
         return redirect(url_for('profile'))
 
@@ -638,9 +632,8 @@ def public_profile(trip_user):
     notifications = current_user['notifications']
 
     # Public profile user
-    user = mongo.db.users.find_one(
-        {'_id': ObjectId(trip_user)})
     user_ntf = user['notifications']
+    user_followers = user['followers']
 
     ntf_id = []
     for ntf in range(len(user_ntf)):
@@ -662,7 +655,8 @@ def public_profile(trip_user):
                            next_pag=next_pag,
                            pag_link=pprofile_pag.pag_link,
                            notifications=notifications,
-                           ntf_id=ntf_id)
+                           ntf_id=ntf_id,
+                           user_followers=user_followers)
 
 
 # Count likes
@@ -710,7 +704,7 @@ def likes(trip_id):
                     'count_likes': count_likes})
 
 
-# View to execute the Feed page
+# View to edit profile
 @ app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
     current_user = mongo.db.users.find_one({'_id': ObjectId(session['user'])})
@@ -1064,8 +1058,66 @@ def notification(user_id):
 
 
 # Follow request
-@app.route("/follow_request/<user_id>")
+@app.route("/follow_request/<user_id>", methods=["POST", "GET"])
 def follow_request(user_id):
+    current_user_id = session['user']
+    current_user = mongo.db.users.find_one(
+        {'_id': ObjectId(current_user_id)})
+    user = mongo.db.users.find_one(
+        {'_id': ObjectId(user_id)})
+    rqt_user = current_user['followers']
+
+    flwg = current_user_id
+    flwr = user_id
+
+    ntf = {
+        '_id': user_id,
+        'name': user['fname'].capitalize()
+    }
+
+    if len(rqt_user) > 0:
+        for req in rqt_user:
+            if current_user_id != req:
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$push': {
+                        'following': flwg
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                    '$push': {
+                        'followers': flwr
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                    '$pull': {
+                        'notifications': ntf
+                    }})
+            else:
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$pull': {
+                        'following': flwg
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                    '$pull': {
+                        'followers': flwr
+                    }})
+    else:
+        mongo.db.users.update({'_id': ObjectId(user_id)}, {
+            '$push': {
+                'following': flwg
+            }})
+
+        mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+            '$push': {
+                'followers': flwr
+            }})
+
+        mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+            '$pull': {
+                'notifications': ntf
+            }})
+
     return jsonify({
         'result': 'success',
         'user': user_id
