@@ -244,6 +244,11 @@ a.navSmFont:hover {
     color: #fff !important;
 }
 
+.requestBtn a {
+    color: #fff !important;
+    line-height: 1.5;
+}
+
 /* Landpage */
 .landCover {
     margin-top: 2rem;
@@ -523,11 +528,13 @@ footer {
 }
 
 /* Public Profile */
-#followBtn {
+#followBtn,
+#unFollowBtn {
     margin-top: 1rem;
 }
 
-#followBtn:hover {
+#followBtn:hover,
+#unFollowBtn:hover {
     color: #fff;
 }
 

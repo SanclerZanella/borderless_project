@@ -71,10 +71,9 @@
         </div>
         {% elif session.user not in ntf_id and session.user in user_followers %}
         <div class="col-12 content-alignment">
-            <a href="" id="followBtn" class="btn btn-outline-primary" data-id="{{ user._id }}">Unfollow <i
-                    class="fas fa-user-plus"></i></a>
+            <a href="{{ url_for('follow_request', user_id=user._id) }}" id="unFollowBtn" data-id="{{ user._id }}" class="btn btn-outline-warning accept_btn">Unfollow <i class="fas fa-user-minus"></i></a>
         </div>
-        {% elif session.user in ntf_id %}
+        {% elif session.user in ntf_id and session.user not in user_followers %}
         <div class="col-12 content-alignment">
             <a href="{{ url_for('notification', user_id=user._id) }}" id="followBtn" class="btn btn-outline-warning"
                 data-id="{{ user._id }}">Remove follow request</a>

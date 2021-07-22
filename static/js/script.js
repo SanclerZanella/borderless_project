@@ -305,14 +305,14 @@ $(document).ready(() => {
             } else {
                 button.removeClass('btn-outline-warning');
                 button.addClass('btn-outline-primary');
-                $(button).html('Follow <i class="fas fa-user-plus"></i>');
+                $(button).html('Follow <i class="fas fa-user-plus aria-hidden="true""></i>');
             };
         });
 
     });
 });
 
-// Ajax to delete photos without refresh the page
+
 $(document).ready(() => {
     $('.accept_btn').each((key, value) => {
         $(value).click((event) => {
@@ -320,6 +320,7 @@ $(document).ready(() => {
 
             let button = $(value);
             let user_id = $(value).data('id');
+            let btn_html = $(value).html();
             let ntf_id;
 
             $('.notification').each((key, value) => {
@@ -336,6 +337,22 @@ $(document).ready(() => {
 
             req.done((data) => {
                 $(`#${ntf_id}`).remove();
+
+
+                if (btn_html == 'Unfollow <i class="fas fa-user-minus" aria-hidden="true"></i>') {
+                    button.removeClass('btn-outline-warning');
+                    button.addClass('btn-outline-primary');
+                    $(button).html('Follow <i class="fas fa-user-plus" aria-hidden="true"></i>');
+                    $(button).attr('href', `/notification/${user_id}`);
+                } else if (btn_html == 'Follow <i class="fas fa-user-plus" aria-hidden="true"></i>') {
+                    button.removeClass('btn-outline-primary');
+                    button.addClass('btn-outline-warning');
+                    $(button).html('Remove follow request');
+                } else if (btn_html == 'Remove follow request') {
+                    button.removeClass('btn-outline-warning');
+                    button.addClass('btn-outline-primary');
+                    $(button).html('Follow <i class="fas fa-user-plus" aria-hidden="true"></i>');
+                };
             });
 
         });

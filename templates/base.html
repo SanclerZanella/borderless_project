@@ -47,6 +47,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('feed') }}"><i class="fas fa-globe-americas"></i></a>
                     </li>
+                    {% if notifications|length != 0 %}
                     <li class="nav-item">
                         <div class="dropdown dropleft">
                             <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
@@ -55,8 +56,6 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <div class="dropdown-item">
-
-                                    {% if notifications|length != 0 %}
                                     {% for ntf in notifications %}
                                     <!-- Notification container -->
                                     <div id="ntf_{{ ntf._id }}" class="row no-gutters notification">
@@ -70,25 +69,41 @@
                                                     <a class="btn btn-danger btn-sm">Refuse</a>
                                                 </div>
                                                 <div class="col-6 content-alignment requestBtn">
-                                                    <a id="accept_btn_{{ ntf._id }}" class="btn btn-primary btn-sm accept_btn"
-                                                        data-id="{{ ntf._id }}" href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
+                                                    <a id="accept_btn_{{ ntf._id }}"
+                                                        class="btn btn-primary btn-sm accept_btn"
+                                                        data-id="{{ ntf._id }}"
+                                                        href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
-                                    {% else %}
-                                    <div class="row no-gutters">
-                                        <div class="col-12 notifContainer">
-                                            <p>No notifications at the moment</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <div class="dropdown dropleft">
+                            <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="far fa-bell"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-item">
+
+                                    <!-- Notification container -->
+                                    <div  class="row no-gutters notification">
+                                        <div class="col-12">
+                                            <p class="text-center">No notifications at the moment</p>
                                         </div>
                                     </div>
-                                    {% endif %}
 
                                 </div>
                             </div>
                         </div>
                     </li>
+                    {% endif %}
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>

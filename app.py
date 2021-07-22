@@ -634,6 +634,7 @@ def public_profile(trip_user):
     # Public profile user
     user_ntf = user['notifications']
     user_followers = user['followers']
+    current_user_followers = current_user['followers']
 
     ntf_id = []
     for ntf in range(len(user_ntf)):
@@ -656,7 +657,8 @@ def public_profile(trip_user):
                            pag_link=pprofile_pag.pag_link,
                            notifications=notifications,
                            ntf_id=ntf_id,
-                           user_followers=user_followers)
+                           user_followers=user_followers,
+                           current_user_followers=current_user_followers)
 
 
 # Count likes
@@ -1065,7 +1067,8 @@ def follow_request(user_id):
         {'_id': ObjectId(current_user_id)})
     user = mongo.db.users.find_one(
         {'_id': ObjectId(user_id)})
-    rqt_user = current_user['followers']
+    rqt_current_user = current_user['followers']
+    user_followers = user['followers']
 
     flwg = current_user_id
     flwr = user_id
@@ -1075,33 +1078,32 @@ def follow_request(user_id):
         'name': user['fname'].capitalize()
     }
 
-    if len(rqt_user) > 0:
-        for req in rqt_user:
-            if current_user_id != req:
-                mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                    '$push': {
-                        'following': flwg
-                    }})
+    if len(rqt_current_user) > 0:
+        if user_id not in rqt_current_user:
+            mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                '$push': {
+                    'following': flwg
+                }})
 
-                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                    '$push': {
-                        'followers': flwr
-                    }})
+            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                '$push': {
+                    'followers': flwr
+                }})
 
-                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                    '$pull': {
-                        'notifications': ntf
-                    }})
-            else:
-                mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                    '$pull': {
-                        'following': flwg
-                    }})
+            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                '$pull': {
+                    'notifications': ntf
+                }})
+        else:
+            mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                '$pull': {
+                    'followers': flwg
+                }})
 
-                mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                    '$pull': {
-                        'followers': flwr
-                    }})
+            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
+                '$pull': {
+                    'following': flwr
+                }})
     else:
         mongo.db.users.update({'_id': ObjectId(user_id)}, {
             '$push': {
