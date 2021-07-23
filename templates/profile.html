@@ -71,6 +71,7 @@
         <div class="col-12">
             <div class="row no-gutters content-alignment">
 
+                {% if user_trips|length > 0 %}
                 <!-- Pagination links top -->
                 <div class="col-12 pagination paginationTop content-alignment">
                     {% if page != 1 %}
@@ -86,6 +87,7 @@
                     <a class="page-link" href="{{ next_pag }}">&raquo;</a>
                     {% endif %}
                 </div>
+                {% endif %}
 
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                     <div class="row no-gutters content-alignment">
@@ -205,6 +207,7 @@
                     </div>
                 </div>
 
+                {% if user_trips|length > 0 %}
                 <!-- Pagination links bottom -->
                 <div class="col-12 pagination paginationBottom content-alignment">
                     {% if page != 1 %}
@@ -221,6 +224,7 @@
                     <a class="page-link" href="{{ next_pag }}">&raquo;</a>
                     {% endif %}
                 </div>
+                {% endif %}
 
             </div>
         </div>

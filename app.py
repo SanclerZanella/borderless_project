@@ -326,12 +326,88 @@ class Pagination:
 
 
 # View for landpage
-@app.route("/")
-def landpage():
-    if 'user' not in session:
-        return render_template("landpage.html")
+@app.route("/", methods=["GET", "POST"])
+def feed():
+
+    if session.get('user'):
+        # Current user
+        current_user = mongo.db.users.find_one(
+            {'_id': ObjectId(session['user'])})
+
+        # Current user ID
+        current_user_id = current_user['_id']
+
+        notifications = current_user['notifications']
     else:
-        return redirect(url_for('profile'))
+        current_user_id = None
+        notifications = None
+
+    # Pagination
+    db = mongo.db.trips
+    db_field = None
+    db_field_data = None
+    sort_data = '_id'
+    sort_direction = -1
+
+    if request.args:
+        offset = int(request.args['offset'])
+        limit = int(request.args['limit'])
+        page = int(request.args['page'])
+
+        feed_pag = Pagination(db,
+                              db_field,
+                              db_field_data,
+                              sort_data,
+                              sort_direction,
+                              offset,
+                              limit)
+    else:
+        offset = 0
+        limit = 10
+        page = 1
+
+        feed_pag = Pagination(db,
+                              db_field,
+                              db_field_data,
+                              sort_data,
+                              sort_direction,
+                              offset,
+                              limit)
+
+    trips_pag = feed_pag.pag_data()
+    num_pages = feed_pag.num_pages()
+    prev_pag = feed_pag.pag_link('feed',
+                                 None,
+                                 limit,
+                                 (offset - limit),
+                                 (page - 1))
+    next_pag = feed_pag.pag_link('feed',
+                                 None,
+                                 limit,
+                                 (offset + limit),
+                                 (page + 1))
+
+    return render_template("feed.html",
+                           current_user_id=current_user_id,
+                           trips=trips_pag,
+                           bg_post_url=get_BGPost_pic,
+                           no_files=get_no_pictures,
+                           user_photo=user_post_photo,
+                           num_pages=num_pages,
+                           limit=limit,
+                           offset=offset,
+                           page=page,
+                           prev_pag=prev_pag,
+                           next_pag=next_pag,
+                           pag_link=feed_pag.pag_link,
+                           notifications=notifications,
+                           profile_pic=get_profile_pic)
+
+
+# Open about page
+@app.route("/about", methods=["GET", "POST"])
+def about():
+    return render_template("landpage.html")
 
 
 # View for Sign Up Page
@@ -344,14 +420,14 @@ def signup():
 
         if existing_user:
             flash("User already exists")
-            return redirect(url_for("signup"))
+            return redirect(request.referrer)
 
         register = {
             "fname": request.form.get("fname").lower(),
             "lname": request.form.get("lname").lower(),
             "email": request.form.get("email"),
-            "following": [],
             "followers": [],
+            "following": [],
             "notifications": [],
             "password": generate_password_hash(request.form.get("password"))
         }
@@ -388,7 +464,7 @@ def signup():
 
         return redirect(url_for("profile"))
 
-    return render_template("signup.html")
+    return redirect(request.referrer)
 
 
 # View to execute the login page and form (Read from DB)
@@ -397,12 +473,12 @@ def login():
     if request.method == "POST":
         # Check if the username exists in database
         existing_user = mongo.db.users.find_one(
-            {"email": request.form.get("email")})
+            {"email": request.form.get("emailL")})
 
         if existing_user:
             # Ensure hashed password matches user input
             if check_password_hash(
-                    existing_user["password"], request.form.get("password")):
+                    existing_user["password"], request.form.get("passwordL")):
                 session["user"] = str(existing_user["_id"])
                 flash("Welcome, {}".format(
                     existing_user["fname"].capitalize()))
@@ -411,14 +487,14 @@ def login():
             else:
                 # Invalid password
                 flash("Incorrect username and/or password")
-                return redirect(url_for("login"))
+                return redirect(request.referrer)
 
         else:
             # Username doesn't exist
-            flash("Incorrect username and/or password")
-            return redirect(url_for("login"))
+            flash("Incorrect email and/or password")
+            return redirect(request.referrer)
 
-    return render_template("login.html")
+    return redirect(request.referrer)
 
 
 # View to execute the profile
@@ -571,7 +647,7 @@ def profile():
 
 
 # Public profile view
-@ app.route('/public_profile/<trip_user>')
+@ app.route('/public_profile/<trip_user>', methods=["GET", "POST"])
 def public_profile(trip_user):
     user = mongo.db.users.find_one({'_id': ObjectId(trip_user)})
 
@@ -626,15 +702,19 @@ def public_profile(trip_user):
     full_name = "%s %s" % (first_name, last_name)
 
     # Get notifications for the current user
-    current_user_id = session['user']
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(current_user_id)})
-    notifications = current_user['notifications']
+    if session.get('user'):
+        current_user_id = session['user']
+        current_user = mongo.db.users.find_one(
+            {'_id': ObjectId(current_user_id)})
+        notifications = current_user['notifications']
+        current_user_followers = current_user['followers']
+    else:
+        notifications = None
+        current_user_followers = None
 
     # Public profile user
     user_ntf = user['notifications']
     user_followers = user['followers']
-    current_user_followers = current_user['followers']
 
     ntf_id = []
     for ntf in range(len(user_ntf)):
@@ -917,82 +997,8 @@ def delete_trip(trip_id):
     return redirect(request.referrer)
 
 
-# View to execute the Feed page
-@ app.route('/feed', methods=["POST", "GET"])
-def feed():
-    # Current user
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(session['user'])})
-
-    # Current user ID
-    current_user_id = current_user['_id']
-
-    # Pagination
-    db = mongo.db.trips
-    db_field = None
-    db_field_data = None
-    sort_data = '_id'
-    sort_direction = -1
-
-    if request.args:
-        offset = int(request.args['offset'])
-        limit = int(request.args['limit'])
-        page = int(request.args['page'])
-
-        feed_pag = Pagination(db,
-                              db_field,
-                              db_field_data,
-                              sort_data,
-                              sort_direction,
-                              offset,
-                              limit)
-    else:
-        offset = 0
-        limit = 10
-        page = 1
-
-        feed_pag = Pagination(db,
-                              db_field,
-                              db_field_data,
-                              sort_data,
-                              sort_direction,
-                              offset,
-                              limit)
-
-    trips_pag = feed_pag.pag_data()
-    num_pages = feed_pag.num_pages()
-    prev_pag = feed_pag.pag_link('feed',
-                                 None,
-                                 limit,
-                                 (offset - limit),
-                                 (page - 1))
-    next_pag = feed_pag.pag_link('feed',
-                                 None,
-                                 limit,
-                                 (offset + limit),
-                                 (page + 1))
-
-    notifications = current_user['notifications']
-
-    return render_template("feed.html",
-                           current_user_id=current_user_id,
-                           trips=trips_pag,
-                           bg_post_url=get_BGPost_pic,
-                           no_files=get_no_pictures,
-                           user_photo=user_post_photo,
-                           profile_pic=get_profile_pic,
-                           num_pages=num_pages,
-                           limit=limit,
-                           offset=offset,
-                           page=page,
-                           prev_pag=prev_pag,
-                           next_pag=next_pag,
-                           pag_link=feed_pag.pag_link,
-                           notifications=notifications)
-
-
 # View to open the trip post
-@app.route('/trip/<trip_id>')
+@app.route('/trip/<trip_id>', methods=["GET", "POST"])
 def trip(trip_id):
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     resources = trip_folder_resources(trip['trip_name'])
@@ -1000,10 +1006,13 @@ def trip(trip_id):
     num_photos = get_no_pictures(trip['user'], trip['_id'])
     map = map_key
 
-    current_user_id = session['user']
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(current_user_id)})
-    notifications = current_user['notifications']
+    if session.get('user'):
+        current_user_id = session['user']
+        current_user = mongo.db.users.find_one(
+            {'_id': ObjectId(current_user_id)})
+        notifications = current_user['notifications']
+    else:
+        notifications = None
 
     return render_template('trip.html',
                            trip=trip,
@@ -1132,7 +1141,7 @@ def logout():
     # Remove user from session cookie
     flash("You have been logged out")
     session.pop("user")
-    return redirect(url_for("login"))
+    return redirect(url_for("feed"))
 
 
 # Define host and port for the app

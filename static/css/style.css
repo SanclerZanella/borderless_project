@@ -232,6 +232,7 @@ a.navSmFont:hover {
 .nav-item a {
     color: rgb(0, 155, 155) !important;
     line-height: 42px;
+    cursor: pointer;
 }
 
 .nav-item i:hover,
@@ -283,7 +284,7 @@ a.navSmFont:hover {
 
 .card {
     background-color: #b6f8ff;
-    width: 50vw;
+    width: 100%;
     height: 100%;
     margin: 2.3rem 0;
 }
@@ -300,10 +301,6 @@ a.navSmFont:hover {
 .logOutBottomText p,
 .logInBottomText p {
     font-weight: 600;
-}
-
-#loginForm {
-    margin: 5rem 0;
 }
 
 /* Footer */
@@ -662,7 +659,7 @@ div#map {
     }
 
     .loginCard {
-        margin: 5rem 0;
+        margin: 0;
     }
 
     #profilePic {

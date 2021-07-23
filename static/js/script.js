@@ -358,3 +358,25 @@ $(document).ready(() => {
         });
     });
 });
+
+// Open sign up modal
+$('#signUpBtn').click((event) => {
+    event.preventDefault();
+
+    let closeBtn = $('.closeSignUp');
+    let signUp_btn = $('#signUpBtn');
+    let modal_el = $('#signUp');
+
+    modal(signUp_btn, modal_el, closeBtn);
+});
+
+// Open login modal
+$('#loginBtn').click((event) => {
+    event.preventDefault();
+
+    let closeBtn = $('.closeLogin');
+    let login_btn = $('#loginBtn');
+    let modal_el = $('#login');
+
+    modal(login_btn, modal_el, closeBtn);
+});
