@@ -49,7 +49,7 @@ map_key = os.environ.get("MAP_KEY")
 def img_url(folder, filename):
     pic_url = cloudinary.CloudinaryImage('%s/%s' % (folder,
                                                     filename)).url
-    return pic_url
+    # return pic_url
 
 
 # Get profile picture url
@@ -62,7 +62,7 @@ def get_profile_pic(user_id):
     profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
     profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
 
-    return profile_pic_url
+    # return profile_pic_url
 
 
 # Get cover picture url
@@ -75,7 +75,7 @@ def get_cover_pic(user_id):
     cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
     cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
 
-    return cover_pic_url
+    # return cover_pic_url
 
 
 # Get trip post link background picture url
@@ -90,10 +90,10 @@ def get_BGPost_pic(user_id, trip_id):
         res = trip_path['resources'][-1]
         first_pic = res['public_id']
         post_BGpic_url = cloudinary.CloudinaryImage('%s.jpg' % first_pic).url
-        return post_BGpic_url
+        # return post_BGpic_url
     else:
         local_img = '../static/images/default_post_cover.jpg'
-        return local_img
+        # return local_img
 
 
 # Get number of pictures in a folder

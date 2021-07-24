@@ -360,14 +360,16 @@ $(document).ready(() => {
 });
 
 // Open sign up modal
-$('#signUpBtn').click((event) => {
-    event.preventDefault();
+$('.signUpBtn').each((key, value) => {
+    $(value).click((event) => {
+        event.preventDefault();
 
-    let closeBtn = $('.closeSignUp');
-    let signUp_btn = $('#signUpBtn');
-    let modal_el = $('#signUp');
+        let closeBtn = $('.closeSignUp');
+        let signUp_btn = $(value);
+        let modal_el = $('#signUp');
 
-    modal(signUp_btn, modal_el, closeBtn);
+        modal(signUp_btn, modal_el, closeBtn);
+    });
 });
 
 // Open login modal

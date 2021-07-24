@@ -386,6 +386,16 @@ footer {
     height: 100%;
 }
 
+.jumbotron {
+    background-color: #86bac0;
+    margin-top: 1rem
+}
+
+.feedTitle {
+    font-weight: 700;
+    margin-top: 1rem
+}
+
 .profileNavItem,
 .addTripBtn {
     cursor: pointer;

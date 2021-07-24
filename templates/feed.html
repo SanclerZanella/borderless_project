@@ -6,6 +6,21 @@
         <div class="col-12">
             <div class="row no-gutters content-alignment">
 
+                <div class="jumbotron text-center">
+                    <img src="{{ url_for('static', filename='images/logo_session.png') }}" alt="">
+                    <h1 class="display-4">Say Hello to a Borderless World!</h1>
+                    <p class="lead">This is the place to share your adventures with an enthusiastic community of adventurers.</p>
+                    <hr class="my-4">
+                    <p>Come on board and discover more about the Borderless platform.</p>
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('about') }}" role="button">Discover more</a>
+                </div>
+
+                <!-- Feed Title -->
+                <div class="col-12">
+                    <h1 class="text-center feedTitle">Trips Feed</h1>
+                    <hr>
+                </div>
+
                 <!-- Pagination links top -->
                 <div class="col-12 pagination paginationTop content-alignment">
                     {% if page != 1 %}
