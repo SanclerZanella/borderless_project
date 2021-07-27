@@ -55,7 +55,7 @@
                             <select class="form-control" id="trip_country" name="trip_country" required>
                                 <option selected hidden>{{ current_trip.trip_country }}</option>
                                 {% for country in countries %}
-                                <option>{{ country['name'] }}</option>
+                                <option>{{ country }}</option>
                                 {% endfor %}
                             </select>
                         </div>

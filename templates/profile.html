@@ -289,7 +289,7 @@
                                                 name="trip_country" required>
                                                 <option value="" selected disabled hidden>Choose one Country</option>
                                                 {% for country in countries %}
-                                                <option>{{ country['name'] }}</option>
+                                                <option>{{ country }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -348,6 +348,7 @@
                                                 <option selected disabled hidden>Choose one privacy category</option>
                                                 <option>Public</option>
                                                 <option>Private</option>
+                                                <option>Friends</option>
                                             </select>
                                         </div>
                                     </div>
@@ -381,7 +382,8 @@
         <div class="col-12">
             <h2 class="text-center">Followers</h2>
             <div class="row no-gutters content-alignment">
-                <div class="col-8 feedProfile"></div>
+                <div class="col-8 feedProfile">
+                </div>
             </div>
         </div>
     </div>

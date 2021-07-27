@@ -46,6 +46,22 @@ form label {
     min-height: 100vh;
 }
 
+.errorContent {
+    margin: 3rem 0;
+}
+
+.errorPag {
+    background-color: #86bac0;
+}
+
+.errorTitle {
+    margin-top: 1rem;
+}
+
+.errorMsg {
+    margin: 0.5rem 0;
+}
+
 .alertValidation {
     border-color: red;
 }
