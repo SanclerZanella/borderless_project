@@ -97,9 +97,10 @@
                         <div id="editTripPrev" class="previewCurrentImages">
                             {% for res in trip_path['resources'] %}
                             <div class="imgPrevWrapper">
-                                <a id="{{ res.asset_id }}" class="delEditImg"><img
-                                        class="previewPictureEdit img-centered shakeEffect"
-                                        src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt=""></a>
+                                <a id="{{ res.asset_id }}" class="delEditImg">
+                                        <img class="previewPictureEdit img-centered shakeEffect"
+                                            src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt="">
+                                </a>
                             </div>
 
                             <!-- The delete photo confirmation modal -->

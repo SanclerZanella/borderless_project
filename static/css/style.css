@@ -575,6 +575,10 @@ footer {
     margin-bottom: 1rem;
 }
 
+.imgPrevWrapper:hover img {
+    opacity: 0.5;
+}
+
 .delEditImg {
     cursor: pointer;
 }

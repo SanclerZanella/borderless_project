@@ -506,7 +506,8 @@ class Pagination:
                  sort_data,
                  sort_direction,
                  offset,
-                 limit):
+                 limit,
+                 query):
 
         self.db = db
         self.db_field = db_field
@@ -515,19 +516,25 @@ class Pagination:
         self.sort_direction = sort_direction
         self.offset = offset
         self.limit = limit
+        self.query = query
 
     def all_data(self):
         """
         Return all data in db
         """
         db = self.db
-        if self.db_field is None or self.db_field_data is None:
-            all_data = list(db.find().sort(
-                self.sort_data, self.sort_direction))
+        query = self.query
+
+        if query is None:
+            if self.db_field is None or self.db_field_data is None:
+                all_data = list(db.find().sort(
+                    self.sort_data, self.sort_direction))
+            else:
+                all_data = list(db.find(
+                    {self.db_field: self.db_field_data}).sort(
+                    self.sort_data, self.sort_direction))
         else:
-            all_data = list(db.find(
-                {self.db_field: self.db_field_data}).sort(
-                self.sort_data, self.sort_direction))
+            all_data = list(db.find({"$text": {"$search": query}}))
 
         return all_data
 
@@ -540,14 +547,21 @@ class Pagination:
         offset = int(self.offset)
         limit = int(self.limit)
         db = self.db
+        query = self.query
 
-        if self.db_field is None or self.db_field_data is None:
-            data = list(db.find().sort(
-                self.sort_data, self.sort_direction).skip(
-                offset).limit(limit))
+        if query is None:
+            if self.db_field is None or self.db_field_data is None:
+                data = list(db.find().sort(
+                    self.sort_data, self.sort_direction).skip(
+                    offset).limit(limit))
+            else:
+                data = list(db.find(
+                    {self.db_field: self.db_field_data}).sort(
+                    self.sort_data, self.sort_direction).skip(
+                    offset).limit(limit))
         else:
             data = list(db.find(
-                {self.db_field: self.db_field_data}).sort(
+                {"$text": {"$search": query}}).sort(
                 self.sort_data, self.sort_direction).skip(
                 offset).limit(limit))
 
@@ -563,6 +577,7 @@ class Pagination:
         """
 
         num_pages = math.ceil(len(self.all_data())/self.limit)
+        print(num_pages)
 
         return num_pages
 
@@ -647,6 +662,11 @@ def feed():
                                  limit,
                                  (offset + limit),
                                  (page + 1))
+
+    # Search query
+    if request.method == "POST":
+        query = request.form.get('query')
+        trips_pag = list(mongo.db.trips.find({"$text": {"$search": query}}))
 
     return render_template("feed.html",
                            current_user_id=current_user_id,
@@ -764,6 +784,13 @@ def login():
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
 
+    # Pagination
+    db = mongo.db.trips
+    db_field = 'user'
+    db_field_data = ObjectId(session['user'])
+    sort_data = 'trip_startdate'
+    sort_direction = -1
+
     # Current user
     current_user = mongo.db.users.find_one(
         {'_id': ObjectId(session['user'])})
@@ -775,102 +802,144 @@ def profile():
 
         # Catch data from form into variables
         trip_category = request.form.get("trip_category")
-        trip_name = request.form.get("trip_name").lower()
-        trip_place_name = request.form.get("trip_place_name")
-        trip_country = request.form.get("trip_country")
-        trip_description = request.form.get("trip_description")
-        trip_startdate = dt.datetime.strptime(
-            request.form.get("trip_startdate"), '%Y-%m-%d')
-        trip_end_date = dt.datetime.strptime(
-            request.form.get("trip_end_date"), '%Y-%m-%d')
-        trip_photos = request.files.getlist('trip_photos')
-        trip_privacy = request.form.get("trip_privacy")
 
-        # New trip dictionary to insert into database
-        new_trip = {
-            "user": current_user_id,
-            "trip_category": trip_category,
-            "trip_name": trip_name,
-            "trip_place_name": trip_place_name,
-            "trip_country": trip_country,
-            "trip_description": trip_description,
-            "trip_startdate": trip_startdate,
-            "trip_end_date": trip_end_date,
-            "trip_likes": [],
-            "trip_privacy": trip_privacy
-        }
+        if trip_category is not None:
+            trip_name = request.form.get("trip_name").lower()
+            trip_place_name = request.form.get("trip_place_name")
+            trip_country = request.form.get("trip_country")
+            trip_description = request.form.get("trip_description")
+            trip_startdate = dt.datetime.strptime(
+                request.form.get("trip_startdate"), '%Y-%m-%d')
+            trip_end_date = dt.datetime.strptime(
+                request.form.get("trip_end_date"), '%Y-%m-%d')
+            trip_photos = request.files.getlist('trip_photos')
+            trip_privacy = request.form.get("trip_privacy")
 
-        # Insert new_trip into database
-        flash('Trip successfully added')
-        mongo.db.trips.insert_one(new_trip)
+            # New trip dictionary to insert into database
+            new_trip = {
+                "user": current_user_id,
+                "user_name": current_user['fname'],
+                "trip_category": trip_category,
+                "trip_name": trip_name,
+                "trip_place_name": trip_place_name,
+                "trip_country": trip_country,
+                "trip_description": trip_description,
+                "trip_startdate": trip_startdate,
+                "trip_end_date": trip_end_date,
+                "trip_likes": [],
+                "trip_privacy": trip_privacy
+            }
 
-        # Create trip folder to host trip photos
-        if trip_photos[0].filename != "":
-            for trip_photo in range(len(trip_photos)):
-                file = trip_photos[trip_photo]
-                category = trip_category.lower().replace(" ", "_")
-                folder_name = trip_name.replace(" ", "_")
-                photo_id = "%s_%s" % (folder_name, trip_photo)
-                folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
-                                                         category,
-                                                         folder_name)
-                cloudinary.uploader.upload(file,
-                                           folder=folder_path,
-                                           public_id=photo_id,
-                                           format='jpg')
+            # Insert new_trip into database
+            flash('Trip successfully added')
+            mongo.db.trips.insert_one(new_trip)
+
+            # Create trip folder to host trip photos
+            if trip_photos[0].filename != "":
+                for trip_photo in range(len(trip_photos)):
+                    file = trip_photos[trip_photo]
+                    category = trip_category.lower().replace(" ", "_")
+                    folder_name = trip_name.replace(" ", "_")
+                    photo_id = "%s_%s" % (folder_name, trip_photo)
+                    folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
+                                                             category,
+                                                             folder_name)
+                    cloudinary.uploader.upload(file,
+                                               folder=folder_path,
+                                               public_id=photo_id,
+                                               format='jpg')
+            else:
+                category = trip_category.lower().replace(" ", "_").lower()
+                folder_name = trip_name.replace(" ", "_").lower()
+                folder_path = "users/%s/trips/%s/%s" % (current_user_id,
+                                                        category,
+                                                        folder_name)
+                cloudinary.api.create_folder(folder_path)
         else:
-            category = trip_category.lower().replace(" ", "_").lower()
-            folder_name = trip_name.replace(" ", "_").lower()
-            folder_path = "users/%s/trips/%s/%s" % (current_user_id,
-                                                    category,
-                                                    folder_name)
-            cloudinary.api.create_folder(folder_path)
+            # Search query
+            query = request.form.get('query')
 
-    # Pagination
-    db = mongo.db.trips
-    db_field = 'user'
-    db_field_data = ObjectId(session['user'])
-    sort_data = 'trip_startdate'
-    sort_direction = -1
+            if request.args:
+                offset = int(request.args['offset'])
+                limit = int(request.args['limit'])
+                page = int(request.args['page'])
 
-    if request.args:
-        offset = int(request.args['offset'])
-        limit = int(request.args['limit'])
-        page = int(request.args['page'])
+                profile_pag = Pagination(db,
+                                         db_field,
+                                         db_field_data,
+                                         sort_data,
+                                         sort_direction,
+                                         offset,
+                                         limit,
+                                         query)
+            else:
+                offset = 0
+                limit = 5
+                page = 1
 
-        profile_pag = Pagination(db,
-                                 db_field,
-                                 db_field_data,
-                                 sort_data,
-                                 sort_direction,
-                                 offset,
-                                 limit)
+                profile_pag = Pagination(db,
+                                         db_field,
+                                         db_field_data,
+                                         sort_data,
+                                         sort_direction,
+                                         offset,
+                                         limit,
+                                         query)
+
+            trips_pag = profile_pag.pag_data()
+            num_pages = profile_pag.num_pages()
+            prev_pag = profile_pag.pag_link('profile',
+                                            None,
+                                            limit,
+                                            (offset - limit),
+                                            (page - 1))
+            next_pag = profile_pag.pag_link('profile',
+                                            None,
+                                            limit,
+                                            (offset + limit),
+                                            (page + 1))
     else:
-        offset = 0
-        limit = 5
-        page = 1
+        if request.args:
+            offset = int(request.args['offset'])
+            limit = int(request.args['limit'])
+            page = int(request.args['page'])
+            query = None
 
-        profile_pag = Pagination(db,
-                                 db_field,
-                                 db_field_data,
-                                 sort_data,
-                                 sort_direction,
-                                 offset,
-                                 limit)
+            profile_pag = Pagination(db,
+                                     db_field,
+                                     db_field_data,
+                                     sort_data,
+                                     sort_direction,
+                                     offset,
+                                     limit,
+                                     query)
+        else:
+            offset = 0
+            limit = 5
+            page = 1
+            query = None
 
-    trips_pag = profile_pag.pag_data()
-    num_pages = profile_pag.num_pages()
-    prev_pag = profile_pag.pag_link('profile',
-                                    None,
-                                    limit,
-                                    (offset - limit),
-                                    (page - 1))
-    next_pag = profile_pag.pag_link('profile',
-                                    None,
-                                    limit,
-                                    (offset + limit),
-                                    (page + 1))
+            profile_pag = Pagination(db,
+                                     db_field,
+                                     db_field_data,
+                                     sort_data,
+                                     sort_direction,
+                                     offset,
+                                     limit,
+                                     query)
 
+        trips_pag = profile_pag.pag_data()
+        num_pages = profile_pag.num_pages()
+        prev_pag = profile_pag.pag_link('profile',
+                                        None,
+                                        limit,
+                                        (offset - limit),
+                                        (page - 1))
+        next_pag = profile_pag.pag_link('profile',
+                                        None,
+                                        limit,
+                                        (offset + limit),
+                                        (page + 1))
     # Get full name
     first_name = current_user['fname'].capitalize()
     last_name = current_user['lname'].capitalize()
@@ -1401,6 +1470,14 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("feed"))
+
+
+# Search view
+# @app.route("/search", methods=["GET", "POST"])
+# def search():
+#     query = request.form.get('query')
+#     trips = list(mongo.db.trips.find({"$text": {"$search": query}}))
+#     return redirect(request.referrer)
 
 
 # Define host and port for the app

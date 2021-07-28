@@ -151,6 +151,7 @@
                             </div>
 
                             <!-- Likes Button -->
+                            {% if session.user %}
                             <div class="row no-gutters postLikes">
                                 <div class="col-12 text-center">
                                     <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like"
@@ -161,6 +162,7 @@
                                         trip.trip_likes|length }}</span>
                                 </div>
                             </div>
+                            {% endif %}
 
                         </div>
                         {% endfor %}
