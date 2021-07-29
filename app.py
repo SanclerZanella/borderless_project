@@ -577,7 +577,6 @@ class Pagination:
         """
 
         num_pages = math.ceil(len(self.all_data())/self.limit)
-        print(num_pages)
 
         return num_pages
 
@@ -586,17 +585,35 @@ class Pagination:
         Return the link for each page
         """
 
-        if sec_arg is None:
-            link = '/%s?limit=%s&offset=%s&page=%s' % (pag_name,
-                                                       limit,
-                                                       offset,
-                                                       page)
+        query = self.query
+
+        if query is None:
+            if sec_arg is None:
+                link = '/%s?limit=%s&offset=%s&page=%s' % (pag_name,
+                                                           limit,
+                                                           offset,
+                                                           page)
+            else:
+                link = '/%s/%s?limit=%s&offset=%s&page=%s' % (pag_name,
+                                                              sec_arg,
+                                                              limit,
+                                                              offset,
+                                                              page)
         else:
-            link = '/%s/%s?limit=%s&offset=%s&page=%s' % (pag_name,
-                                                          sec_arg,
-                                                          limit,
-                                                          offset,
-                                                          page)
+            if sec_arg is None:
+                link = '/%s?query=%s&limit=%s&offset=%s&page=%s' % (pag_name,
+                                                                    query,
+                                                                    limit,
+                                                                    offset,
+                                                                    page)
+            else:
+                link = '/%s/%s?query=%s&limit=%s&offset=%s&page=%s' % (
+                    pag_name,
+                    sec_arg,
+                    query,
+                    limit,
+                    offset,
+                    page)
 
         return link
 
@@ -648,7 +665,8 @@ def feed():
                               sort_data,
                               sort_direction,
                               offset,
-                              limit)
+                              limit,
+                              None)
 
     trips_pag = feed_pag.pag_data()
     num_pages = feed_pag.num_pages()
@@ -783,6 +801,7 @@ def login():
 #  following and statistics)
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+    print(request.method)
 
     # Pagination
     db = mongo.db.trips
@@ -863,6 +882,7 @@ def profile():
                 offset = int(request.args['offset'])
                 limit = int(request.args['limit'])
                 page = int(request.args['page'])
+                query = request.args['query']
 
                 profile_pag = Pagination(db,
                                          db_field,
@@ -903,7 +923,11 @@ def profile():
             offset = int(request.args['offset'])
             limit = int(request.args['limit'])
             page = int(request.args['page'])
-            query = None
+
+            if 'query' in request.args:
+                query = request.args['query']
+            else:
+                query = None
 
             profile_pag = Pagination(db,
                                      db_field,
