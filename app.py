@@ -339,6 +339,16 @@ def get_cover_pic(user_id):
     return cover_pic_url
 
 
+# Get full name
+def get_full_name(id):
+    user = mongo.db.users.find_one({'_id': ObjectId(id)})
+    first_name = user['fname'].capitalize()
+    last_name = user['lname'].capitalize()
+    full_name = "%s %s" % (first_name, last_name)
+
+    return full_name
+
+
 # Get trip post link background picture url
 def get_BGPost_pic(user_id, trip_id):
     post = mongo.db.trips.find_one(
@@ -852,7 +862,6 @@ def login():
 #  following and statistics)
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    print(request.method)
 
     # Pagination
     db = mongo.db.trips
@@ -1016,10 +1025,7 @@ def profile():
                                         (offset + limit),
                                         (page + 1))
 
-    # Get full name
-    first_name = current_user['fname'].capitalize()
-    last_name = current_user['lname'].capitalize()
-    full_name = "%s %s" % (first_name, last_name)
+    # full_name = get_full_name(current_user_id)
 
     # Verify if the user has trips recorded
     user_trips = []
@@ -1029,10 +1035,13 @@ def profile():
 
     notifications = current_user['notifications']
 
+    user_followers = current_user['followers']
+    user_following = current_user['following']
+
     return render_template('profile.html',
                            countries=countries(),
                            trips=trips_pag,
-                           full_name=full_name,
+                           full_name=get_full_name,
                            current_user_id=current_user_id,
                            user_trips=user_trips,
                            profile_pic=get_profile_pic,
@@ -1046,7 +1055,9 @@ def profile():
                            prev_pag=prev_pag,
                            next_pag=next_pag,
                            pag_link=profile_pag.pag_link,
-                           notifications=notifications)
+                           notifications=notifications,
+                           followers=user_followers,
+                           following=user_following)
 
 
 # Public profile view
@@ -1152,11 +1163,6 @@ def public_profile(trip_user):
                                          (offset + limit),
                                          (page + 1))
 
-    # Get full name
-    first_name = user['fname'].capitalize()
-    last_name = user['lname'].capitalize()
-    full_name = "%s %s" % (first_name, last_name)
-
     # Get notifications for the current user
     if session.get('user'):
         current_user_id = session['user']
@@ -1171,6 +1177,7 @@ def public_profile(trip_user):
     # Public profile user
     user_ntf = user['notifications']
     user_followers = user['followers']
+    user_following = user['following']
 
     ntf_id = []
     for ntf in range(len(user_ntf)):
@@ -1183,7 +1190,7 @@ def public_profile(trip_user):
                            no_files=get_no_pictures,
                            trips=trips_pag,
                            user=user,
-                           full_name=full_name,
+                           full_name=get_full_name,
                            num_pages=num_pages,
                            limit=limit,
                            offset=offset,
@@ -1194,6 +1201,7 @@ def public_profile(trip_user):
                            notifications=notifications,
                            ntf_id=ntf_id,
                            user_followers=user_followers,
+                           user_following=user_following,
                            current_user_followers=current_user_followers)
 
 
@@ -1533,7 +1541,6 @@ def follow_request(user_id):
     user = mongo.db.users.find_one(
         {'_id': ObjectId(user_id)})
     rqt_current_user = current_user['followers']
-    user_followers = user['followers']
 
     flwg = current_user_id
     flwr = user_id
@@ -1598,14 +1605,6 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("feed"))
-
-
-# Search view
-# @app.route("/search", methods=["GET", "POST"])
-# def search():
-#     query = request.form.get('query')
-#     trips = list(mongo.db.trips.find({"$text": {"$search": query}}))
-#     return redirect(request.referrer)
 
 
 # Define host and port for the app

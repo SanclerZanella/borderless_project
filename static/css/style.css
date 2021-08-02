@@ -524,6 +524,18 @@ footer {
     font-weight: 600;
 }
 
+.friendProfilePic {
+    height: 10vh;
+    border: 1px solid #000;
+    border-radius: 100%;
+    margin: 0.5rem;
+}
+
+.friendLink a {
+    text-decoration: none;
+    color: #000;
+}
+
 /* Edit Profile page */
 
 .currentProfilePic {

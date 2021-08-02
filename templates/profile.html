@@ -8,7 +8,7 @@
             <img class="profileCover img-centered" src="{{ cover_pic(session.user) }}" alt="">
             <img id="profilePic" src="{{ profile_pic(session.user) }}" alt="">
             <div class="profileName">
-                <h2>{{ full_name }}</h2>
+                <h2>{{ full_name(session.user) }}</h2>
             </div>
         </div>
     </div>
@@ -46,8 +46,8 @@
 
                 <!-- Search Bar -->
                 <div class="col-11 col-md-6 col-lg-6 col-xl-6">
-                    <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search" minlength="3" placeholder="Search"
-                        aria-label="Search" required>
+                    <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search" minlength="3"
+                        placeholder="Search" aria-label="Search" required>
                 </div>
 
                 <!-- Search Reset Button -->
@@ -380,9 +380,33 @@
     <!-- Followers Feed -->
     <div class="row no-gutters profileFeed followersFeed text-center d-none">
         <div class="col-12">
-            <h2 class="text-center">Followers</h2>
+            <h2 class="text-center"> {{ followers|length }} Followers</h2>
             <div class="row no-gutters content-alignment">
                 <div class="col-8 feedProfile">
+                    <div class="row no-gutters">
+                        {% if followers|length > 0 %}
+
+                        {% for follower in followers %}
+                        <!-- Friend Link -->
+                        <div class="col-2 friendLink">
+                            <a href="{{ url_for('public_profile', trip_user=follower) }}">
+                                <img class="friendProfilePic" src="{{ profile_pic(follower) }}" alt="Follower picture">
+
+                                <div class="row no-gutters friendName">
+                                    <div class="col-12">
+                                        <h6 class="text-center">{{ full_name(follower) }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <h3 class="text-center">No Followers to show yet</h3>
+                        </div>
+
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -391,9 +415,33 @@
     <!-- Following Feed -->
     <div class="row no-gutters profileFeed followingFeed text-center d-none">
         <div class="col-12">
-            <h2 class="text-center">Following</h2>
+            <h2 class="text-center">{{ following|length }} Following</h2>
             <div class="row no-gutters content-alignment">
-                <div class="col-8 feedProfile"></div>
+                <div class="col-8 feedProfile">
+                    <div class="row no-gutters">
+                        {% if following|length > 0 %}
+
+                        {% for follow in following %}
+                        <!-- Friend Link -->
+                        <div class="col-2 friendLink">
+                            <a href="{{ url_for('public_profile', trip_user=follow) }}">
+                                <img class="friendProfilePic" src="{{ profile_pic(follow) }}" alt="Follower picture">
+
+                                <div class="row no-gutters friendName">
+                                    <div class="col-12">
+                                        <h6 class="text-center">{{ full_name(follow) }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <h3 class="text-center">No followed friends yet</h3>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -403,7 +451,8 @@
         <div class="col-12">
             <h2 class="text-center">Statistics</h2>
             <div class="row no-gutters content-alignment">
-                <div class="col-8 feedProfile"></div>
+                <div class="col-8 feedProfile">
+                </div>
             </div>
         </div>
     </div>
