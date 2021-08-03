@@ -536,6 +536,21 @@ footer {
     color: #000;
 }
 
+.statisticWrapper {
+    margin: 1rem 4rem;
+}
+
+.statisticResultWrapper {
+    height: 30vh;
+    background-color: #fff;
+    border: double 5px #000;
+    border-radius: 50%;
+}
+
+.statisticResult {
+    font-size: 7em;
+}
+
 /* Edit Profile page */
 
 .currentProfilePic {
