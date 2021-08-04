@@ -215,6 +215,7 @@ nav {
 
 #profileLinkPic {
     height: 8vh;
+    width: 4vw;
     margin-left: 0.5rem;
     border-radius: 100%;
 }
@@ -351,6 +352,7 @@ footer {
 
 #profilePic {
     height: 40vh;
+    width: 40vh;
     border-radius: 100%;
     border: 1px solid #000;
     position: absolute;
@@ -470,6 +472,7 @@ footer {
 
 .postLinkProfilePic {
     height: 10vh;
+    width: 5vw;
     border: 1px solid #000;
     border-radius: 100%;
     margin: 0.5rem;

@@ -313,42 +313,6 @@ def img_url(folder, filename):
     return pic_url
 
 
-# Get profile picture url
-def get_profile_pic(user_id):
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(user_id)})
-    current_user_id = current_user['_id']
-    profile_folder_id = "default_profile_pic"
-    profile_folder = "users/%s/profile/" % current_user_id
-    profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
-    profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
-
-    return profile_pic_url
-
-
-# Get cover picture url
-def get_cover_pic(user_id):
-    current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(user_id)})
-    current_user_id = current_user['_id']
-    cover_folder_id = "default_cover_pic"
-    cover_folder = "users/%s/cover/" % current_user_id
-    cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
-    cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
-
-    return cover_pic_url
-
-
-# Get full name
-def get_full_name(id):
-    user = mongo.db.users.find_one({'_id': ObjectId(id)})
-    first_name = user['fname'].capitalize()
-    last_name = user['lname'].capitalize()
-    full_name = "%s %s" % (first_name, last_name)
-
-    return full_name
-
-
 # Get trip post link background picture url
 def get_BGPost_pic(user_id, trip_id):
     post = mongo.db.trips.find_one(
@@ -380,40 +344,6 @@ def get_no_pictures(trip_user, trip_id):
         search_cloud = cloudinary.Search().expression(search_exp).execute()
         no_files = search_cloud['total_count']
         return no_files
-
-
-# Update profile
-def update_profile_pic(profile_photo):
-    user_id = mongo.db.users.find_one(
-        {"_id": ObjectId(session["user"])})
-    default_profile_pic = profile_photo
-    profile_folder_id = "default_profile_pic"
-    profile_folder = "users/%s/profile/" % user_id['_id']
-
-    cloudinary.uploader.upload(default_profile_pic,
-                               folder=profile_folder,
-                               public_id=profile_folder_id,
-                               format='jpg',
-                               overwrite=True,
-                               invalidate=True,
-                               use_filename=True)
-
-
-# Update profile and cover pictures
-def update_cover_pic(cover_photo):
-    user_id = mongo.db.users.find_one(
-        {"_id": ObjectId(session["user"])})
-    default_cover_pic = cover_photo
-    cover_folder_id = "default_cover_pic"
-    cover_folder = "users/%s/cover/" % user_id['_id']
-
-    cloudinary.uploader.upload(default_cover_pic,
-                               folder=cover_folder,
-                               public_id=cover_folder_id,
-                               format='jpg',
-                               overwrite=True,
-                               invalidate=True,
-                               use_filename=True)
 
 
 # Get the profile photo of the post author
@@ -504,9 +434,350 @@ def update_trip_photos(trip_photos,
                                            use_filename=True)
 
 
+class User:
+    """
+    Handle all users functionality
+
+    Attributes:
+        *fname: A string indicating the user's first name;
+        *lname: A string indicating the user's last name;
+        *email: A string indicating the user's email;
+        *password: A string indicating the user's password
+
+    Methods:
+        *register: Handle user registration creating user document
+                  in data base;
+        *cloud_folder: Create a user's fold in cloud platform
+                      when the user is registered,
+                      to store the images;
+        *login: Handle the user login, putting the user into a session;
+        *get_full_name: Get user's fullname concatenating the fname(first name)
+                        and the lname(last name);
+        *get_profile_pic: Get the profile pic of any user from the cloud
+                          platform;
+        *get_cover_pic: Get the cover pic of any user from the cloud platform;
+        *update_profile_pic: Update the profile pic of any user in the cloud;
+        *update_cover_pic: Update the cover pic of any user in the cloud;
+        *update_name: Update the name of any user in database;
+        *notifications: Handle user's notifications creation and deletion;
+        *follow_request: Handle follow request add in database
+                         or removing from database;
+        *logout: Handle user logout, removing his session
+    """
+
+    def __init__(self,
+                 fname,
+                 lname,
+                 email,
+                 password):
+        self.fname = fname
+        self.lname = lname
+        self.email = email
+        self.password = password
+
+    def register(self):
+        """
+        Handle user registration in
+        database
+        """
+
+        register = {
+            "fname": self.fname.lower(),
+            "lname": self.lname.lower(),
+            "email": self.email,
+            "followers": [],
+            "following": [],
+            "notifications": [],
+            "password": generate_password_hash(self.password)
+        }
+        mongo.db.users.insert_one(register)
+
+    def cloud_folder(self, id):
+        """
+        Create a folder for the users to store the images
+        and set the default cover and profile picture
+        """
+
+        default_profile_pic = 'static/images/profile/default_profile_pic.png'
+        default_cover_pic = 'static/images/profile/default_cover_pic.jpg'
+        profile_folder_id = "default_profile_pic"
+        cover_folder_id = "default_cover_pic"
+        profile_folder = "users/%s/profile/" % id
+        cover_folder = "users/%s/cover/" % id
+
+        # Create folder in the cloud platform
+        cloudinary.uploader.upload(default_profile_pic,
+                                   folder=profile_folder,
+                                   public_id=profile_folder_id,
+                                   format='jpg')
+        cloudinary.uploader.upload(default_cover_pic,
+                                   folder=cover_folder,
+                                   public_id=cover_folder_id,
+                                   format='jpg')
+
+    def login(self):
+        """
+        Handle the user login
+        """
+
+        # Check if the username exists in database
+        user = mongo.db.users.find_one(
+            {"email": self.email})
+
+        # Ensure hashed password matches user input
+        pw = check_password_hash(user["password"], self.password)
+
+        if user:
+            if pw:
+                existing_user = True
+                password = True
+            else:
+                existing_user = True
+                password = False
+        else:
+            existing_user = False
+            password = False
+
+        return existing_user, password, user
+
+    def get_full_name(self, id):
+        """
+        Get user's full name
+        """
+
+        user = mongo.db.users.find_one({'_id': ObjectId(id)})
+        first_name = user['fname'].capitalize()
+        last_name = user['lname'].capitalize()
+        full_name = "%s %s" % (first_name, last_name)
+
+        return full_name
+
+    def get_profile_pic(self, user_id):
+        """
+        Get user's profile picture url
+        """
+
+        profile_folder_id = "default_profile_pic"
+        profile_folder = "users/%s/profile/" % user_id
+        profile_pic_path = "%s/%s" % (profile_folder, profile_folder_id)
+        profile_pic_url = cloudinary.CloudinaryImage(profile_pic_path).url
+
+        return profile_pic_url
+
+    def get_cover_pic(self, user_id):
+        """
+        Get user's cover picture url
+        """
+
+        cover_folder_id = "default_cover_pic"
+        cover_folder = "users/%s/cover/" % user_id
+        cover_pic_path = "%s/%s" % (cover_folder, cover_folder_id)
+        cover_pic_url = cloudinary.CloudinaryImage(cover_pic_path).url
+
+        return cover_pic_url
+
+    def update_profile_pic(self, profile_photo):
+        """
+        Update user's profile picture
+        """
+
+        default_profile_pic = profile_photo
+        profile_folder_id = "default_profile_pic"
+        profile_folder = "users/%s/profile/" % session["user"]
+
+        cloudinary.uploader.upload(default_profile_pic,
+                                   folder=profile_folder,
+                                   public_id=profile_folder_id,
+                                   format='jpg',
+                                   overwrite=True,
+                                   invalidate=True,
+                                   use_filename=True)
+
+    def update_cover_pic(self, cover_photo):
+        """
+        Update user's cover pictures
+        """
+
+        default_cover_pic = cover_photo
+        cover_folder_id = "default_cover_pic"
+        cover_folder = "users/%s/cover/" % session["user"]
+
+        cloudinary.uploader.upload(default_cover_pic,
+                                   folder=cover_folder,
+                                   public_id=cover_folder_id,
+                                   format='jpg',
+                                   overwrite=True,
+                                   invalidate=True,
+                                   use_filename=True)
+
+    def update_name(self):
+        """
+        Update user's name in DB
+        """
+
+        # Data from form
+        updated_data = {
+            'fname': self.fname,
+            'lname': self.lname
+        }
+
+        # Update Name and last name
+        mongo.db.users.update({"_id": ObjectId(session['user'])},
+                              {'$set': updated_data},
+                              multi=True)
+
+    def notification(self, current_user, user, ntf_user, user_id):
+        """
+        Handle user's notifications
+        """
+
+        # Notifications content
+        # (Current user id and first name)
+        ntf = {
+            '_id': session['user'],
+            'name': current_user['fname'].capitalize()
+        }
+
+        # Verify if the user has any notification
+        if len(ntf_user) > 0:
+
+            # Verify if any of user's friend request
+            # notification is from current_user
+            for notif in ntf_user:
+                # Add notification
+                if session['user'] != notif['_id']:
+                    mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                        '$push': {
+                            'notifications': ntf
+                        }})
+
+                else:
+
+                    # Remove notification
+                    mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                        '$pull': {
+                            'notifications': ntf
+                        }})
+        else:
+            # Add notification
+            mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                '$push': {
+                    'notifications': ntf
+                }})
+
+    def follow_request(self, current_user, rqt_current_user, user, user_id):
+        """
+        Handle follow request
+        """
+
+        # Following
+        flwg = session['user']
+        # Follower
+        flwr = user_id
+
+        # Notifications content
+        # (Any user id and first name)
+        ntf = {
+            '_id': user_id,
+            'name': user['fname'].capitalize()
+        }
+
+        # Check if user is already a current user's follower
+        if len(rqt_current_user) > 0:
+
+            if user_id not in rqt_current_user:
+                """
+                If user is not a current user's follower
+                the user will be added to current user's
+                followers list and the current user will
+                be added to user's following list
+                """
+
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$push': {
+                        'following': flwg
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+                    '$push': {
+                        'followers': flwr
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+                    '$pull': {
+                        'notifications': ntf
+                    }})
+            else:
+                """
+                If user is a current user's follower
+                the user will be removed from current user's
+                followers list and the current user will
+                be removed from user's following list
+                """
+
+                mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                    '$pull': {
+                        'followers': flwg
+                    }})
+
+                mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+                    '$pull': {
+                        'following': flwr
+                    }})
+        else:
+            """
+            If the current_user has not followers, then the
+            user will be added to current user's followers list
+            and the current user will be added to user's following
+            list
+            """
+
+            mongo.db.users.update({'_id': ObjectId(user_id)}, {
+                '$push': {
+                    'following': flwg
+                }})
+
+            mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+                '$push': {
+                    'followers': flwr
+                }})
+
+            mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+                '$pull': {
+                    'notifications': ntf
+                }})
+
+    def logout(self):
+        """
+        Handle user logout
+        """
+
+        session.pop("user")
+
+
 class Pagination:
     """
     Handle pagination
+
+    Attributes:
+        *db: A string indicating the database path;
+        *db_field: A string indicating the database field;
+        *db_field_data: A string indicating the database field data
+                        which will be used as query parameter;
+        *sort_data: A string indicating the sort parameter;
+        *sort_direction: A integer indicating the sort direction;
+        *offset: A integer indicating the number of data will be skipped;
+        *limit: A integer indicating the number of data shown per each page;
+        *query: A string indicating a query to be searched
+
+    Methods:
+        *all_data: Fetch all data from a specific database of a
+                   specific query;
+        *pag_data: Fetch the number of data per each page, defined by
+                   the offset, limit and query;
+        *num_pages: Define the number of pages;
+        *pag_link: Define the links for the previous and next pages to
+                   show diferent results in each page
     """
 
     def __init__(self,
@@ -631,9 +902,11 @@ class Pagination:
         return link
 
 
-# View for landpage
 @app.route("/", methods=["GET", "POST"])
 def feed():
+    """
+    View for landpage
+    """
 
     if session.get('user'):
         # Current user
@@ -747,6 +1020,9 @@ def feed():
                                      (offset + limit),
                                      (page + 1))
 
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
     return render_template("feed.html",
                            current_user_id=current_user_id,
                            trips=trips_pag,
@@ -761,19 +1037,32 @@ def feed():
                            next_pag=next_pag,
                            pag_link=feed_pag.pag_link,
                            notifications=notifications,
-                           profile_pic=get_profile_pic)
+                           profile_pic=user_func.get_profile_pic)
 
 
-# Open about page
 @app.route("/about", methods=["GET", "POST"])
 def about():
+    """
+    View to open the about page
+    """
+
     return render_template("landpage.html")
 
 
-# View for Sign Up Page
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    """
+    View to handle the sign up form modal
+    """
+
     if request.method == "POST":
+
+        # Instance of User Class
+        user_func = User(request.form.get("fname"),
+                         request.form.get("lname"),
+                         request.form.get("email"),
+                         request.form.get("password"))
+
         # Check if the username already exists in db
         existing_user = mongo.db.users.find_one(
             {"email": request.form.get("email")})
@@ -782,66 +1071,54 @@ def signup():
             flash("User already exists")
             return redirect(request.referrer)
 
-        register = {
-            "fname": request.form.get("fname").lower(),
-            "lname": request.form.get("lname").lower(),
-            "email": request.form.get("email"),
-            "followers": [],
-            "following": [],
-            "notifications": [],
-            "password": generate_password_hash(request.form.get("password"))
-        }
-        mongo.db.users.insert_one(register)
+        # Register the user in DB
+        user_func.register()
 
+        # Fetch the new user DB
         registered_user = mongo.db.users.find_one(
             {"email": request.form.get("email")})
 
         # Put the new user into 'session' cookie
         session['user'] = str(registered_user["_id"])
+
+        # Create user's folder in cloud platform
+        user_func.cloud_folder(session['user'])
+
+        # Redirect to the new user's profile
         flash("Registration Successful")
-
-        # Create a folder for the user to store images
-        # Create folder and file name
-        # for default profile and cover pictures
-        user_id = mongo.db.users.find_one(
-            {"_id": ObjectId(session["user"])})
-        default_profile_pic = 'static/images/default_profile_pic.png'
-        default_cover_pic = 'static/images/default_cover_pic.jpg'
-        profile_folder_id = "default_profile_pic"
-        cover_folder_id = "default_cover_pic"
-        profile_folder = "users/%s/profile/" % user_id['_id']
-        cover_folder = "users/%s/cover/" % user_id['_id']
-
-        # Create folder in the cloud platform
-        cloudinary.uploader.upload(default_profile_pic,
-                                   folder=profile_folder,
-                                   public_id=profile_folder_id,
-                                   format='jpg')
-        cloudinary.uploader.upload(default_cover_pic,
-                                   folder=cover_folder,
-                                   public_id=cover_folder_id,
-                                   format='jpg')
-
         return redirect(url_for("profile"))
 
+    # redirect to previous if the users already exists
     return redirect(request.referrer)
 
 
-# View to execute the login page and form (Read from DB)
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        # Check if the username exists in database
-        existing_user = mongo.db.users.find_one(
-            {"email": request.form.get("emailL")})
+    """
+    View to handle the login form modal
+    """
 
+    if request.method == "POST":
+
+        # Instance of User Class
+        user_func = User(None,
+                         None,
+                         request.form.get("emailL"),
+                         request.form.get("passwordL"))
+
+        # Return if the user exists and if the password matches
+        existing_user, password, user = user_func.login()
+
+        # Check if the user exists and if the password matches
         if existing_user:
-            # Ensure hashed password matches user input
-            if check_password_hash(
-                    existing_user["password"], request.form.get("passwordL")):
-                session["user"] = str(existing_user["_id"])
+            if password:
+
+                # Put the user into 'session' cookie
+                session["user"] = str(user["_id"])
+
+                # redirect to user's profile
                 flash("Welcome, {}".format(
-                    existing_user["fname"].capitalize()))
+                    user["fname"].capitalize()))
                 return redirect(url_for("profile"))
 
             else:
@@ -854,21 +1131,21 @@ def login():
             flash("Incorrect email and/or password")
             return redirect(request.referrer)
 
+    # If the user does not exist or the password does not match,
+    # redirect to previous page
     return redirect(request.referrer)
 
 
-# View to execute the profile
-# (Add new trip button, feed to show the trips, followers,
-#  following and statistics)
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+    """
+    View to execute the profile
+    (Add new trip button, feed to show the trips, followers,
+    following and statistics)
+    """
 
-    # Pagination
-    db = mongo.db.trips
-    db_field = 'user'
-    db_field_data = ObjectId(session['user'])
-    sort_data = 'trip_startdate'
-    sort_direction = -1
+    # Instance of User Class
+    user_func = User(None, None, None, None)
 
     # Current user
     current_user = mongo.db.users.find_one(
@@ -876,6 +1153,13 @@ def profile():
 
     # Current user ID
     current_user_id = current_user['_id']
+
+    # Pagination
+    db = mongo.db.trips
+    db_field = 'user'
+    db_field_data = current_user_id
+    sort_data = 'trip_startdate'
+    sort_direction = -1
 
     if request.method == "POST":
 
@@ -1025,27 +1309,27 @@ def profile():
                                         (offset + limit),
                                         (page + 1))
 
-    # full_name = get_full_name(current_user_id)
-
     # Verify if the user has trips recorded
     user_trips = []
     if len(profile_pag.all_data()):
         for trip in profile_pag.all_data():
             user_trips.append(trip)
 
+    # Get current user's notifications
     notifications = current_user['notifications']
 
+    # Get current user's friends
     user_followers = current_user['followers']
     user_following = current_user['following']
 
     return render_template('profile.html',
                            countries=countries(),
                            trips=trips_pag,
-                           full_name=get_full_name,
+                           full_name=user_func.get_full_name,
                            current_user_id=current_user_id,
                            user_trips=user_trips,
-                           profile_pic=get_profile_pic,
-                           cover_pic=get_cover_pic,
+                           profile_pic=user_func.get_profile_pic,
+                           cover_pic=user_func.get_cover_pic,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
                            num_pages=num_pages,
@@ -1060,10 +1344,16 @@ def profile():
                            following=user_following)
 
 
-# Public profile view
 @ app.route('/public_profile/<trip_user>', methods=["GET", "POST"])
 def public_profile(trip_user):
+    """
+    Public profile view
+    """
 
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
+    # Any user data
     user = mongo.db.users.find_one({'_id': ObjectId(trip_user)})
 
     # Pagination
@@ -1184,13 +1474,13 @@ def public_profile(trip_user):
         ntf_id.append(user_ntf[ntf]['_id'])
 
     return render_template('public_profile.html',
-                           profile_pic=get_profile_pic,
-                           cover_pic=get_cover_pic,
+                           profile_pic=user_func.get_profile_pic,
+                           cover_pic=user_func.get_cover_pic,
                            bg_post_url=get_BGPost_pic,
                            no_files=get_no_pictures,
                            trips=trips_pag,
                            user=user,
-                           full_name=get_full_name,
+                           full_name=user_func.get_full_name,
                            num_pages=num_pages,
                            limit=limit,
                            offset=offset,
@@ -1205,9 +1495,12 @@ def public_profile(trip_user):
                            current_user_followers=current_user_followers)
 
 
-# Count likes
 @ app.route('/likes/<trip_id>', methods=["GET", "POST"])
 def likes(trip_id):
+    """
+    Count likes
+    """
+
     current_user = session['user']
     trip_id = trip_id
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
@@ -1250,49 +1543,55 @@ def likes(trip_id):
                     'count_likes': count_likes})
 
 
-# View to edit profile
 @ app.route('/edit_profile', methods=["POST", "GET"])
 def edit_profile():
+    """
+    View to edit profile
+    """
 
     current_user = mongo.db.users.find_one({'_id': ObjectId(session['user'])})
-    current_user_id = current_user['_id']
 
     if request.method == 'POST':
 
-        # Update profile and cover pictures
+        # Instance of User Class (POST request)
+        user_func = User(request.form.get('fname'),
+                         request.form.get('lname'),
+                         None, None)
+
+        # Update profile and cover pictures in cloud platform
         profile_photo = request.files['profile_photo']
         if profile_photo.filename != "":
-            update_profile_pic(profile_photo)
+            user_func.update_profile_pic(profile_photo)
 
         cover_photo = request.files['cover_photo']
         if cover_photo.filename != "":
-            update_cover_pic(cover_photo)
+            user_func.update_cover_pic(cover_photo)
 
-        # Data from form
-        updated_data = {
-            'fname': request.form.get('fname'),
-            'lname': request.form.get('lname')
-        }
+        # Update name in DB
+        user_func.update_name()
 
-        # Update Name and last name
-        mongo.db.users.update({"_id": ObjectId(current_user_id)},
-                              {'$set': updated_data},
-                              multi=True)
+        # Redirect to profile page after update
         flash('Profile Updated')
         return redirect(url_for('profile'))
 
+    # Instance of User Class (GET request)
+    user_func = User(None, None, None, None)
+
+    # Get current user's notifications
     notifications = current_user['notifications']
 
     return render_template("edit_profile.html",
-                           profile_pic=get_profile_pic,
-                           cover_pic=get_cover_pic,
+                           profile_pic=user_func.get_profile_pic,
+                           cover_pic=user_func.get_cover_pic,
                            current_user=current_user,
                            notifications=notifications)
 
 
-# View to edit a trip
 @ app.route('/edit_trip/<trip_id>', methods=['GET', 'POST'])
 def edit_trip(trip_id):
+    """
+    View to edit a trip
+    """
 
     current_trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     current_catg = current_trip['trip_category'].lower()
@@ -1398,8 +1697,11 @@ def edit_trip(trip_id):
         {'_id': ObjectId(current_user_id)})
     notifications = current_user['notifications']
 
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
     return render_template('edit_trip.html',
-                           profile_pic=get_profile_pic,
+                           profile_pic=user_func.get_profile_pic,
                            current_user=current_user,
                            current_trip=current_trip,
                            countries=countries(),
@@ -1408,9 +1710,12 @@ def edit_trip(trip_id):
                            notifications=notifications)
 
 
-# Delete one image from cloud
 @ app.route('/delete_img/<trip_id>/<filename>', methods=["GET", "POST"])
 def delete_img(trip_id, filename):
+    """
+    Delete one image from cloud
+    """
+
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     trip_user = trip['user']
     trip_catg = trip['trip_category'].replace(" ", "_").lower()
@@ -1426,9 +1731,12 @@ def delete_img(trip_id, filename):
     return jsonify({'result': 'success'})
 
 
-# View to execute the delete_trip
 @ app.route('/delete_trip/<trip_id>')
 def delete_trip(trip_id):
+    """
+    View to execute the delete_trip
+    """
+
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     search_exp = (trip['trip_name']).replace(" ", " AND ")
     trip_path = cloudinary.Search().expression(search_exp).execute()
@@ -1460,9 +1768,11 @@ def delete_trip(trip_id):
     return redirect(request.referrer)
 
 
-# View to open the trip post
 @app.route('/trip/<trip_id>', methods=["GET", "POST"])
 def trip(trip_id):
+    """
+    View to open the trip post
+    """
 
     trip = mongo.db.trips.find_one({'_id': ObjectId(trip_id)})
     resources = trip_folder_resources(trip['trip_name'])
@@ -1478,9 +1788,12 @@ def trip(trip_id):
     else:
         notifications = None
 
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
     return render_template('trip.html',
                            trip=trip,
-                           profile_pic=get_profile_pic,
+                           profile_pic=user_func.get_profile_pic,
                            resources=resources,
                            img_url=img_url,
                            map=map,
@@ -1488,109 +1801,53 @@ def trip(trip_id):
                            notifications=notifications)
 
 
-# Notifications
 @app.route("/notification/<user_id>", methods=["POST", "GET"])
 def notification(user_id):
-    current_user_id = session['user']
+    """
+    Notifications
+    """
+
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
+    # Current user
     current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(current_user_id)})
+        {'_id': ObjectId(session['user'])})
+
+    # Any user who was requested to be friend
     user = mongo.db.users.find_one(
         {'_id': ObjectId(user_id)})
+    # User notifications
     ntf_user = user['notifications']
 
-    ntf = {
-        '_id': current_user_id,
-        'name': current_user['fname'].capitalize()
-    }
+    # Handle notification functionality
+    user_func.notification(current_user, user, ntf_user, user_id)
 
-    if len(ntf_user) > 0:
-        for notif in ntf_user:
-            # Add notification
-            if session['user'] != notif['_id']:
-                mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                    '$push': {
-                        'notifications': ntf
-                    }})
-
-            # Remove notification
-            else:
-                mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                    '$pull': {
-                        'notifications': ntf
-                    }})
-    else:
-        # Add notification
-        mongo.db.users.update({'_id': ObjectId(user_id)}, {
-            '$push': {
-                'notifications': ntf
-            }})
-
-    return jsonify({
-        'result': 'success',
-        'user_id': user_id,
-        'current_user': current_user_id
-    })
+    return jsonify({'result': 'success'})
 
 
-# Follow request
 @app.route("/follow_request/<user_id>", methods=["POST", "GET"])
 def follow_request(user_id):
-    current_user_id = session['user']
+    """
+    Follow request
+    """
+
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
+    # Current user
     current_user = mongo.db.users.find_one(
-        {'_id': ObjectId(current_user_id)})
-    user = mongo.db.users.find_one(
-        {'_id': ObjectId(user_id)})
+        {'_id': ObjectId(session['user'])})
+
+    # Current user's followers
     rqt_current_user = current_user['followers']
 
-    flwg = current_user_id
-    flwr = user_id
+    # Any user who was requested to be friend
+    user = mongo.db.users.find_one(
+        {'_id': ObjectId(user_id)})
 
-    ntf = {
-        '_id': user_id,
-        'name': user['fname'].capitalize()
-    }
-
-    if len(rqt_current_user) > 0:
-        if user_id not in rqt_current_user:
-            mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                '$push': {
-                    'following': flwg
-                }})
-
-            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                '$push': {
-                    'followers': flwr
-                }})
-
-            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                '$pull': {
-                    'notifications': ntf
-                }})
-        else:
-            mongo.db.users.update({'_id': ObjectId(user_id)}, {
-                '$pull': {
-                    'followers': flwg
-                }})
-
-            mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-                '$pull': {
-                    'following': flwr
-                }})
-    else:
-        mongo.db.users.update({'_id': ObjectId(user_id)}, {
-            '$push': {
-                'following': flwg
-            }})
-
-        mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-            '$push': {
-                'followers': flwr
-            }})
-
-        mongo.db.users.update({'_id': ObjectId(current_user_id)}, {
-            '$pull': {
-                'notifications': ntf
-            }})
+    # Handle follow request
+    user_func.follow_request(current_user, rqt_current_user, user, user_id)
 
     return jsonify({
         'result': 'success',
@@ -1598,12 +1855,20 @@ def follow_request(user_id):
     })
 
 
-# View to logout the user (Clear the session cookie)
 @app.route("/logout")
 def logout():
+    """
+    View to logout the user (Clear the session cookie)
+    """
+
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
+    # Logout user
+    user_func.logout()
+
     # Remove user from session cookie
     flash("You have been logged out")
-    session.pop("user")
     return redirect(url_for("feed"))
 
 
