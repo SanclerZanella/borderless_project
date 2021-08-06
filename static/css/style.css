@@ -208,7 +208,6 @@ nav {
     background-color: rgb(1, 95, 95);
 }
 
-
 #logo {
     height: 8vh;
 }
@@ -243,6 +242,14 @@ a.navSmFont {
 
 a.navSmFont:hover {
     color: #fff;
+}
+
+.nav-link {
+    margin: .5rem 0;
+}
+
+.dropdown {
+    margin: .8rem 0;
 }
 
 .nav-item i,
@@ -406,12 +413,14 @@ footer {
 
 .jumbotron {
     background-color: #86bac0;
-    margin-top: 1rem
+    margin-top: 1rem;
+    margin-bottom: 0;
 }
 
 .feedTitle {
     font-weight: 700;
-    margin-top: 1rem
+    margin-top: 1rem;
+    padding: 0;
 }
 
 .profileNavItem,
@@ -829,6 +838,12 @@ div#map {
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
+    }
+}
+
+@media (min-width: 576px) {
+    .jumbotron {
+        padding: 0.5rem 0.5rem;
     }
 }
 

@@ -389,15 +389,24 @@
                         {% for follower in followers %}
                         <!-- Friend Link -->
                         <div class="col-2 friendLink">
-                            <a href="{{ url_for('public_profile', trip_user=follower) }}">
-                                <img class="friendProfilePic" src="{{ profile_pic(follower) }}" alt="Follower picture">
+                            <div class="dropdown">
+                                <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <img class="friendProfilePic" src="{{ profile_pic(follower) }}"
+                                        alt="Follower picture">
 
-                                <div class="row no-gutters friendName">
-                                    <div class="col-12">
-                                        <h6 class="text-center">{{ full_name(follower) }}</h6>
+                                    <div class="row no-gutters friendName">
+                                        <div class="col-12">
+                                            <h6 class="text-center">{{ full_name(follower) }}</h6>
+                                        </div>
                                     </div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="{{ url_for('public_profile', trip_user=follower) }}"><i class="fas fa-eye"></i> Visit Profile</a>
+                                    <a class="dropdown-item" href="#"><i class="fas fa-user-times"></i> Remove Follower</a>
                                 </div>
-                            </a>
+                            </div>
+                            
                         </div>
                         {% endfor %}
                         {% else %}
