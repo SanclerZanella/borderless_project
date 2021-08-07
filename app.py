@@ -376,6 +376,47 @@ class User:
                     'notifications': ntf
                 }})
 
+        # Update followers count
+        updated_user = mongo.db.users.find_one(
+            {'_id': ObjectId(session['user'])})
+        updated_following = updated_user['following']
+        count_following = len(updated_following)
+
+        return count_following
+
+    def remove_follower(self, id):
+        """
+        Remove follower from followers array in database and
+        remove current user from following array
+        in the other user database
+        """
+
+        # Following
+        fwl = session['user']
+        # Followers
+        flwr = id
+
+        # Remove follower from followers array in database
+        mongo.db.users.update({'_id': ObjectId(session['user'])}, {
+            '$pull': {
+                'followers': flwr
+            }})
+
+        # Remove current user from following array
+        # in the other user database
+        mongo.db.users.update({'_id': ObjectId(id)}, {
+            '$pull': {
+                'following': fwl
+            }})
+
+        # Update followers count
+        updated_user = mongo.db.users.find_one(
+            {'_id': ObjectId(session['user'])})
+        updated_followers = updated_user['followers']
+        count_followers = len(updated_followers)
+
+        return count_followers
+
     def logout(self):
         """
         Handle user logout
@@ -2125,11 +2166,30 @@ def follow_request(user_id):
         {'_id': ObjectId(user_id)})
 
     # Handle follow request
-    user_func.follow_request(current_user, rqt_current_user, user, user_id)
+    flwn_count = user_func.follow_request(current_user,
+                                          rqt_current_user,
+                                          user,
+                                          user_id)
 
     return jsonify({
         'result': 'success',
-        'user': user_id
+        'user': user_id,
+        'flwn_count': flwn_count
+    })
+
+
+@app.route("/remove_follower/<user_id>", methods=["POST", "GET"])
+def remove_follower(user_id):
+
+    # Instance of User Class
+    user_func = User(None, None, None, None)
+
+    # Remove follower from database
+    followers_count = user_func.remove_follower(user_id)
+
+    return jsonify({
+        'result': 'success',
+        'count_flwr': followers_count,
     })
 
 

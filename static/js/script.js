@@ -100,13 +100,13 @@ $('#trip_photos').on('change', () => {
 $('.deletePost').each((key, value) => {
     let button_id = $(value).attr('id');
     let button_el = $(`#${button_id}`);
+    let button_data = $(value).data('id');
 
     $(button_el).click(() => {
         let closeBtn = $('.closeDeleteConfirm');
         let delete_btn_id = $(button_el).attr('id');
         let delete_btn = $(`#${delete_btn_id}`);
-        let id = delete_btn_id.slice(-1);
-        let modal_id = `deleteTripModal_${id}`;
+        let modal_id = `deleteTripModal_${button_data}`;
         let modal_el = $(`#${modal_id}`);
 
         modal(delete_btn, modal_el, closeBtn);
@@ -294,7 +294,7 @@ $(document).ready(() => {
         let req = $.ajax({
             url: `/notification/${user_id}`,
             type: 'POST',
-            data: { user_id: user_id }
+            data: { 'user_id': user_id }
         });
 
         req.done((data) => {
@@ -312,7 +312,7 @@ $(document).ready(() => {
     });
 });
 
-
+// Handle notification
 $(document).ready(() => {
     $('.accept_btn').each((key, value) => {
         $(value).click((event) => {
@@ -381,4 +381,89 @@ $('#loginBtn').click((event) => {
     let modal_el = $('#login');
 
     modal(login_btn, modal_el, closeBtn);
+});
+
+// Open Remove follower modal
+$('.remove_flwr').each((key, value) => {
+    $(value).click((event) => {
+        event.preventDefault();
+
+        let remove_data = $(value).data('id');
+        let modal_id = `#removeFlwrModal_${remove_data}`
+        let btn_id = `#remove_flwr${remove_data}`
+
+        let closeBtn = $('.closeRemoveConfirm');
+        let remove_btn = $(btn_id);
+        let modal_el = $(modal_id);
+
+        modal(remove_btn, modal_el, closeBtn);
+    });
+});
+
+
+// Ajax to remove follower without refresh the page
+$(document).ready(() => {
+    $('.removeFwl').each((key, value) => {
+        $(value).click((event) => {
+            event.preventDefault();
+
+            let follower_id = $(value).data('id');
+
+            let follower_wrapper = `#follower_${follower_id}`;
+
+            let req = $.ajax({
+                url: `/remove_follower/${follower_id}`,
+                type: 'POST',
+                data: { follower: follower_id }
+            });
+
+            req.done((data) => {
+                $(follower_wrapper).hide(500);
+                $(`.followersCount`).text(data.count_flwr);
+            });
+
+        });
+    });
+});
+
+// Open Unfollow modal
+$('.remove_flwn').each((key, value) => {
+    $(value).click((event) => {
+        event.preventDefault();
+
+        let unfollow_data = $(value).data('id');
+        let modal_id = `#removeFlwnModal_${unfollow_data}`
+        let btn_id = `#remove_flwn${unfollow_data}`
+
+        let closeBtn = $('.closeUnfollowConfirm');
+        let remove_btn = $(btn_id);
+        let modal_el = $(modal_id);
+
+        modal(remove_btn, modal_el, closeBtn);
+    });
+});
+
+// Ajax to unfollow
+$(document).ready(() => {
+    $('.removeFwln').each((key, value) => {
+        $(value).click((event) => {
+            event.preventDefault();
+
+            let flwn_id = $(value).data('id');
+            let following_wrapper = `#following_${flwn_id}`
+
+            let req = $.ajax({
+                url: `/follow_request/${flwn_id}`,
+                type: 'POST',
+                data: { 'flwn_id': flwn_id }
+            });
+
+            req.done((data) => {
+                $(following_wrapper).hide(500);
+                $('.followingCount').text(data.flwn_count);
+            });
+
+        });
+    });
+
 });
