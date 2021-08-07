@@ -91,6 +91,9 @@ class User:
         *notifications: Handle user's notifications creation and deletion;
         *follow_request: Handle follow request add in database
                          or removing from database;
+        *remove_follower: Remove follower from followers array in database and
+                          remove current user from following array
+                          in the other user database;
         *logout: Handle user logout, removing his session
     """
 
@@ -460,6 +463,7 @@ class Trip:
         *img_url: Get url of an image from cloud platform;
         *folder_resources: Get all info and resources of a trip folder
                            in cloud platform;
+        *statistics: Handle statistics amounts;
         *update_trip_photos: Update the trip photos in the cloud
     """
 
@@ -1042,6 +1046,71 @@ class Trip:
         resources = trip_path['resources']
 
         return resources
+
+    def statistics(self, id):
+        """
+        Handle statistcs amounts
+        """
+
+        trips = mongo.db.trips.find({
+            'user': ObjectId(id)})
+
+        # Countries set
+        countries_visited = set()
+
+        # Places set
+        places_visited = set()
+
+        # Total days traveled
+        total_days = []
+
+        # Total photos
+        total_photos = []
+
+        for trip in trips:
+
+            # Add countries to countries_visited set
+            country = trip['trip_country']
+            countries_visited.add(country)
+
+            # Add places to places_visited set
+            place = trip['trip_place_name']
+            places_visited.add(place)
+
+            # Add amount of time of each trip to
+            # total_days list
+            start_date = trip['trip_startdate']
+            end_date = trip['trip_end_date']
+            delta_time = (end_date - start_date).days
+            total_days.append(delta_time)
+
+            # Add amount of photos in each trip to
+            # total_photos list
+            trip_name = trip['trip_name']
+            search_exp = (trip_name).replace(" ", " AND ")
+            trip_path = cloudinary.Search().expression(search_exp).execute()
+            res = trip_path['total_count']
+            total_photos.append(res)
+
+        # Number of visited countries
+        num_countries = len(countries_visited)
+
+        # Number of visited places
+        num_places = len(places_visited)
+
+        # Sum of total days traveled
+        sum_days = sum(total_days)
+
+        # Longest day traveling
+        long_day = max(total_days)
+
+        # Sum of photos
+        sum_photos = sum(total_photos)
+
+        output = (num_countries, num_places,
+                  sum_days, long_day, sum_photos)
+
+        return output
 
     def update_trip_photos(self, trip_photos,
                            resources,
@@ -1712,6 +1781,9 @@ def profile():
     user_followers = current_user['followers']
     user_following = current_user['following']
 
+    # Statistics
+    ctr, plc, days, long, ph = trip_func.statistics(session['user'])
+
     return render_template('profile.html',
                            countries=trip_func.countries(),
                            trips=trips_pag,
@@ -1731,7 +1803,12 @@ def profile():
                            pag_link=profile_pag.pag_link,
                            notifications=notifications,
                            followers=user_followers,
-                           following=user_following)
+                           following=user_following,
+                           num_coun=ctr,
+                           num_plc=plc,
+                           total_days=days,
+                           long_day=long,
+                           total_photos=ph)
 
 
 @ app.route('/public_profile/<trip_user>', methods=["GET", "POST"])
@@ -1869,6 +1946,9 @@ def public_profile(trip_user):
     for ntf in range(len(user_ntf)):
         ntf_id.append(user_ntf[ntf]['_id'])
 
+    # Statistics
+    ctr, plc, days, long, ph = trip_func.statistics(trip_user)
+
     return render_template('public_profile.html',
                            profile_pic=user_func.get_profile_pic,
                            cover_pic=user_func.get_cover_pic,
@@ -1888,7 +1968,12 @@ def public_profile(trip_user):
                            ntf_id=ntf_id,
                            user_followers=user_followers,
                            user_following=user_following,
-                           current_user_followers=current_user_followers)
+                           current_user_followers=current_user_followers,
+                           num_coun=ctr,
+                           num_plc=plc,
+                           total_days=days,
+                           long_day=long,
+                           total_photos=ph)
 
 
 @ app.route('/likes/<trip_id>', methods=["GET", "POST"])
