@@ -36,23 +36,23 @@ def create_app(config_class=Config):
     mongo.init_app(app)
 
     # route imports
-    from app.errors.routes import errors
-    from app.main.routes import main
-    from app.about.routes import about_page
-    from app.delete_img.routes import delete_img_func
-    from app.delete_trip.routes import delete_trip_func
-    from app.edit_profile.routes import edit_profile_page
-    from app.edit_trip.routes import edit_trip_pag
-    from app.follow_request.routes import follow_request_func
-    from app.likes.routes import likes_func
-    from app.login.routes import login_func
-    from app.logout.routes import logout_func
-    from app.notification.routes import notification_func
-    from app.profile.routes import profile_pag
-    from app.public_profile.routes import public_profile_pag
-    from app.remove_follower.routes import remove_follower_func
-    from app.signup.routes import signup_func
-    from app.trip.routes import trip_pag
+    from app.routes.errors.routes import errors
+    from app.routes.main.routes import main
+    from app.routes.about.routes import about_page
+    from app.routes.delete_img.routes import delete_img_func
+    from app.routes.delete_trip.routes import delete_trip_func
+    from app.routes.edit_profile.routes import edit_profile_page
+    from app.routes.edit_trip.routes import edit_trip_pag
+    from app.routes.follow_request.routes import follow_request_func
+    from app.routes.likes.routes import likes_func
+    from app.routes.login.routes import login_func
+    from app.routes.logout.routes import logout_func
+    from app.routes.notification.routes import notification_func
+    from app.routes.profile.routes import profile_pag
+    from app.routes.public_profile.routes import public_profile_pag
+    from app.routes.remove_follower.routes import remove_follower_func
+    from app.routes.signup.routes import signup_func
+    from app.routes.trip.routes import trip_pag
 
     app.register_blueprint(errors)
     app.register_blueprint(main)
