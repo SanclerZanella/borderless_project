@@ -1,42 +1,60 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
+
 <div class="content-wrapper">
+    <!-- Cover and Profile picture  -->
     <div class="row no-gutters">
-        <!-- Trips Feed -->
+        <div class="col-12 profilePics">
+            <img class="profileCover img-centered" src="{{ cover_pic(user._id) }}" alt="">
+            <img id="profilePic" src="{{ profile_pic(user._id) }}" alt="">
+            <div class="profileName">
+                <h2>{{ full_name(user._id) }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile navbar -->
+    <div class="row no-gutters">
         <div class="col-12">
-            <div class="row no-gutters content-alignment">
-
-                {% if session.user == Undefined %}
-                <!-- Jumbotron from bootstrap -->
-                <div class="jumbotron text-center">
-                    <img src="{{ url_for('static', filename='images/logo_session.png') }}" alt="">
-                    <h1 class="display-4">Say Hello to a Borderless World!</h1>
-                    <p class="lead">This is the place to share your adventures with an enthusiastic community of adventurers.</p>
-                    <hr class="my-4">
-                    <p>Come on board and discover more about the Borderless platform.</p>
-                    <a class="btn btn-primary btn-lg" href="{{ url_for('about') }}" role="button">Discover more</a>
+            <nav class="navbar navbar-expand content-alignment profileNav">
+                <div id="navbarTogglerDemo01">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link profileNavItem">Trips</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Followers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Following</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link profileNavItem">Statistics</a>
+                        </li>
+                    </ul>
                 </div>
-                {% endif %}
+            </nav>
+        </div>
+    </div>
 
-                <!-- Feed Title -->
-                <div class="col-12">
-                    <h1 class="text-center feedTitle">Trips Feed</h1>
-                    <hr>
-                </div>
+    <!-- Trips feed -->
+    <div class="row no-gutters profileFeed tripsprofileFeed">
 
-                <!-- Search Bar -->
-        <form action="{{ url_for('feed') }}" method="POST" class="content-alignment profileSearchForm">
+        <!-- Search Bar -->
+        <form action="{{ url_for('public_profile.public_profile', trip_user=user._id) }}" method="POST"
+            class="content-alignment profileSearchForm">
             <div class="row no-gutters">
 
                 <!-- Search Bar -->
                 <div class="col-11 col-md-6 col-lg-6 col-xl-6">
-                    <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search" minlength="3" placeholder="Search"
-                        aria-label="Search" required>
+                    <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search"
+                        placeholder="Search" aria-label="Search">
                 </div>
 
                 <!-- Search Reset Button -->
                 <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
-                    <a href="{{ url_for('feed') }}" class="btn btn-outline-danger my-sm-0">Reset</a>
+                    <a href="{{ url_for('public_profile.public_profile', trip_user=user._id) }}"
+                        class="btn btn-outline-danger my-sm-0">Reset</a>
                 </div>
 
                 <!-- Search Button -->
@@ -46,7 +64,33 @@
             </div>
         </form>
 
-                <!-- Pagination links top -->
+        <!-- Follow/Unfollow Button -->
+        {% if session.user %}
+        {% if session.user not in ntf_id and session.user not in user_followers %}
+        <div class="col-12 content-alignment">
+            <a href="{{ url_for('notification.notification', user_id=user._id) }}" id="followBtn"
+                class="btn btn-outline-primary" data-id="{{ user._id }}">Follow <i class="fas fa-user-plus"></i></a>
+        </div>
+        {% elif session.user not in ntf_id and session.user in user_followers %}
+        <div class="col-12 content-alignment">
+            <a href="{{ url_for('follow_request.follow_request', user_id=user._id) }}" id="unFollowBtn"
+                data-id="{{ user._id }}" class="btn btn-outline-warning accept_btn">Unfollow <i
+                    class="fas fa-user-minus"></i></a>
+        </div>
+        {% elif session.user in ntf_id and session.user not in user_followers %}
+        <div class="col-12 content-alignment">
+            <a href="{{ url_for('notification.notification', user_id=user._id) }}" id="followBtn"
+                class="btn btn-outline-warning" data-id="{{ user._id }}">Remove follow request</a>
+        </div>
+        {% endif %}
+        {% endif %}
+
+
+        <!-- Trips Profile Feed -->
+        <div class="col-12">
+            <div class="row no-gutters content-alignment">
+
+                <!-- Pagination Links Top -->
                 <div class="col-12 pagination paginationTop content-alignment">
                     {% if page != 1 %}
                     <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
@@ -54,8 +98,9 @@
                     {% set count = namespace(value=0) %}
                     {% for pageNum in range(num_pages) %}
                     <a class="pageLink page-link" data-page='{{ page }}'
-                        href="{{ pag_link('', none, limit, count.value, loop.index) }}">{{loop.index }}</a>
-                    {% set count.value = count.value + 10 %}
+                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index
+                        }}</a>
+                    {% set count.value = count.value + 5 %}
                     {% endfor %}
                     {% if num_pages != page %}
                     <a class="page-link" href="{{ next_pag }}">&raquo;</a>
@@ -67,43 +112,20 @@
 
                         {% if trips|length %}
                         {% for trip in trips %}
-                        {% if trip.trip_privacy != 'Private' %}
                         <!-- Trip Post -->
                         <div class="col-11 tripPostLink">
                             <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
                                 alt="">
                             <div class="row no-gutters">
-                                {% if trip.user == current_user_id %}
-                                <div class="col-8 col-md-10">
-                                    <img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}" alt="">
-                                </div>
-                                {% else %}
                                 <div class="col-10">
-                                    <a href="{{ url_for('public_profile', trip_user=trip.user) }}"><img
-                                            class="postLinkProfilePic shadowEffect" src="{{ user_photo(trip.user) }}"
-                                            alt=""></a>
+                                    <img class="postLinkProfilePic" src="{{ profile_pic(user._id) }}" alt="">
                                 </div>
-                                {% endif %}
-                                {% if trip.user == current_user_id %}
-                                <!-- Delete trip Button -->
-                                <div class="col-2 col-md-1 deleteTrip">
-                                    <a id="deleteTripBtn_{{ loop.index }}" class="deletePost"><i
-                                            class="fas fa-trash-alt shakeEffect"></i></a>
-                                </div>
-
-                                <!-- Edit trip button -->
-                                <div class="col-2 col-md-1 editTrip">
-                                    <a href="{{ url_for('edit_trip', trip_id=trip._id) }}"><i
-                                            class="fas fa-pencil-alt shakeEffect"></i></a>
-                                </div>
-                                {% endif %}
 
                             </div>
 
-                            <!-- Link to open the trip -->
                             <div class="row no-gutters postNameDate">
                                 <div class="col-12 text-center">
-                                    <a href="{{ url_for('trip', trip_id=trip._id) }}">
+                                    <a href="{{ url_for('trip.trip', trip_id=trip._id) }}">
                                         <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
                                         <div>
                                             <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
@@ -127,52 +149,14 @@
                                                 no_files(trip.user, trip._id) }}</span></span>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- The delete trip confirmation modal -->
-                            <div class="row no-gutters">
-                                <div class="col-12">
-                                    <div id="deleteTripModal_{{ loop.index }}" class="modal deleteTripModal">
-
-                                        <!-- Modal content -->
-                                        <div class="modal-content">
-                                            <div class="row no-gutters">
-                                                <div class="col-2 ml-auto">
-                                                    <span class="close closeDeleteConfirm">&times;</span>
-                                                </div>
-
-                                                <!-- Confirmation message -->
-                                                <div class="col-12">
-                                                    <div class="row no-gutters">
-                                                        <div class="col-12">
-                                                            <h2 class="text-center">You are going to delete this
-                                                                trip! Are you sure?</h2>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="row no-gutters content-alignment deleteBtnModal">
-                                                        <div class="col-2 content-alignment">
-                                                            <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
-                                                        </div>
-                                                        <div class="col-2 content-alignment">
-                                                            <a class="btn btn-danger"
-                                                                href="{{ url_for('delete_trip', trip_id=trip._id) }}">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Likes Button -->
                             {% if session.user %}
                             <div class="row no-gutters postLikes">
                                 <div class="col-12 text-center">
-                                    <a href="{{ url_for('likes', trip_id=trip._id) }}" class="like"
+                                    <a href="{{ url_for('likes.likes', trip_id=trip._id) }}" class="like"
                                         data-trip="{{ trip._id }}">
                                         <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart shakeEffect"></i>
                                     </a>
@@ -183,7 +167,6 @@
                             {% endif %}
 
                         </div>
-                        {% endif %}
                         {% endfor %}
                         {% else %}
                         <h1>NO TRIPS TO SHOW</h1>
@@ -192,7 +175,7 @@
                     </div>
                 </div>
 
-                <!-- Pagination links bottom -->
+                <!-- Pagination Links Bottom -->
                 <div class="col-12 pagination paginationBottom content-alignment">
                     {% if page != 1 %}
                     <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
@@ -200,8 +183,9 @@
                     {% set count = namespace(value=0) %}
                     {% for pageNum in range(num_pages) %}
                     <a class="pageLink page-link" data-page='{{ page }}'
-                        href="{{ pag_link('', none, limit, count.value, loop.index) }}">{{loop.index }}</a>
-                    {% set count.value = count.value + 10 %}
+                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index
+                        }}</a>
+                    {% set count.value = count.value + 5 %}
                     {% endfor %}
                     {% if num_pages != page %}
                     <a class="page-link" href="{{ next_pag }}">&raquo;</a>
@@ -211,6 +195,175 @@
             </div>
         </div>
     </div>
+
+    <!-- Followers Feed -->
+    <div class="row no-gutters profileFeed followersFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">{{ user_followers|length }} Followers</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile">
+                    <div class="row no-gutters">
+                        {% if user_followers|length > 0 %}
+
+                        {% for follower in user_followers %}
+                        <!-- Friend Link -->
+                        <div class="col-2 friendLink">
+                            {% if session.user != follower %}
+                            <a href="{{ url_for('public_profile.public_profile', trip_user=follower) }}">
+                                <img class="friendProfilePic" src="{{ profile_pic(follower) }}" alt="Follower picture">
+
+                                <div class="row no-gutters friendName">
+                                    <div class="col-12">
+                                        <h6 class="text-center">{{ full_name(follower) }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                            {% else %}
+                            <img class="friendProfilePic" src="{{ profile_pic(follower) }}" alt="Follower picture">
+
+                            <div class="row no-gutters friendName">
+                                <div class="col-12">
+                                    <h6 class="text-center">{{ full_name(follower) }}</h6>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <h3 class="text-center">No Followers to show yet</h3>
+                        </div>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Following Feed -->
+    <div class="row no-gutters profileFeed followingFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">{{ user_following|length }} Following</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile">
+                    <div class="row no-gutters">
+                        {% if user_following|length > 0 %}
+
+                        {% for follow in user_following %}
+                        <!-- Friend Link -->
+                        <div class="col-2 friendLink">
+                            {% if session.user != follow %}
+                            <a href="{{ url_for('public_profile.public_profile', trip_user=follow) }}">
+                                <img class="friendProfilePic" src="{{ profile_pic(follow) }}" alt="Follower picture">
+
+                                <div class="row no-gutters friendName">
+                                    <div class="col-12">
+                                        <h6 class="text-center">{{ full_name(follow) }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                            {% else %}
+                            <img class="friendProfilePic" src="{{ profile_pic(follow) }}" alt="Follower picture">
+
+                            <div class="row no-gutters friendName">
+                                <div class="col-12">
+                                    <h6 class="text-center">{{ full_name(follow) }}</h6>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <h3 class="text-center">No followed friends yet</h3>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Feed -->
+    <div class="row no-gutters profileFeed statisticsFeed text-center d-none">
+        <div class="col-12">
+            <h2 class="text-center">Statistics</h2>
+            <div class="row no-gutters content-alignment">
+                <div class="col-8 feedProfile">
+                    <div class="row no-gutters content-alignment">
+
+                        <!-- Countries visited -->
+                        <div class="col-3 statisticWrapper">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <h6 class="text-center">Countries visited</h6>
+                                </div>
+                            </div>
+
+                            <div class="statisticResultWrapper">
+                                <p class="text-center statisticResult">{{ num_coun }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Countries visited -->
+                        <div class="col-3 statisticWrapper">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <h6 class="text-center">Places visited</h6>
+                                </div>
+                            </div>
+
+                            <div class="statisticResultWrapper">
+                                <p class="text-center statisticResult">{{ num_plc }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Countries visited -->
+                        <div class="col-3 statisticWrapper">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <h6 class="text-center">Days Traveling</h6>
+                                </div>
+                            </div>
+
+                            <div class="statisticResultWrapper">
+                                <p class="text-center statisticResult">{{ total_days }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Countries visited -->
+                        <div class="col-3 statisticWrapper">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <h6 class="text-center">Longest time traveling</h6>
+                                </div>
+                            </div>
+
+                            <div class="statisticResultWrapper">
+                                <p class="text-center statisticResult">{{ long_day }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Countries visited -->
+                        <div class="col-3 statisticWrapper">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                    <h6 class="text-center">Total Photos</h6>
+                                </div>
+                            </div>
+
+                            <div class="statisticResultWrapper">
+                                <p class="text-center statisticResult">{{ total_photos }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- signUp modal -->
@@ -227,7 +380,7 @@
 
                     <!-- form -->
                     <div class="col-12">
-                        <form method="POST" action="{{ url_for('signup') }}">
+                        <form method="POST" action="{{ url_for('signup.signup') }}">
                             <fieldset class="content-alignment">
                                 <div class="card signUpCard">
                                     <div class="text-center">
@@ -317,7 +470,7 @@
                     <!-- form -->
                     <div class="col-12">
                         <!-- Login Form from bootstrap -->
-                        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+                        <form id="loginForm" method="POST" action="{{ url_for('login.login') }}">
                             <fieldset class="content-alignment">
                                 <div class="card loginCard">
                                     <div class="text-center">

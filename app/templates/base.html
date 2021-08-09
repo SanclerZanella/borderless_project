@@ -26,10 +26,10 @@
         <!-- Navbar from bootstrap -->
         <nav class="navbar navbar-expand-lg navbar-light">
             {% if not session.user %}
-            <a class="navbar-brand" href="{{ url_for('feed') }}"><img id="logo"
+            <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
                     src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
             {% else %}
-            <a class="navbar-brand" href="{{ url_for('feed') }}"><img id="logo"
+            <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
                     src="{{ url_for('static', filename='images/logo_session.png') }}" alt="Borderless Logo"></a>
             {% endif %}
 
@@ -45,7 +45,7 @@
                 <ul class="navbar-nav ml-auto">
                     {% if session.user %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('feed') }}"><i class="fas fa-globe-americas"></i></a>
+                        <a class="nav-link" href="{{ url_for('main.feed') }}"><i class="fas fa-globe-americas"></i></a>
                     </li>
                     {% if notifications|length != 0 %}
                     <li class="nav-item">
@@ -62,7 +62,7 @@
                                         <div class="col-12 notifContainer">
                                             <div class="row no-gutters">
                                                 <div class="col-12 requestText">
-                                                    <p><a href="{{ url_for('public_profile', trip_user=ntf._id) }}">{{
+                                                    <p><a href="{{ url_for('public_profile.public_profile', trip_user=ntf._id) }}">{{
                                                             ntf.name }}</a> sent a follow request</p>
                                                 </div>
                                                 <div class="col-6 content-alignment requestBtn">
@@ -72,7 +72,7 @@
                                                     <a id="accept_btn_{{ ntf._id }}"
                                                         class="btn btn-primary btn-sm accept_btn"
                                                         data-id="{{ ntf._id }}"
-                                                        href="{{ url_for('follow_request', user_id=ntf._id) }}">Accept</a>
+                                                        href="{{ url_for('follow_request.follow_request', user_id=ntf._id) }}">Accept</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -106,7 +106,7 @@
                     {% endif %}
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                        <a class="nav-link" href="{{ url_for('about.about') }}">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link signUpBtn">SignUp</a>
@@ -125,11 +125,11 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="{{ url_for('profile') }}"><i class="fas fa-user"></i>
+                            <a class="dropdown-item" href="{{ url_for('profile.profile') }}"><i class="fas fa-user"></i>
                                 Profile</a>
-                            <a class="dropdown-item" href="{{ url_for('edit_profile') }}"><i
+                            <a class="dropdown-item" href="{{ url_for('edit_profile.edit_profile') }}"><i
                                     class="fas fa-user-edit"></i> Edit Profile</a>
-                            <a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>
+                            <a class="dropdown-item" href="{{ url_for('logout.logout') }}"><i class="fas fa-sign-out-alt"></i>
                                 Log Out</a>
                         </div>
                     </div>
