@@ -24,9 +24,12 @@ def feed():
         current_user_id = current_user['_id']
 
         notifications = current_user['notifications']
+
+        path = "/public_profile/%s" % session['user']
     else:
         current_user_id = None
         notifications = None
+        path = "/public_profile/%s" % 123
 
     # Pagination
     db = trips_collection
@@ -34,6 +37,10 @@ def feed():
     db_field_data = None
     sort_data = '_id'
     sort_direction = -1
+    pag_name = ""
+    sec_arg = None
+    offset_sum = 10
+    query_page = 'main.feed'
 
     # Search query
     if request.method == "POST":
@@ -139,6 +146,8 @@ def feed():
     return render_template("feed.html",
                            current_user_id=current_user_id,
                            trips=trips_pag,
+                           query_page=query_page,
+                           path=path,
                            bg_post_url=trip_func.get_BGPost_pic,
                            no_files=trip_func.get_no_pictures,
                            user_photo=trip_func.user_post_photo,
@@ -149,5 +158,8 @@ def feed():
                            prev_pag=prev_pag,
                            next_pag=next_pag,
                            pag_link=feed_pag.pag_link,
+                           pag_name=pag_name,
+                           sec_arg=sec_arg,
+                           offset_sum=offset_sum,
                            notifications=notifications,
                            profile_pic=user_func.get_profile_pic)

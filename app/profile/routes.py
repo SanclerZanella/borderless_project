@@ -40,6 +40,11 @@ def profile():
     db_field_data = current_user_id
     sort_data = 'trip_startdate'
     sort_direction = -1
+    pag_name = 'profile'
+    sec_arg = None
+    offset_sum = 5
+    query_page = 'profile.profile'
+    path = "/public_profile/%s" % session['user']
 
     if request.method == "POST":
 
@@ -231,10 +236,13 @@ def profile():
     return render_template('profile.html',
                            countries=trip_func.countries(),
                            trips=trips_pag,
+                           query_page=query_page,
+                           path=path,
                            full_name=user_func.get_full_name,
                            current_user_id=current_user_id,
                            user_trips=user_trips,
                            profile_pic=user_func.get_profile_pic,
+                           user_photo=trip_func.user_post_photo,
                            cover_pic=user_func.get_cover_pic,
                            bg_post_url=trip_func.get_BGPost_pic,
                            no_files=trip_func.get_no_pictures,
@@ -245,6 +253,9 @@ def profile():
                            prev_pag=prev_pag,
                            next_pag=next_pag,
                            pag_link=profile_pag.pag_link,
+                           pag_name=pag_name,
+                           sec_arg=sec_arg,
+                           offset_sum=offset_sum,
                            notifications=notifications,
                            followers=user_followers,
                            following=user_following,

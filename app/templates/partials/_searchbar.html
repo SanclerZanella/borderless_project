@@ -1,0 +1,21 @@
+<!-- Search Bar -->
+<form {% if path != (request.path)|string %} action="{{ url_for(query_page) }}" {% else %} action="{{ url_for(query_page, trip_user=user._id) }}" {% endif %} method="POST" class="content-alignment profileSearchForm">
+    <div class="row no-gutters">
+
+        <!-- Search Bar -->
+        <div class="col-11 col-md-6 col-lg-6 col-xl-6">
+            <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search" minlength="3"
+                placeholder="Search" aria-label="Search" required>
+        </div>
+
+        <!-- Search Reset Button -->
+        <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
+            <a {% if path != (request.path)|string %} href="{{ url_for(query_page) }}" {% else %} href="{{ url_for('public_profile.public_profile', trip_user=user._id) }}" {% endif %} class="btn btn-outline-danger my-sm-0">Reset</a>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons resetSearchProfile">
+            <button type="submit" class="btn btn-outline-primary my-sm-0">Search</button>
+        </div>
+    </div>
+</form>

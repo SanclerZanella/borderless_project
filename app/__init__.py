@@ -1,4 +1,5 @@
 from flask import Flask
+import jinja_partials
 from flask_pymongo import PyMongo
 import cloudinary
 import cloudinary.uploader
@@ -27,6 +28,9 @@ def create_app(config_class=Config):
     # app initialization and configuration
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Register Partials method
+    jinja_partials.register_extensions(app)
 
     # extensions for app init from above
     mongo.init_app(app)

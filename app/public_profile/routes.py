@@ -34,6 +34,11 @@ def public_profile(trip_user):
     db_field_data = ObjectId(trip_user)
     sort_data = 'trip_startdate'
     sort_direction = -1
+    pag_name = "public_profile"
+    sec_arg = trip_user
+    offset_sum = 5
+    query_page = 'public_profile.public_profile'
+    path = "/public_profile/%s" % trip_user
 
     if request.method == "POST":
         if request.args:
@@ -150,9 +155,12 @@ def public_profile(trip_user):
 
     return render_template('public_profile.html',
                            profile_pic=user_func.get_profile_pic,
+                           user_photo=trip_func.user_post_photo,
                            cover_pic=user_func.get_cover_pic,
                            bg_post_url=trip_func.get_BGPost_pic,
                            no_files=trip_func.get_no_pictures,
+                           query_page=query_page,
+                           path=path,
                            trips=trips_pag,
                            user=user,
                            full_name=user_func.get_full_name,
@@ -163,6 +171,9 @@ def public_profile(trip_user):
                            prev_pag=prev_pag,
                            next_pag=next_pag,
                            pag_link=pprofile_pag.pag_link,
+                           pag_name=pag_name,
+                           sec_arg=sec_arg,
+                           offset_sum=offset_sum,
                            notifications=notifications,
                            ntf_id=ntf_id,
                            user_followers=user_followers,

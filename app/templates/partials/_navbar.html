@@ -1,0 +1,113 @@
+<nav class="navbar navbar-expand-lg navbar-light">
+    {% if not session.user %}
+    <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
+            src="{{ url_for('static', filename='images/borderless_logo.png') }}" alt="Borderless Logo"></a>
+    {% else %}
+    <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
+            src="{{ url_for('static', filename='images/logo_session.png') }}" alt="Borderless Logo"></a>
+    {% endif %}
+
+    <!-- side nav button for small and medium screens -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Navbar and side items -->
+        <ul class="navbar-nav ml-auto">
+            {% if session.user %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.feed') }}"><i class="fas fa-globe-americas"></i></a>
+            </li>
+            {% if notifications|length != 0 %}
+            <li class="nav-item">
+                <div class="dropdown dropleft">
+                    <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-item">
+                            {% for ntf in notifications %}
+                            <!-- Notification container -->
+                            <div id="ntf_{{ ntf._id }}" class="row no-gutters notification">
+                                <div class="col-12 notifContainer">
+                                    <div class="row no-gutters">
+                                        <div class="col-12 requestText">
+                                            <p><a
+                                                    href="{{ url_for('public_profile.public_profile', trip_user=ntf._id) }}">{{
+                                                    ntf.name }}</a> sent a follow request</p>
+                                        </div>
+                                        <div class="col-6 content-alignment requestBtn">
+                                            <a class="btn btn-danger btn-sm">Refuse</a>
+                                        </div>
+                                        <div class="col-6 content-alignment requestBtn">
+                                            <a id="accept_btn_{{ ntf._id }}" class="btn btn-primary btn-sm accept_btn"
+                                                data-id="{{ ntf._id }}"
+                                                href="{{ url_for('follow_request.follow_request', user_id=ntf._id) }}">Accept</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <div class="dropdown dropleft">
+                    <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="far fa-bell"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-item">
+
+                            <!-- Notification container -->
+                            <div class="row no-gutters notification">
+                                <div class="col-12">
+                                    <p class="text-center">No notifications at the moment</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% endif %}
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('about.about') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link signUpBtn">SignUp</a>
+            </li>
+            <li class="nav-item">
+                <a id="loginBtn" class="nav-link">Login</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% if session.user %}
+        <div>
+            <div class="dropdown dropleft">
+                <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <img id="profileLinkPic" src="{{ profile_pic(session.user) }}" alt="Profile Link Photo">
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{{ url_for('profile.profile') }}"><i class="fas fa-user"></i>
+                        Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('edit_profile.edit_profile') }}"><i
+                            class="fas fa-user-edit"></i> Edit Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('logout.logout') }}"><i class="fas fa-sign-out-alt"></i>
+                        Log Out</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</nav>

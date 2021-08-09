@@ -41,28 +41,7 @@
     <div class="row no-gutters profileFeed tripsprofileFeed">
 
         <!-- Search Bar -->
-        <form action="{{ url_for('public_profile.public_profile', trip_user=user._id) }}" method="POST"
-            class="content-alignment profileSearchForm">
-            <div class="row no-gutters">
-
-                <!-- Search Bar -->
-                <div class="col-11 col-md-6 col-lg-6 col-xl-6">
-                    <input id="query" name="query" class="searchInput form-control mr-sm-2" type="search"
-                        placeholder="Search" aria-label="Search">
-                </div>
-
-                <!-- Search Reset Button -->
-                <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons">
-                    <a href="{{ url_for('public_profile.public_profile', trip_user=user._id) }}"
-                        class="btn btn-outline-danger my-sm-0">Reset</a>
-                </div>
-
-                <!-- Search Button -->
-                <div class="col-2 col-md-2 col-lg-2 col-xl-2 searchProfileButtons resetSearchProfile">
-                    <button type="submit" class="btn btn-outline-primary my-sm-0">Search</button>
-                </div>
-            </div>
-        </form>
+        {% include "partials/_searchbar.html" %}
 
         <!-- Follow/Unfollow Button -->
         {% if session.user %}
@@ -91,82 +70,17 @@
             <div class="row no-gutters content-alignment">
 
                 <!-- Pagination Links Top -->
-                <div class="col-12 pagination paginationTop content-alignment">
-                    {% if page != 1 %}
-                    <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
-                    {% endif %}
-                    {% set count = namespace(value=0) %}
-                    {% for pageNum in range(num_pages) %}
-                    <a class="pageLink page-link" data-page='{{ page }}'
-                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index
-                        }}</a>
-                    {% set count.value = count.value + 5 %}
-                    {% endfor %}
-                    {% if num_pages != page %}
-                    <a class="page-link" href="{{ next_pag }}">&raquo;</a>
-                    {% endif %}
-                </div>
+                {% include "partials/_pagination_top.html" %}
 
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                     <div class="row no-gutters content-alignment">
 
                         {% if trips|length %}
                         {% for trip in trips %}
+
                         <!-- Trip Post -->
-                        <div class="col-11 tripPostLink">
-                            <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}"
-                                alt="">
-                            <div class="row no-gutters">
-                                <div class="col-10">
-                                    <img class="postLinkProfilePic" src="{{ profile_pic(user._id) }}" alt="">
-                                </div>
+                        {% include "partials/_post.html" %}
 
-                            </div>
-
-                            <div class="row no-gutters postNameDate">
-                                <div class="col-12 text-center">
-                                    <a href="{{ url_for('trip.trip', trip_id=trip._id) }}">
-                                        <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
-                                        <div>
-                                            <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
-                                                }}</span>
-                                            <span>to</span> <span id="endDate">{{
-                                                trip['trip_end_date'].strftime('%Y-%m-%d')
-                                                }}</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="row no-gutters postStatistic">
-                                <div class="col-12 text-center">
-                                    <div>
-                                        <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
-                                                ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
-                                                days'
-                                                }}</span></span>
-                                        <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
-                                                no_files(trip.user, trip._id) }}</span></span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Likes Button -->
-                            {% if session.user %}
-                            <div class="row no-gutters postLikes">
-                                <div class="col-12 text-center">
-                                    <a href="{{ url_for('likes.likes', trip_id=trip._id) }}" class="like"
-                                        data-trip="{{ trip._id }}">
-                                        <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart shakeEffect"></i>
-                                    </a>
-                                    <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{
-                                        trip.trip_likes|length }}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-
-                        </div>
                         {% endfor %}
                         {% else %}
                         <h1>NO TRIPS TO SHOW</h1>
@@ -176,21 +90,7 @@
                 </div>
 
                 <!-- Pagination Links Bottom -->
-                <div class="col-12 pagination paginationBottom content-alignment">
-                    {% if page != 1 %}
-                    <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
-                    {% endif %}
-                    {% set count = namespace(value=0) %}
-                    {% for pageNum in range(num_pages) %}
-                    <a class="pageLink page-link" data-page='{{ page }}'
-                        href="{{ pag_link('public_profile', user['_id'], limit, count.value, loop.index) }}">{{loop.index
-                        }}</a>
-                    {% set count.value = count.value + 5 %}
-                    {% endfor %}
-                    {% if num_pages != page %}
-                    <a class="page-link" href="{{ next_pag }}">&raquo;</a>
-                    {% endif %}
-                </div>
+                {% include "partials/_pagination_bottom.html" %}
 
             </div>
         </div>
@@ -367,152 +267,9 @@
 </div>
 
 <!-- signUp modal -->
-<div class="row no-gutters">
-    <div class="col-12">
-        <div id="signUp" class="modal signUpModal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="row no-gutters">
-                    <div class="col-2 ml-auto">
-                        <span class="close closeSignUp">&times;</span>
-                    </div>
-
-                    <!-- form -->
-                    <div class="col-12">
-                        <form method="POST" action="{{ url_for('signup.signup') }}">
-                            <fieldset class="content-alignment">
-                                <div class="card signUpCard">
-                                    <div class="text-center">
-                                        <legend>Sign Up</legend>
-                                    </div>
-
-                                    <!-- First Name Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="fname">First Name</label>
-                                            <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
-                                                pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
-                                                placeholder="First name" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Last Name Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="lname">Last Name</label>
-                                            <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
-                                                pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
-                                                placeholder="Last name" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Email Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="email">Email</label>
-                                            <input type="email" id="email" name="email" class="form-control"
-                                                placeholder="Email" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Password Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="password">Password</label>
-                                            <input type="password" id="password" name="password" minlenght="5"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
-                                                placeholder="Password" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Repeat Password Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="Rpassword">Confirm Password</label>
-                                            <input type="password" id="Rpassword" name="Rpassword" minlenght="5"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
-                                                placeholder="Password" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Register Button -->
-                                    <div class="row no-gutters text-center">
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-lg registerBtn"
-                                                disabled>Register</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
+{% include "partials/_signup_modal.html" %}
 
 <!-- Login modal -->
-<div class="row no-gutters">
-    <div class="col-12">
-        <div id="login" class="modal loginModal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="row no-gutters">
-                    <div class="col-2 ml-auto">
-                        <span class="close closeLogin">&times;</span>
-                    </div>
-
-                    <!-- form -->
-                    <div class="col-12">
-                        <!-- Login Form from bootstrap -->
-                        <form id="loginForm" method="POST" action="{{ url_for('login.login') }}">
-                            <fieldset class="content-alignment">
-                                <div class="card loginCard">
-                                    <div class="text-center">
-                                        <legend>Login</legend>
-                                    </div>
-
-                                    <!-- Email Field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="email">Email</label>
-                                            <input type="email" id="emailL" name="emailL" class="form-control"
-                                                placeholder="Email" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- Password field -->
-                                    <div class="row no-gutters content-alignment">
-                                        <div class="col-8">
-                                            <label for="password">Password</label>
-                                            <input type="password" id="passwordL" name="passwordL" minlenght="5"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
-                                                placeholder="Password" required>
-                                        </div>
-                                    </div>
-
-                                    <!-- LogIn Button -->
-                                    <div class="row no-gutters text-center">
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-lg registerBtn">Log
-                                                In</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
+{% include "partials/_login_modal.html" %}
 
 {% endblock %}
