@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from app import mongo
+from app.app import mongo
 from app.config import Config
 
 

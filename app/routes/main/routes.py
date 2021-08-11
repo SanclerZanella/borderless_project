@@ -10,6 +10,7 @@ main = Blueprint("main", __name__)
 
 
 @main.route("/", methods=["GET", "POST"])
+@main.route("/feed", methods=["GET", "POST"])
 def feed():
     """
     View for landpage
