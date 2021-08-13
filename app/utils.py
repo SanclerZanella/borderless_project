@@ -97,16 +97,28 @@ class User:
         cover_folder_id = "default_cover_pic"
         profile_folder = "users/%s/profile/" % id
         cover_folder = "users/%s/cover/" % id
+        delete_folder = "users/%s/delete" % id
+        trips_folder = "users/%s/trips" % id
 
         # Create folder in the cloud platform
+
+        # Profile folder
         cloudinary.uploader.upload(default_profile_pic,
                                    folder=profile_folder,
                                    public_id=profile_folder_id,
                                    format='jpg')
+
+        # Cover Folder
         cloudinary.uploader.upload(default_cover_pic,
                                    folder=cover_folder,
                                    public_id=cover_folder_id,
                                    format='jpg')
+
+        # Delete Folder
+        cloudinary.api.create_folder(delete_folder)
+
+        # Trips Folder
+        cloudinary.api.create_folder(trips_folder)
 
     def login(self):
         """
@@ -933,6 +945,8 @@ class Trip:
             res = trip_path['resources']
             for img in range(len(res)):
                 resources = res[img]
+
+                # Delete folder
                 delete_folder = 'users/%s/delete' % trip['user']
 
                 cloudinary.uploader.rename(resources['public_id'],
