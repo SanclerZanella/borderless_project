@@ -1,5 +1,7 @@
-# Borderless
+
 ---
+
+# Borderless
 
 ![MN logo](assets/images/readme/Icon.png)
 ADD LOGO
@@ -15,8 +17,10 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
 ![responsiveness TEST](assets/images/readme/responsiveness.PNG)
 ADD RESPONSIVENESS TEST PRINT
 
-## Tables of Contents
 ---
+
+## Tables of Contents
+
 - [Borderless](#borderless)
 - [Tables of Contents](#tables-of-contents)
 - [UX](#ux)
@@ -45,8 +49,10 @@ ADD RESPONSIVENESS TEST PRINT
   - [Content](#content)
   - [Acknowledgements](#acknowledgements)
 
-## UX
 ---
+
+## UX
+
 ### The purpose of the website is to present the follow values:
   * Share your best moments in travels, short trips, vacation, hikings and so on.
   * Share your opnion about a place, with suggestions, advices and photos.
@@ -75,10 +81,13 @@ ADD RESPONSIVENESS TEST PRINT
   * *be able see my followers and following users in my profile.*
   * *be able see a statistic about my trips in my profile.*
   * *be able to log out.*
-  
+
+Back to the [Tables of Contents](#tables-of-contents)
+
+---  
 
 ## Design Process:
----
+
   ### Framework
   * [Bootstrap](https://getbootstrap.com/):
     * Bootstrap is a responsive mobile-first design framework with a clean and modern layout, with its simple-to-understand documentation.
@@ -95,20 +104,23 @@ ADD RESPONSIVENESS TEST PRINT
   * **The wireframe can be seen here**:
     * [Wireframe](app/static/files/readme/borderless_wireframe.pdf)
 
-## Features
+Back to the [Tables of Contents](#tables-of-contents)
+
 ---
+
+## Features
 
 ### Existing Features
 
   * This project has nine separate pages, which are:
-    * "feed" page (which is the first page), where the user can see all public trips posted;
-    * "about" page which contains a brief information about the platform with a button to open the sign up modal form;
-    * "profile" page where the user can see and manipulate your own trips, profile or relationships (followers and following);
-    * "public profile" page where the user can see others user's profile and send a relationship request (follow/unfollow);
-    * "edit profile" page where the user can find a form to update his profile;
-    * "edit trip" page where the user can find a form to update a trip;
-    * "trip" page where the user can see all informations about a trip.
-    * 404 and 500 error page to handle these erros.
+    * **"Feed"** page (which is the first page), where the user can see all public trips posted;
+    * **"About"** page which contains a brief information about the platform with a button to open the sign up modal form;
+    * **"Profile"** page where the user can see and manipulate your own trips, profile or relationships (followers and following);
+    * **"Public Profile"** page where the user can see others user's profile and send a relationship request (follow/unfollow);
+    * **"Edit Profile"** page where the user can find a form to update his profile;
+    * **"Edit Trip"** page where the user can find a form to update a trip;
+    * **"Trip"** page where the user can see all informations about a trip.
+    * **404 and 500 error page** to handle these erros.
 
   * **Register Account**:
     * Anybody can register for free and create their own unique account. I have built-in authentication and authorization to check certain criteria is met before an account is validated. All passwords are hashed for security purposes. When an user is registered in the database, a folder for this user is automaticly created in the cloud platform to hold all pictures of his account. ([see cloud folders diagram when user is registered](app/static/files/readme/register-cloud-folder-diagram.pdf))
@@ -158,6 +170,8 @@ ADD RESPONSIVENESS TEST PRINT
   * **Follow/Unfollow Button**:
     * It's a part of the public profile page where any user can send a follow request to another user or Unfollow.
 
+Back to the [Tables of Contents](#tables-of-contents)
+
 ### Future Implementations
 
   * Add comments to the trip posts.
@@ -166,8 +180,11 @@ ADD RESPONSIVENESS TEST PRINT
 
   * Change pagination to infinite scroll with lazy loading.
 
-## Technologies Used
+Back to the [Tables of Contents](#tables-of-contents)
+
 ---
+
+## Technologies Used
 
   * [Gitpod](https://gitpod.io/)
     * Used as my primary IDE for coding. Gitpod is an open source platform for automated and ready-to-code development environments that blends into your existing workflow directly from your browser.
@@ -214,6 +231,8 @@ ADD RESPONSIVENESS TEST PRINT
   * [CSS-tricks](https://css-tricks.com/)
     * Is a blog where you can find lots of tutorial and tricks to write a good css.
 
+Back to the [Tables of Contents](#tables-of-contents)
+
   ### Front-End Technologies
 
   * [HTML 5](https://en.wikipedia.org/wiki/HTML5)
@@ -233,6 +252,8 @@ ADD RESPONSIVENESS TEST PRINT
 
   * [Jquery](https://jquery.com/):
     * Used as the primary JavaScript functionality. In an effort to keep the JavaScript minimal, I have decided to use jQuery as foundation to my scripts framework.
+
+Back to the [Tables of Contents](#tables-of-contents)
   
   ### Back-End Technologies
 
@@ -263,18 +284,118 @@ ADD RESPONSIVENESS TEST PRINT
   * [PyMongo](https://pypi.org/project/pymongo/)
     * Used as the Python API for MongoDB.
 
-## Testing
+Back to the [Tables of Contents](#tables-of-contents)
+
 ---
 
-### Testing User Stories
+## Testing
 
-Based on the User Stories listed above:
+### Creating an Account
 
-  1. The bride was convinced that the photographer is a reliable photographer and he will register her wedding with quality and creativity, she had a good experience on website where she found every information quickly.
+I've created my own personal account. In addition to this primary account, I've tested with about 5 fake accounts in order to confirm authentication and validation worked as expected. The authentication and validation to create an account consists in:
 
-  2. the couple enjoyed the website design, making them confident that the photographer is creative and confirming this looking the photos on pre-wedding portfolio. 
+1. Check if the Sign up form is properly filled out.
+    * If the "First name" and "Last name" fields are filled out, with a minimum length of 2 characters and maximum of 15 characters;
+      ```html
+      <!-- First Name Field -->
+      <div class="row no-gutters content-alignment">
+          <div class="col-8">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
+                  pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
+                  placeholder="First name" required>
+          </div>
+      </div>
 
-  3. The pregnant liked the family portfolio, making her confident, she was capable to reach all website features by her smartphone.
+      <!-- Last Name Field -->
+      <div class="row no-gutters content-alignment">
+          <div class="col-8">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
+                  pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
+                  placeholder="Last name" required>
+          </div>
+      </div>
+      
+      ```
+      - Checking if the above fields are filled out:
+      ![fname lname check](app/static/images/readme/test/manual/signup_fname.png)
+
+      - Checking if the above fields have the right length:
+      ![fname lname len check](app/static/images/readme/test/manual/signup_fname_len.png)
+
+    * If the "Email" field is filled out with the properly email format;
+      ```html
+      <!-- Email Field -->
+      <div class="row no-gutters content-alignment">
+          <div class="col-8">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" class="form-control"
+                  placeholder="Email" required>
+          </div>
+      </div>
+
+      ```
+      - Checking if the email field has the right format:
+      ![email format check](app/static/images/readme/test/manual/signup_email.png)
+
+    * If the "Password" and "Confirm Password" field are properly filled out with a minimum length of 6 characters and maximum of 15 characters and if these fields match, in case of these fields not match, the register button "Register" keep disabled.
+      ```html
+      <!-- Password Field -->
+      <div class="row no-gutters content-alignment">
+          <div class="col-8">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" minlenght="5"
+                  maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                  placeholder="Password" required>
+          </div>
+      </div>
+
+      <!-- Repeat Password Field -->
+      <div class="row no-gutters content-alignment">
+          <div class="col-8">
+              <label for="Rpassword">Confirm Password</label>
+              <input type="password" id="Rpassword" name="Rpassword" minlenght="5"
+                  maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                  placeholder="Password" required>
+          </div>
+      </div>
+
+      ```
+      - Checking if the above fields have the right length:
+      ![password length check](app/static/images/readme/test/manual/password_check.png)
+
+      - If the above fields match, then "Register" button is no longer disabled:
+        * Match:
+          ![password match check](app/static/images/readme/test/manual/password_match.png)
+        * No Match:
+          ![password match check](app/static/images/readme/test/manual/password_no_match.png)
+
+2. Check if the user already exists in the database, using the email as parameter, if the user already exists, the return to the previous page with a flash message which says "User already exists";
+    ```python
+    # Check if the username already exists in db
+    existing_user = users_collections.find_one(
+        {"email": request.form.get("email")})
+
+    if existing_user:
+        flash("User already exists")
+
+        # redirect to previous page if the users already exists
+        return redirect(request.referrer)
+    ```
+
+### Log in
+I've tested the log in form and functionality in all initial pages, filling the form with the correct values and different values to try to catch any unexpected error, authentication and validation worked as expected. The authentication and validation to log in consists in:
+
+1. Check if the Log in form is properly filled out.
+    * If the "Email" field is filled out with the properly email format;
+    ```html
+
+    ```
+
+    * If the "Password" field is properly filled out with a minimum length of 5 characters and maximum of 15 characters.
+
+2. Check if the user exists in the database, using the email as parameter, in the case the user exists in the database, then check if the password match with the password stored in the database;
 
 ### Validating The HTML and CSS code
   
@@ -302,6 +423,7 @@ I manually tested the live project by doing the following:
   2. I noted that the Mozilla Firefox render the photos better than the Google Chrome. I don't have yet the knowledge to fix it.
 
 ---
+
 ## Accessibility
 
   * Each image has an alt attribute describing the image's function
@@ -311,6 +433,7 @@ I manually tested the live project by doing the following:
   * Contact form inputs have labels
 
 ---
+
 ## Deployment
 
 ### Deploying my project
@@ -330,6 +453,8 @@ Use the following link to view my live project: [Marco Neves Photography](https:
 
 More information about this process can be found on the following link: [Netlify Docs](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/)
 
+---
+
 ## Cloning my project
 
 If you would like to work on my project further you can clone it to your local machine using the following steps:
@@ -346,6 +471,7 @@ If you would like to work on my project further you can clone it to your local m
 You can find both the source of this information and learn more about the process on the following link: [Cloning a Repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
 
 ---
+
 ## Credits
 
 ### Content

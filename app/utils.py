@@ -90,9 +90,9 @@ class User:
         Create a folder for the users to store the images
         and set the default cover and profile picture
         """
-
-        default_profile_pic = 'static/images/profile/default_profile_pic.png'
-        default_cover_pic = 'static/images/profile/default_cover_pic.jpg'
+        pic_path = 'app/static/images/profile/default_profile_pic.png'
+        default_profile_pic = pic_path
+        default_cover_pic = 'app/static/images/profile/default_cover_pic.jpg'
         profile_folder_id = "default_profile_pic"
         cover_folder_id = "default_cover_pic"
         profile_folder = "users/%s/profile/" % id

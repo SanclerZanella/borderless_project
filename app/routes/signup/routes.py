@@ -28,12 +28,14 @@ def signup():
 
         if existing_user:
             flash("User already exists")
+
+            # redirect to previous page if the users already exists
             return redirect(request.referrer)
 
         # Register the user in DB
         user_func.register_user()
 
-        # Fetch the new user DB
+        # Fetch the new user in DB
         registered_user = users_collections.find_one(
             {"email": request.form.get("email")})
 
@@ -46,6 +48,3 @@ def signup():
         # Redirect to the new user's profile
         flash("Registration Successful")
         return redirect(url_for("profile.profile"))
-
-    # redirect to previous if the users already exists
-    return redirect(request.referrer)
