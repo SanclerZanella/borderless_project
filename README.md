@@ -17,21 +17,21 @@ ADD RESPONSIVENESS TEST PRINT
 
 ## Tables of Contents
 ---
-- [# Borderless](#-borderless)
-- [## Tables of Contents](#-tables-of-contents)
-- [## UX](#-ux)
+- [Borderless](#borderless)
+- [Tables of Contents](#tables-of-contents)
+- [UX](#ux)
   - [The purpose of the website is to present the follow values:](#the-purpose-of-the-website-is-to-present-the-follow-values)
   - [User Stories:](#user-stories)
-- [## Design Process:](#-design-process)
+- [Design Process:](#design-process)
   - [Framework](#framework)
   - [Wireframing the project on Balsamiq](#wireframing-the-project-on-balsamiq)
-- [## Features](#-features)
+- [Features](#features)
   - [Existing Features](#existing-features)
   - [Future Implementations](#future-implementations)
-- [## Technologies Used](#-technologies-used)
+- [Technologies Used](#technologies-used)
   - [Front-End Technologies](#front-end-technologies)
   - [Back-End Technologies](#back-end-technologies)
-- [## Testing](#-testing)
+- [Testing](#testing)
   - [Testing User Stories](#testing-user-stories)
   - [Validating The HTML and CSS code](#validating-the-html-and-css-code)
   - [Testing in different browsers](#testing-in-different-browsers)
@@ -163,6 +163,8 @@ ADD RESPONSIVENESS TEST PRINT
   * Add comments to the trip posts.
 
   * Add the option to create a list of favorite trips.
+
+  * Change pagination to infinite scroll with lazy loading.
 
 ## Technologies Used
 ---
