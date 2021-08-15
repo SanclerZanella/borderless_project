@@ -4,7 +4,7 @@ $('#footerYear').text(new Date().getFullYear());
 // Change the dropdown menu direction in the navbar on medium and small screens
 if (screen.width < 1024) {
     $('.dropdown').removeClass('dropleft');
-};
+}
 
 // Enable Submit Button on Sign Up page when the confirm password matches the password
 $('#Rpassword').on('keyup', function () {
@@ -34,7 +34,7 @@ $('.profileNavItem').each((key, value) => {
             $('.profileFeed').addClass('d-none');
             $('.statisticsFeed').removeClass('d-none');
         }
-    })
+    });
 });
 
 // Open modal
@@ -47,13 +47,13 @@ function modal(openButton, modal, closeBtn) {
     closeBtn.click(() => {
         modal.hide(500);
     });
-};
+}
 
 // Get the modal form to add new trip
 let addTripFormModal = $('#addTripFormModal');
 let addTripButton = $('.addTripBtn');
 let tripBtn = $('#TripBtn');
-let closeAddTripBtn = $('#addTripClose')
+let closeAddTripBtn = $('#addTripClose');
 
 modal(addTripButton, addTripFormModal, closeAddTripBtn);
 
@@ -71,29 +71,29 @@ $('.selectElNewTrip').each((key, value) => {
 
 // Create a photo preview on new trip form
 $('#trip_photos').on('change', () => {
-    const uploadedFiles = trip_photos.files
+    const uploadedFiles = trip_photos.files;
 
-    let numberPics = Object.keys(uploadedFiles)
+    let numberPics = Object.keys(uploadedFiles);
 
     if (numberPics.length > 15) {
-        $('.previewImages').hide(500)
-        $("#trip_photos").addClass('alertValidation')
-        $('.previewPicture').remove()
+        $('.previewImages').hide(500);
+        $("#trip_photos").addClass('alertValidation');
+        $('.previewPicture').remove();
     } else if (numberPics.length == 0) {
-        $('.previewImages').hide(500)
-        $("#trip_photos").removeClass('alertValidation')
-        $('.previewPicture').remove()
+        $('.previewImages').hide(500);
+        $("#trip_photos").removeClass('alertValidation');
+        $('.previewPicture').remove();
     } else {
-        $('.previewImages').show(500)
-        $("#trip_photos").removeClass('alertValidation')
-        $('.previewPicture').remove()
+        $('.previewImages').show(500);
+        $("#trip_photos").removeClass('alertValidation');
+        $('.previewPicture').remove();
         $(uploadedFiles).each((key, value) => {
-            let img_url = URL.createObjectURL(value)
+            let img_url = URL.createObjectURL(value);
             $(`<div>
                  <img class="previewPicture img-centered" src="${img_url}" alt="">
                </div>`).appendTo("#newTripPrev");
         });
-    };
+    }
 });
 
 // Open delete trip confirmation
@@ -168,7 +168,7 @@ $(document).ready(() => {
                 $(`<h3 class="text-center">No photos to show</h3>`).appendTo('#editTripPrev');
             } else {
                 $('#trip_photos').show(500);
-            };
+            }
 
         });
     });
@@ -178,26 +178,26 @@ $(document).ready(() => {
         $('#trip_photos').hide(500);
     } else {
         $('#trip_photos').show(500);
-    };
+    }
 
     $('#trip_photos').on('change', () => {
         countInputFiles = $('#trip_photos')[0].files.length;
         totalInputFiles = countInputFiles + countPrevImg;
         if (totalInputFiles > 15) {
             $('.updateTripBtn').prop('disabled', true);
-            $('.previewImages').hide(500)
-            $('.previewPicture').remove()
+            $('.previewImages').hide(500);
+            $('.previewPicture').remove();
             $('#trip_photos').addClass('alertValidation');
-        } else if (totalInputFiles = 0) {
+        } else if (totalInputFiles == 0) {
             $('.updateTripBtn').prop('disabled', false);
-            $('.previewImages').hide(500)
-            $('.previewPicture').remove()
+            $('.previewImages').hide(500);
+            $('.previewPicture').remove();
             $('#trip_photos').removeClass('alertValidation');
         } else {
             $('.updateTripBtn').prop('disabled', false);
-            $('.previewImages').show(500)
+            $('.previewImages').show(500);
             $('#trip_photos').removeClass('alertValidation');
-        };
+        }
 
     });
 
@@ -226,7 +226,7 @@ $('.pageLink').each((key, value) => {
 
     if (pageData == pageText) {
         $(value).addClass('active');
-    };
+    }
 });
 
 // Google maps api from google maps api documentation
@@ -306,7 +306,7 @@ $(document).ready(() => {
                 button.removeClass('btn-outline-warning');
                 button.addClass('btn-outline-primary');
                 $(button).html('Follow <i class="fas fa-user-plus aria-hidden="true""></i>');
-            };
+            }
         });
 
     });
@@ -352,7 +352,7 @@ $(document).ready(() => {
                     button.removeClass('btn-outline-warning');
                     button.addClass('btn-outline-primary');
                     $(button).html('Follow <i class="fas fa-user-plus" aria-hidden="true"></i>');
-                };
+                }
             });
 
         });
@@ -389,8 +389,8 @@ $('.remove_flwr').each((key, value) => {
         event.preventDefault();
 
         let remove_data = $(value).data('id');
-        let modal_id = `#removeFlwrModal_${remove_data}`
-        let btn_id = `#remove_flwr${remove_data}`
+        let modal_id = `#removeFlwrModal_${remove_data}`;
+        let btn_id = `#remove_flwr${remove_data}`;
 
         let closeBtn = $('.closeRemoveConfirm');
         let remove_btn = $(btn_id);
@@ -432,8 +432,8 @@ $('.remove_flwn').each((key, value) => {
         event.preventDefault();
 
         let unfollow_data = $(value).data('id');
-        let modal_id = `#removeFlwnModal_${unfollow_data}`
-        let btn_id = `#remove_flwn${unfollow_data}`
+        let modal_id = `#removeFlwnModal_${unfollow_data}`;
+        let btn_id = `#remove_flwn${unfollow_data}`;
 
         let closeBtn = $('.closeUnfollowConfirm');
         let remove_btn = $(btn_id);
@@ -450,7 +450,7 @@ $(document).ready(() => {
             event.preventDefault();
 
             let flwn_id = $(value).data('id');
-            let following_wrapper = `#following_${flwn_id}`
+            let following_wrapper = `#following_${flwn_id}`;
 
             let req = $.ajax({
                 url: `/follow_request/${flwn_id}`,

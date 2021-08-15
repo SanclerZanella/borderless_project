@@ -442,8 +442,50 @@ I've checked the trip post in different pages (Profile, Public Profile and Feed)
 
 ### Validating The HTML and CSS code
   
-  * [HTML](https://validator.w3.org/)
-  * [CSS](https://jigsaw.w3.org/css-validator/)
+  #### HTML
+
+  All pages checked. All errors and warnings fixed.
+
+  * [W3C HTML Validator](https://validator.w3.org/) - In the first Check  some erros and warning were found, like:
+    * Legend element can't be inside a div, referent to Sign up and Log in form modals. The legend elements in the Sign up and Log in modals were changed to h3 elements;
+    * Were found duplicated IDs (startDate, endDate, totalDays and totalPhotos) in the trip posts, referent to trip post template (_post.html), which is used in a loop and it generates the duplicated IDs error. For each id was added the 'trip id' from the data base, then each id is different in each post. Exemple:
+      * Before :
+        ```html
+        <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d') }}</span>)
+        ```
+        It results in duplicated ID's when the database is iterated and the trip posts are rendered.
+
+      * After :
+        ```html
+        <span id="startDate_{{ trip._id }}">{{ trip['trip_startdate'].strftime('%Y-%m-%d') }}</span>)
+        ```
+        It results in different ID's when the database is iterated and the trip posts are rendered.
+  
+  In the second check was found a typo error, in the maxlength and minlength attribute of some input elements. This error was fixed.
+
+
+  #### CSS3
+
+  * [W3C CSS Validator](https://jigsaw.w3.org/css-validator/) - No error found in the style sheet.
+
+  #### JavaScript
+
+  * [JShint](https://jshint.com/) - "Metrics: There are 20 functions in this file. Function with the Largest function has 13 statements in it, while the median is 1. The most complex function has a cyclomatic complexity value of 5 while the median is 1."
+
+    ##### Common warnings:
+
+    * "'arrow function syntax (=>)' is only available in ES6 (use 'esversion: 6').";
+    * "'let' is available in ES6 (use 'esversion: 6') or Mozilla JS extensions (use moz).";
+    * "'const' is available in ES6 (use 'esversion: 6') or Mozilla JS extensions (use moz).";
+    * "'template literal syntax' is only available in ES6 (use 'esversion: 6')."
+    * This code works well despite these warnings
+
+    ##### Two undefined variables:
+
+    * '$' - This is for jQuery, is a sign to define/access jQuery;
+    * 'modal' - Which is a function to handle the modals;
+
+* [JSesprima](https://esprima.org/demo/validate.html) - "Code is syntactically valid."
 
 ### Testing in different browsers
 
@@ -451,6 +493,7 @@ I manually tested the website on the following web browsers, checking that butto
 
   * Google Chrome
   * Mozilla Firefox
+  * Microsoft Edge
 
 ### Testing responsiveness
 
@@ -461,9 +504,15 @@ I manually tested the live project by doing the following:
 
 ### Issues found
 
-  1. I planned to open each photo on portfolios pages in a modal, I implemented the modal with a carousel, but when I click on any photo the modal opens always in the first photo in a carousel. I don't have yet the knowledge to fix it with JavaScript. All photos keep being shown in the modal carousel control. I will implement a function to to prevent this from happening in a similar situation.
+  1. The Unfollow button in public profile page, when clicked all code related to remove user from the specific field in the database works well and the button UI turn to a Follow Button, but it does not behave as a Follow button unless the page is reloaded.
 
-  2. I noted that the Mozilla Firefox render the photos better than the Google Chrome. I don't have yet the knowledge to fix it.
+  2. In case an user is logged with two pages opened in different tabs and one of theses pages is the profile page, if the user log out in the tab that isn't the profile and after try to reload the profile page, then he would see a KeyError error, because there is no longer any session called 'user'. This error was fixed adding a try/except statement in every page that needs a user logged to be used, if there is no longer session 'user', then redirect to feed page, which does not need the session 'user'.
+
+  3. If a user create a trip where the place name does not exists in the country, the google maps is not rendered.
+
+  4. Unfollow link in Following tab (profile page) and Remove Follower in the Followers tab (profile page), just work with a double click.
+
+Back to the [Tables of Contents](#tables-of-contents)
 
 ---
 
@@ -473,32 +522,79 @@ I manually tested the live project by doing the following:
   * Each anchor tag has an aria-label attribute describing where that link goes
   * Each section has an aria-labelledby attribute
   * Content has a contrast with the background to improve the visibility
-  * Contact form inputs have labels
+  * Form inputs have labels
 
+Back to the [Tables of Contents](#tables-of-contents)
 ---
 
 ## Deployment
 
-### Deploying my project
+### Local Deployment
 
-I created my project on GitHub and used GitPod's development environment to write my code.
+Please note - in order to run this project locally on your own system, you will need the following installed:
+  * [Python3](https://www.python.org/downloads/) to run the application.
+  * [PIP](https://pip.pypa.io/en/stable/installation/) to install all app requirements.
+  * Any IDE such as [Microsoft Visual Studio Code](https://code.visualstudio.com/).
+  * [GIT](https://www.atlassian.com/git/tutorials/install-git) for cloning and version control.
+  * [MongoDb](https://www.mongodb.com) to develop your own database either locally or remotely on MongoDB Atlas.
 
-To make my project viewable to others, I deployed my project to Netlify with the following process:
+Next, there's a series of steps to take in order to proceed with local deployment:
 
-  1. On [Netlify](https://www.netlify.com/) website, you click "Sign up";
-  2. During the sign up process you will be asked to fork your account with your GitHub repository, then allow;
-  3. On your dashboard click on the button "New site from git";
-  4. Choose GitHub as provider;
-  5. Choose a repository;
-  6. And deploy
+  * Clone this GitHub repository by either clicking the green Clone or download button and downloading the project as a zip-file (remember to unzip it first), or by entering the following into the Git CLI terminal:
+    * > git clone https://github.com/SanclerZanella/borderless_project.git
 
-Use the following link to view my live project: [Marco Neves Photography](https://www.marconevesfotografia.com)
+  * Navigate to the correct file location after unpacking the files.
+    * > cd <path to folder>
+  
+  * Create a .env file with your credentials. An example can be found [here](.env_sample). Be sure to include your MONGO_URI and SECRET_KEY values.
 
-More information about this process can be found on the following link: [Netlify Docs](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/)
+  * Create a .flaskenv file and add the following entries:
+    * > FLASK_APP=run.py
+    * > FLASK_ENV=development
+  
+  * Install all requirements from the [requirements.txt](requirements.txt) file using this command:
+    * > sudo -H pip3 -r requirements.txt
+  
+  * Sign up for a free account on [MongoDB](https://www.mongodb.com) and create a new Database called 2BN-Desserts. The Collections in that database should be as in the schema:
+    * [Database Schema](app/static/files/readme/NoSQL_Schema.pdf)
+
+  * You should now be able to launch your app using the following command in your terminal:
+   * > flask run
+
+  * The app should now be running on localhost on an address similar to http://127.0.0.1:5000. Simply copy/paste this into the browser of your choice!
+
+Back to the [Tables of Contents](#tables-of-contents)
+
+### Remote Deployment
+
+This site is currently deployed on [Heroku](https://circleci.com/signup/?gclid=CjwKCAjw9uKIBhA8EiwAYPUS3Jo8VIjh71KAycLOnAlgya-XRQB5GyYpVMR-wvLIxuVPrR3sgcD2bRoCZS0QAvD_BwE) using the master branch on GitHub. To implement this project on Heroku, the following steps were taken:
+
+1. Create a requirements.txt file so Heroku can install the required dependencies to run the app.
+    * > pip3 freeze --local > requirements.txt
+    * My file can be found [here](requirements.txt).
+
+2. Create a Procfile to tell Heroku what type of application is being deployed, and how to run it.
+    * > echo web: python run.py > Procfile
+    * My file can be found [here](Procfile).
+
+3. Sign up for a free Heroku account, create your project app, and click the Deploy tab, at which point you can Connect GitHub as the Deployment Method, and select Enable Automatic Deployment.
+
+4. In the Heroku Settings tab, click on the Reveal Config Vars button to configure environmental variables as follows:
+    * IP: 0.0.0.0
+    * PORT: 5000
+    * MONGO_URI: <database_uri>
+    * MONGO_DBNAME: <database_name>
+    * SECRET_KEY: <your_own_secret_key>
+    * MAP_KEY: <Google_maps_API_key>
+    * CLOUDINARY_API_KEY: <Cloudinary_API_key>
+    * CLOUDINARY_API_SECRET: <Cloudinary_secret>
+    * CLOUDINARY_CLOUD_NAME: <Cloudinary_cloud_name>
+
+5. Your app should be successfully deployed to Heroku at this point.
 
 ---
 
-## Cloning my project
+## Cloning a Repository
 
 If you would like to work on my project further you can clone it to your local machine using the following steps:
 
@@ -513,19 +609,18 @@ If you would like to work on my project further you can clone it to your local m
 
 You can find both the source of this information and learn more about the process on the following link: [Cloning a Repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
 
+Back to the [Tables of Contents](#tables-of-contents)
+
 ---
 
 ## Credits
-
-### Content
-
-The content of this website is entirely real developed by myself, designed by myself and [Marco Neves Photography](https://www.instagram.com/marconevesfotografia/?hl=en). The images are from Marco Neves portfolio.
 
 ### Acknowledgements
 
 Thank you to the following people who helped with support, inspiration and guidance at different stages in the project:
 
   * My mentor [Caleb Mbakwe](https://www.linkedin.com/in/calebmbakwe/?originalSubdomain=ng)
+  * [Tim Nelson](https://github.com/TravelTimN) who I took the inspiration to organize the project and README file.
   * Code Institute Mentors and Tutors
   * Code Institute Student Care, which is always Kind
   * My class on slack
