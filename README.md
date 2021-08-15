@@ -620,7 +620,7 @@ Back to the [Tables of Contents](#tables-of-contents)
 Thank you to the following people who helped with support, inspiration and guidance at different stages in the project:
 
   * My mentor [Caleb Mbakwe](https://www.linkedin.com/in/calebmbakwe/?originalSubdomain=ng)
-  * [Tim Nelson](https://github.com/TravelTimN) who I took the inspiration to organize the project and README file.
+  * [Tim Nelson](https://github.com/TravelTimN) whom I inspired to organize the project and the README file.
   * Code Institute Mentors and Tutors
   * Code Institute Student Care, which is always Kind
   * My class on slack
