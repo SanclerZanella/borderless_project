@@ -345,7 +345,7 @@ I've created my own personal account. In addition to this primary account, I've 
       <div class="row no-gutters content-alignment">
           <div class="col-8">
               <label for="password">Password</label>
-              <input type="password" id="password" name="password" minlenght="5"
+              <input type="password" id="password" name="password" minlenght="6"
                   maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
                   placeholder="Password" required>
           </div>
@@ -355,7 +355,7 @@ I've created my own personal account. In addition to this primary account, I've 
       <div class="row no-gutters content-alignment">
           <div class="col-8">
               <label for="Rpassword">Confirm Password</label>
-              <input type="password" id="Rpassword" name="Rpassword" minlenght="5"
+              <input type="password" id="Rpassword" name="Rpassword" minlenght="6"
                   maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
                   placeholder="Password" required>
           </div>
@@ -385,17 +385,60 @@ I've created my own personal account. In addition to this primary account, I've 
     ```
 
 ### Log in
+
 I've tested the log in form and functionality in all initial pages, filling the form with the correct values and different values to try to catch any unexpected error, authentication and validation worked as expected. The authentication and validation to log in consists in:
 
 1. Check if the Log in form is properly filled out.
     * If the "Email" field is filled out with the properly email format;
-    ```html
 
-    ```
+      - Checking if the email field has the right format:
+      ![email format check](app/static/images/readme/test/manual/login_email.png)
 
-    * If the "Password" field is properly filled out with a minimum length of 5 characters and maximum of 15 characters.
+    * If the "Password" field is properly filled out with a minimum length of 6 characters and maximum of 15 characters.
 
-2. Check if the user exists in the database, using the email as parameter, in the case the user exists in the database, then check if the password match with the password stored in the database;
+      - Checking if the password field has the right length:
+      ![email format check](app/static/images/readme/test/manual/login_password.png)
+
+2. Check if the user exists in the database, using the email as parameter, in the case the user exists in the database, then check if the password match with the password stored in the database. If the email or password is incorrect, then reload the previous page with a flash message, which is "Incorrect email and/or password";
+
+### Add, Edit and Delete a Trip Post
+
+Several trip posts were created in order to prepare for pagination building. These trip posts were created using my actual account, the admin account, and several test accounts.
+
+For several posts, I've edited minor things to test all parts of a trip post, adding place and country, description, photos and creating without photos to test the functionality of creating and updating a trip post to the database and cloud platform.
+
+### Pagination
+
+When implementing pagination, I had a lot of manual tests to undergo, in order to make pagination work for multiple scenarios. I needed to test that all aspects of pagination worked with and without the option for searching the database. These included:
+
+* Pagination without Search
+  * Pagination works if no URL args present on initial load;
+  * Previous Page button disabled on first page of trips shown;
+  * Next Page button disabled on last page of all trips shown;
+  * Appropriate number of pages appear based on the number of 10 items per page in the feed page or 5 items in the profile and public profile pages with correct number of trips in database;
+  * Additional page numbers appear if more trips are added;
+  * Each page number returns their correct page URL.
+
+- Pagination without search query:
+  ![pagination no search check](app/static/images/readme/test/manual/pagination_no_search.png)
+
+* Pagination with Search
+  * Pagination works if no URL args present on initial search;
+  * Previous Page button disabled on first page of search results;
+  * Next Page button disabled on last page of search results;
+  * Additional page numbers appear if more trips are added.
+  * Each page number returns their correct page URL.
+
+- Pagination with search query:
+  ![pagination search check](app/static/images/readme/test/manual/pagination_search.png)
+
+### Trip Post
+
+I've checked the trip post in different pages (Profile, Public Profile and Feed). Each user is just allowed to modify or delete your own trip posts, in this case the delete trip button and edit trip button need to be hidden in other users trip posts. The like button can't be seen with the user is logged out.
+
+- Trip post delete and edit buttons:
+  ![trip post icons check](app/static/images/readme/test/manual/post_edit_btn.png)
+
 
 ### Validating The HTML and CSS code
   

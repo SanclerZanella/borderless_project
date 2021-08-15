@@ -15,7 +15,8 @@
         {% if trip.user == current_user_id %}
         <!-- Delete trip Button -->
         <div class="col-2 col-md-1 deleteTrip">
-            <a id="deleteTripBtn_{{ trip._id }}" class="deletePost" data-id="{{ trip._id }}"><i class="fas fa-trash-alt shakeEffect"></i></a>
+            <a id="deleteTripBtn_{{ trip._id }}" class="deletePost" data-id="{{ trip._id }}"><i
+                    class="fas fa-trash-alt shakeEffect"></i></a>
         </div>
 
         <!-- Edit trip button -->
@@ -33,9 +34,9 @@
             <a href="{{ url_for('trip.trip', trip_id=trip._id) }}">
                 <h1 class="shadowEffect">{{ trip['trip_name']|title }}</h1>
                 <div>
-                    <span id="startDate">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
+                    <span id="startDate_{{ trip._id }}">{{ trip['trip_startdate'].strftime('%Y-%m-%d')
                         }}</span>
-                    <span>to</span> <span id="endDate">{{
+                    <span>to</span> <span id="endDate_{{ trip._id }}">{{
                         trip['trip_end_date'].strftime('%Y-%m-%d')
                         }}</span>
                 </div>
@@ -46,11 +47,11 @@
     <div class="row no-gutters postStatistic">
         <div class="col-12 text-center">
             <div>
-                <span id="totalDays"><i class="fas fa-calendar-alt"></i> <span>{{
+                <span class="totalDays" id="totalDays_{{ trip._id }}"><i class="fas fa-calendar-alt"></i> <span>{{
                         ((trip['trip_end_date'] - trip['trip_startdate']).days)|string + '
                         days'
                         }}</span></span>
-                <span id="totalPhotos"><i class="fas fa-images"></i> <span>{{
+                <span id="totalPhotos_{{ trip._id }}"><i class="fas fa-images"></i> <span>{{
                         no_files(trip.user, trip._id) }}</span></span>
             </div>
         </div>

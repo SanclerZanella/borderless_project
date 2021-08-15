@@ -1,5 +1,6 @@
 from flask import (Blueprint, request,
-                   flash, redirect)
+                   flash, redirect,
+                   url_for)
 from bson.objectid import ObjectId
 import cloudinary
 import cloudinary.uploader
@@ -26,18 +27,27 @@ def delete_trip(trip_id):
     View to execute the delete_trip
     """
 
-    # Instance of Trip Class
-    trip_func = Trip(None, None, None,
-                     None, None, None,
-                     None, None, None,
-                     None)
+    try:
+        # Instance of Trip Class
+        trip_func = Trip(None, None, None,
+                         None, None, None,
+                         None, None, None,
+                         None)
 
-    trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
-    search_exp = (trip['trip_name']).replace(" ", " AND ")
-    trip_path = cloudinary.Search().expression(search_exp).execute()
+        trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
+        search_exp = (trip['trip_name']).replace(" ", " AND ")
+        trip_path = cloudinary.Search().expression(search_exp).execute()
 
-    # Handle trip deletion
-    trip_func.delete_trip(trip, trip_path, trip_id)
+        # Handle trip deletion
+        trip_func.delete_trip(trip, trip_path, trip_id)
 
-    flash("Trip Successfuly Deleted")
-    return redirect(request.referrer)
+        flash("Trip Successfuly Deleted")
+        return redirect(request.referrer)
+
+    except KeyError:
+        """
+        Catch KeyError in case there is no session called 'user'
+        and redirect to the feed page
+        """
+
+        return redirect(url_for('main.feed'))

@@ -1,4 +1,5 @@
-from flask import (Blueprint, jsonify)
+from flask import (Blueprint, jsonify,
+                   redirect, url_for)
 from app.utils import Trip
 
 
@@ -13,13 +14,21 @@ def delete_img(trip_id, filename):
     Delete one image from cloud platform
     """
 
-    # Instance of Trip Class
-    trip_func = Trip(None, None, None,
-                     None, None, None,
-                     None, None, None,
-                     None)
+    try:
+        # Instance of Trip Class
+        trip_func = Trip(None, None, None,
+                         None, None, None,
+                         None, None, None,
+                         None)
 
-    # Handle image deletion
-    trip_func.delete_img(trip_id, filename)
+        # Handle image deletion
+        trip_func.delete_img(trip_id, filename)
 
-    return jsonify({'result': 'success'})
+        return jsonify({'result': 'success'})
+    except KeyError:
+        """
+        Catch KeyError in case there is no session called 'user'
+        and redirect to the feed page
+        """
+
+        return redirect(url_for('main.feed'))

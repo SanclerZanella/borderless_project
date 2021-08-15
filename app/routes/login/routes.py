@@ -39,7 +39,7 @@ def login():
 
             else:
                 # Invalid password
-                flash("Incorrect username and/or password")
+                flash("Incorrect email and/or password")
                 return redirect(request.referrer)
 
         else:

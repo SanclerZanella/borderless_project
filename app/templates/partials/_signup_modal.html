@@ -15,15 +15,14 @@
                         <form method="POST" action="{{ url_for('signup.signup') }}">
                             <fieldset class="content-alignment">
                                 <div class="card signUpCard">
-                                    <div class="text-center">
-                                        <legend>Sign Up</legend>
-                                    </div>
+
+                                    <h3 class="text-center">Sign Up</h3>
 
                                     <!-- First Name Field -->
                                     <div class="row no-gutters content-alignment">
                                         <div class="col-8">
                                             <label for="fname">First Name</label>
-                                            <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
+                                            <input type="text" id="fname" name="fname" minlength="2" maxlenght="15"
                                                 pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
                                                 placeholder="First name" required>
                                         </div>
@@ -33,7 +32,7 @@
                                     <div class="row no-gutters content-alignment">
                                         <div class="col-8">
                                             <label for="lname">Last Name</label>
-                                            <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
+                                            <input type="text" id="lname" name="lname" minlength="2" maxlenght="15"
                                                 pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
                                                 placeholder="Last name" required>
                                         </div>
@@ -54,7 +53,7 @@
                                         <div class="col-8">
                                             <label for="password">Password</label>
                                             <input type="password" id="password" name="password" minlenght="6"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                                                maxlenght="15" pattern="^[a-zA-Z0-9]{6,15}$" class="form-control"
                                                 placeholder="Password" required>
                                         </div>
                                     </div>
@@ -64,7 +63,7 @@
                                         <div class="col-8">
                                             <label for="Rpassword">Confirm Password</label>
                                             <input type="password" id="Rpassword" name="Rpassword" minlenght="6"
-                                                maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                                                maxlenght="15" pattern="^[a-zA-Z0-9]{6,15}$" class="form-control"
                                                 placeholder="Password" required>
                                         </div>
                                     </div>
