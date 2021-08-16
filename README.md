@@ -3,8 +3,7 @@
 
 # Borderless
 
-![MN logo](assets/images/readme/Icon.png)
-ADD LOGO
+![MN logo](app/static/images/navbar/borderless_logo.png)
 
 Say Hello to a Borderless World!
 
