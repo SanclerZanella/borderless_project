@@ -4,6 +4,7 @@ from flask_pymongo import PyMongo
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from flask_talisman import Talisman
 from app.config import Config
 
 # Reusable extension for PyMongo
@@ -71,5 +72,53 @@ def create_app(config_class=Config):
     app.register_blueprint(remove_follower_func)
     app.register_blueprint(signup_func)
     app.register_blueprint(trip_pag)
+
+    # whitelist sources for Flask-Talisman
+    csp = {
+        'img-src': '*',
+        'default-src': [
+            '\'unsafe-inline\' \'self\'',
+            '*.herokuapp.com',
+            '*.fontawesome.com',
+            '*.googleapis.com',
+            '*.gstatic.com',
+            '*.cloudinary.com',
+            '*.bootstrap.com',
+            'cdn.jsdelivr.net'
+        ],
+        'style-src': [
+            '\'unsafe-inline\' \'self\'',
+            '*.herokuapp.com',
+            '*.fontawesome.com',
+            '*.googleapis.com',
+            '*.gstatic.com',
+            '*.cloudinary.com',
+            '*.bootstrap.com',
+            'cdn.jsdelivr.net'
+        ],
+        'script-src': [
+            '\'unsafe-inline\' \'self\'',
+            '*.herokuapp.com',
+            '*.fontawesome.com',
+            '*.googleapis.com',
+            '*.jquery.com',
+            '*.cloudinary.com',
+            '*.bootstrap.com',
+            'cdn.jsdelivr.net'
+        ],
+        'script-src-elem': [
+            '\'unsafe-inline\' \'self\'',
+            '*.herokuapp.com',
+            '*.fontawesome.com',
+            '*.googleapis.com',
+            '*.jquery.com',
+            '*.cloudinary.com',
+            '*.bootstrap.com',
+            'cdn.jsdelivr.net'
+        ]
+    }
+
+    # force HTTPS security header using Flask-Talisman
+    Talisman(app, content_security_policy=csp)
 
     return app
