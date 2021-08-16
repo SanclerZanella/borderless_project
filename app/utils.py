@@ -789,7 +789,7 @@ class Trip:
                 '%s.jpg' % first_pic).url
             return post_BGpic_url
         else:
-            local_img = '../static/images/default_post_cover.jpg'
+            local_img = '../static/images/trip_post/default_post_cover.jpg'
             return local_img
 
     def get_no_pictures(self, trip_user, trip_id):

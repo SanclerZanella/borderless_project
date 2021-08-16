@@ -124,24 +124,37 @@ Back to the [Tables of Contents](#tables-of-contents)
 
   * **Register Account**:
     * Anybody can register for free and create their own unique account. I have built-in authentication and authorization to check certain criteria is met before an account is validated. All passwords are hashed for security purposes. When an user is registered in the database, a folder for this user is automaticly created in the cloud platform to hold all pictures of his account. ([see cloud folders diagram when user is registered](app/static/files/readme/register-cloud-folder-diagram.pdf))
+    ![signup form](app/static/images/readme/test/manual/signup_form.png)
 
   * **Log In to Account**:
     * For existing users, I have more authentication and authorization incorporated to check that the hashed passwords and username match the database.
+    ![signup form](app/static/images/readme/test/manual/login_form.png)
 
   * **Log Out of Account**:
     * Users can easily log out of their account with the click of a button.
+    ![logout btn](app/static/images/readme/test/manual/logout_btn.png)
   
   * **Navbar**:
     * The navbar is different, depending whether the user is logged in or not. If the user is not logged in, the logo will be the brand logo picture with the brand name, and the items will be "About" (Which redirects to about page), "Sign Up" (Which open a sign up form) and "Login" (Which open a log in form). If the user is logged in the logo will be just the brand logo picture, and the items will be a globe icon (which redirects to feed page), user's avatar (Which is a dropdown menu with the option to visit profile, edit profile and log out), a bell icon (Which is a dropdown menu where the user can find his notifications), if there is notification to the user, the bell icon will be solid, with there is no notification to the user, the bell icon will be outlined.
+    
+      * Navbar when the user is logged:
+      ![logged navbar](app/static/images/readme/test/manual/logged_navbar.png)
+
+      * Navbar when the user is logged out:
+      ![logged out navbar](app/static/images/readme/test/manual/loggedout_navbar.png)
   
   * **View All Trip Posts**:
     * On the *feed page*, all trip posts are initially displayed in an date order, being ordered by the latest initial trip date to oldest trip date, with a standard 10-items per page using pagination.
+        * [Feed Page](https://borderless-project.herokuapp.com/)
   
   * **Search Trips**:
-    * If a user would like to search for something specific, whether it's a particular trip or a certain place, then the Search button is perfect! and even limit the number of results that are displayed per page.
+    * If a user would like to search for something specific, whether it's a particular trip or a certain place, then the Search bar is perfect.
+      ![search bar feature](app/static/images/readme/test/manual/search_feat.png)
   
   * **Add a Trip**:
     * Create or 'add' a new trip. The 'Add New Trip' button can be found in the profile page. Defensive programming in place means users must adhere to minimal requirements when adding a new trip like fill required fields and limit the number of photos will be posted. If a user doesn't have a photo to accompany their trip, I have a built-in function that will automatically assign a placeholder image. A folder named by the trip category is created in the cloud platform to hold a folder named by the trip name which contains the trip pictures. ([see trips folder diagram](app/static/files/readme/trips-cloud-folder-diagram.pdf))
+      ![add trip btn](app/static/images/readme/test/manual/add_trip_btn.png)
+      ![add trip btn](app/static/images/readme/test/manual/add_trip_form.png)
   
   * **Trip Post**:
     * Trip post can be found in the profile, public profile and feed pages. It's a link to the trip view and trip author's public profile, with a minimal information about the trip. From here, users also have additional options:
@@ -157,18 +170,32 @@ Back to the [Tables of Contents](#tables-of-contents)
       5. **Access Author Public Profile:**
          * Access trip's author clicking in the author's avatar picture on the post
 
-  * **View Trip**:
+    ![trip post](app/static/images/readme/test/manual/trip_post.png)
+
+  * **Trip View**:
     * View all information about the trip with a map pointing the place location in the world, in this page the user is able to find the trip name, trip place (place and country), trip period (start date and end date), trip description and trip photos, which can be expanded on click.
+      ![trip view 1](app/static/images/readme/test/manual/trip_view1.png)
+      ![trip view 2](app/static/images/readme/test/manual/trip_view2.png)
+
   * **Edit Profile**:
     * Allow user to update profile Name and choose a new avatar and cover picture, beside the file input for choose the new avatar and cover picture there is a preview of the current avatar and cover picture. If the user choose new pictures to the profile, the old pictures will be overwriten in cloud folder.
+    ![edit profile form](app/static/images/readme/test/manual/edit_profile_form.png)
+
   * **Followers Tab**:
     * It's a part of the profile and public profile where the user can find the followers of that profile's owner, in this tab the user will find a the followers's avatar and name, which is clickble and open a dropdown menu, with the option of visit the follower's profile or remove the follower.
+    ![followers tab](app/static/images/readme/test/manual/followers_tab.png)
+
   * **Following Tab**:
     * It's a part of the profile and public profile where the user can find other users he is following, in this tab the user will find a the following's avatar and name, which is clickble and open a dropdown menu, with the option of visit the following profile or unfollow.
+    ![following tab](app/static/images/readme/test/manual/following_tab.png)
+
   * **Statistics Tab**:
     * It's a part of the profile and public profile pages where the user can see some statistics like the number of "countries visited" and "places visited", amount of "days traveling", "longest time traveling" and the "total of photos".
+    ![statistics tab](app/static/images/readme/test/manual/stat_tab.png)
+
   * **Follow/Unfollow Button**:
     * It's a part of the public profile page where any user can send a follow request to another user or Unfollow.
+    ![follow/unfollow btn](app/static/images/readme/test/manual/follow_btn.png)
 
 Back to the [Tables of Contents](#tables-of-contents)
 
@@ -621,11 +648,11 @@ Thank you to the following people who helped with support, inspiration and guida
 
   * My mentor [Caleb Mbakwe](https://www.linkedin.com/in/calebmbakwe/?originalSubdomain=ng)
   * [Tim Nelson](https://github.com/TravelTimN) whom I inspired to organize the project and the README file.
-  * Code Institute Mentors and Tutors
-  * Code Institute Student Care, which is always Kind
-  * My class on slack
-  * The supportive Code Institute community on Slack
-  * My family and friends for their patience and honest critique throughout
+  * Code Institute Mentors and Tutors.
+  * Code Institute Student Care, which is always Kind.
+  * My class on slack.
+  * The supportive Code Institute community on Slack.
+  * My family and friends for their patience and honest critique throughout.
 
 
 
