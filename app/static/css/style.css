@@ -307,10 +307,9 @@ a.navSmFont:hover {
 /* Sign Up and LogIn page */
 
 .card {
-    background-color: #b6f8ff;
     width: 100%;
     height: 100%;
-    margin: 2.3rem 0;
+    border: 0;
 }
 
 .registerBtn {
@@ -600,10 +599,17 @@ footer {
     color: #fff;
 }
 
+.editCard {
+    background-color: #86bac0;
+    width: 80%;
+    border-radius: 3%;
+    margin-top: 3rem;
+}
+
 /* Edit trip page */
 
 .edit_trip_wrapper {
-    background-color: #b6f8ff;
+    background-color: #86bac0;
     padding: 1rem !important;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -691,10 +697,6 @@ div#map {
         margin-bottom: 4rem;
     }
 
-    .signUpCard {
-        margin: 9rem 0;
-    }
-
     .card {
         width: 90vw;
         margin-left: 0;
@@ -723,16 +725,18 @@ div#map {
         min-height: 85vh;
     }
 
-    .signUpCard {
-        margin: 4rem 0;
-    }
-
-    .loginCard {
-        margin: 0;
-    }
-
     #profilePic {
         left: 500px;
+    }
+
+    #profileLinkPic {
+        height: 6vh;
+        width: 5vw;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 8vw;
     }
 
     .searchProfileButtons {
@@ -751,6 +755,22 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
     }
+
+    .postNameDate h1 {
+        font-size: 4em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .statisticResultWrapper {
+        height: 20vh;
+    }
+
+    .editCard {
+        margin-top: 12rem;
+    }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
@@ -758,16 +778,13 @@ div#map {
         min-height: 85vh;
     }
 
-    .signUpCard {
-        margin: 4rem;
-    }
-
-    .loginCard {
-        margin: 5rem 0;
-    }
-
     #profilePic {
-        left: 350px;
+        left: 300px;
+    }
+
+    #profileLinkPic {
+        height: 6vh;
+        width: 6vw;
     }
 
     .searchProfileButtons {
@@ -786,6 +803,40 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
     }
+
+    .postNameDate h1 {
+        font-size: 4em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 10vw;
+    }
+
+    .tripPhoto {
+        width: 95%;
+        height: 15vh;
+    }
+
+    .postLikes {
+        font-size: 2em;
+    }
+
+    .statisticResultWrapper {
+        height: 15vh;
+    }
+
+    .statisticResult {
+        font-size: 5em;
+    }
+
+    .editCard {
+        margin-top: 12rem;
+    }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
@@ -801,20 +852,17 @@ div#map {
         width: 80vw;
     }
 
-    .signUpCard {
-        margin: 4rem;
-    }
-
     .card {
         width: 80vw;
     }
 
-    .loginCard {
-        margin: 5rem 0;
-    }
-
     #profilePic {
         left: 200px;
+    }
+
+    #profileLinkPic {
+        height: 8vh;
+        width: 8vw;
     }
 
     .profileNav .nav-item {
@@ -839,6 +887,46 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
     }
+
+    .jumbotron h1 {
+        font-size: 3em;
+    }
+
+    .postNameDate h1 {
+        font-size: 3em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .postLinkProfilePic {
+        height: 8vh;
+        width: 8vw;
+    }
+
+    .tripPhoto {
+        width: 95%;
+        height: 15vh;
+    }
+
+    .statisticResultWrapper {
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .h6, h6 {
+        font-size: 2em;
+    }
+
+    .statisticResult {
+        font-size: 8em;
+    }
+
+    .editCard {
+        margin-top: 1rem;
+    }
 }
 
 @media (min-width: 576px) {
@@ -860,24 +948,21 @@ div#map {
         width: 90vw;
     }
 
-    .signUpCard {
-        margin: 4rem;
-    }
-
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
 
-    .loginCard {
-        margin: 5rem 0;
+    #profilePic {
+        height: 35vh;
+        top: 70px;
+        left: 100px;
     }
 
-    #profilePic {
-        height: 30vh;
-        top: 80px;
-        left: 120px;
+    #profileLinkPic {
+        height: 8vh;
+        width: 10vw;
     }
 
     .profileNav .nav-item {
@@ -911,6 +996,64 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 28%;
     }
+
+    .jumbotron h1 {
+        font-size: 2em;
+    }
+
+    .postNameDate h1 {
+        font-size: 1.5em;
+    }
+
+    .postNameDate span {
+        font-size: 1em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 12vw;
+    }
+
+    .postStatistic {
+        font-size: 1em;
+    }
+
+    .tripPhoto {
+        width: 95%;
+        height: 15vh;
+    }
+
+    .descText {
+        width: 95%;
+    }
+
+    .postLikes {
+        margin-top: 0;
+    }
+
+    .statisticResultWrapper {
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .h6, h6 {
+        font-size: 2em;
+    }
+
+    .statisticResult {
+        font-size: 8em;
+    }
+
+    .editCard {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
 }
 
 @media screen and (min-width: 375px) and (max-width: 424px) {
@@ -931,24 +1074,21 @@ div#map {
         width: 90vw;
     }
 
-    .signUpCard {
-        margin: 5rem;
-    }
-
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
 
-    .loginCard {
-        margin: 6rem 0;
+    #profilePic {
+        height: 35vh;
+        top: 70px;
+        left: 70px;
     }
 
-    #profilePic {
-        height: 30vh;
-        top: 80px;
-        left: 100px;
+    #profileLinkPic {
+        height: 10vh;
+        width: 14vw;
     }
 
     .profileNav .nav-item {
@@ -961,7 +1101,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 1.5em;
+        font-size: 2em;
     }
 
     .searchProfileButtons {
@@ -986,6 +1126,59 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 28%;
     }
+
+    .jumbotron {
+        padding: 1rem;
+    }
+
+    .jumbotron h1 {
+        font-size: 2em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 14vw;
+    }
+
+    .postStatistic {
+        font-size: 1em;
+    }
+
+    .tripPhoto {
+        width: 95%;
+        height: 15vh;
+    }
+
+    .descText {
+        width: 95%;
+    }
+
+    .postLikes {
+        margin-top: 0;
+    }
+
+    .statisticResultWrapper {
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .h6, h6 {
+        font-size: 1.5em;
+    }
+
+    .statisticResult {
+        font-size: 8em;
+    }
+
+    .editCard {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 }
 
 @media screen and (min-width: 320px) and (max-width: 374px) {
@@ -1006,24 +1199,16 @@ div#map {
         width: 90vw;
     }
 
-    .signUpCard {
-        margin: 4rem;
-    }
-
     .card {
         width: 100vw;
         margin-left: 0;
         margin-right: 0;
     }
 
-    .loginCard {
-        margin: 6rem 0;
-    }
-
     #profilePic {
-        height: 30vh;
-        top: 80px;
-        left: 80px;
+        height: 35vh;
+        top: 70px;
+        left: 50px;
     }
 
     .profileNav .nav-item {
@@ -1036,7 +1221,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 1.3em;
+        font-size: 1.5em;
         overflow-wrap: break-word;
     }
 
@@ -1062,6 +1247,64 @@ div#map {
     .previewCurrentImages .previewPictureEdit {
         width: 25%;
         padding: 0;
+    }
+
+    .jumbotron {
+        padding: 1rem;
+    }
+
+    .jumbotron h1 {
+        font-size: 2em;
+    }
+
+    .tripPostLink {
+        height: 35vh;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 16vw;
+    }
+
+    .postStatistic {
+        font-size: 1em;
+    }
+
+    .tripPhoto {
+        width: 95%;
+        height: 15vh;
+    }
+
+    .descText {
+        width: 95%;
+    }
+
+    #profileLinkPic {
+        height: 10vh;
+        width: 16vw;
+    }
+
+    .postLikes {
+        margin-top: 0;
+    }
+
+    .statisticResultWrapper {
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .h6, h6 {
+        font-size: 1.5em;
+    }
+
+    .statisticResult {
+        font-size: 8em;
+    }
+
+    .editCard {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 }
 
@@ -1134,18 +1377,10 @@ div#map {
         margin-bottom: 10rem;
     }
 
-    .signUpCard {
-        margin: 21rem 0;
-    }
-
     .card {
         width: 90vw;
         margin-left: 0;
         margin-right: 0;
-    }
-
-    .loginCard {
-        margin: 21rem 0;
     }
 
     .currentProfilePic {
@@ -1154,12 +1389,11 @@ div#map {
     }
 
     #profilePic {
-        left: 200px;
+        left: 230px;
     }
 
     .postNameDate h1 {
-        font-size: 3em;
-        margin-top: 4rem;
+        font-size: 4em;
     }
 
     .postNameDate span {
@@ -1173,5 +1407,23 @@ div#map {
     .previewImages .previewPicture,
     .previewCurrentImages .previewPictureEdit {
         width: 30%;
+    }
+
+    .postLinkProfilePic {
+        height: 10vh;
+        width: 13vw;
+    }
+
+    #profileLinkPic {
+        height: 6vh;
+        width: 8vw;
+    }
+
+    .statisticResultWrapper {
+        height: 12vh;
+    }
+
+    .statisticResult {
+        font-size: 5em;
     }
 }
