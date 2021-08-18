@@ -537,6 +537,8 @@ I manually tested the live project by doing the following:
 
   4. Unfollow link in Following tab (profile page) and Remove Follower in the Followers tab (profile page), just work with a double click.
 
+  5. Icons from google maps are not rendering.
+
 Back to the [Tables of Contents](#tables-of-contents)
 
 ---

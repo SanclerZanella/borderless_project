@@ -74,12 +74,12 @@ def public_profile(trip_user):
         trips_pag = pprofile_pag.pag_data()
         num_pages = pprofile_pag.num_pages()
         prev_pag = pprofile_pag.pag_link('public_profile',
-                                         None,
+                                         trip_user,
                                          limit,
                                          (offset - limit),
                                          (page - 1))
         next_pag = pprofile_pag.pag_link('public_profile',
-                                         None,
+                                         trip_user,
                                          limit,
                                          (offset + limit),
                                          (page + 1))
@@ -120,12 +120,12 @@ def public_profile(trip_user):
         trips_pag = pprofile_pag.pag_data()
         num_pages = pprofile_pag.num_pages()
         prev_pag = pprofile_pag.pag_link('public_profile',
-                                         None,
+                                         trip_user,
                                          limit,
                                          (offset - limit),
                                          (page - 1))
         next_pag = pprofile_pag.pag_link('public_profile',
-                                         None,
+                                         trip_user,
                                          limit,
                                          (offset + limit),
                                          (page + 1))
