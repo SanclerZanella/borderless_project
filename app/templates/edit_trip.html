@@ -97,9 +97,9 @@
                         <div id="editTripPrev" class="previewCurrentImages">
                             {% for res in trip_path['resources'] %}
                             <div class="imgPrevWrapper">
-                                <a id="{{ res.asset_id }}" class="delEditImg">
+                                <a id="{{ res.asset_id }}" class="delEditImg" aria-label="Delete current photo">
                                         <img class="previewPictureEdit img-centered shakeEffect"
-                                            src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt="">
+                                            src="{{ '%s.jpg' % img_url(res.folder, res.filename) }}" alt="{{ res.filename }}">
                                 </a>
                             </div>
 
@@ -126,14 +126,14 @@
                                                     <hr>
                                                     <div class="row no-gutters content-alignment deleteBtnModal">
                                                         <div class="col-4 col-md-2 content-alignment">
-                                                            <a class="btn btn-primary closeDeleteConfirm">Cancel</a>
+                                                            <a class="btn btn-primary closeDeleteConfirm" aria-label="Close delete current photo confirmation">Cancel</a>
                                                         </div>
                                                         <div class="col-4 col-md-2 content-alignment">
                                                             <a class="btn btn-danger deletePhotoBtn closeDeleteConfirm"
                                                                 data-flname="{{ res.filename }}"
                                                                 data-trip="{{ current_trip._id }}"
                                                                 data-img="{{ res.asset_id }}"
-                                                                href="{{ url_for('delete_img.delete_img', trip_id=current_trip._id, filename=res.filename) }}">
+                                                                href="{{ url_for('delete_img.delete_img', trip_id=current_trip._id, filename=res.filename) }}" aria-label="Delete current photo confirm button">
                                                                 Delete
                                                             </a>
                                                         </div>

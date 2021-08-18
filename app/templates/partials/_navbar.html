@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-light">
     {% if not session.user %}
-    <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
+    <a class="navbar-brand" href="{{ url_for('main.feed') }}" aria-label="Go to feed page"><img id="logo"
             src="{{ url_for('static', filename='images/navbar/borderless_logo.png') }}" alt="Borderless Logo"></a>
     {% else %}
-    <a class="navbar-brand" href="{{ url_for('main.feed') }}"><img id="logo"
+    <a class="navbar-brand" href="{{ url_for('main.feed') }}" aria-label="Go to feed page"><img id="logo"
             src="{{ url_for('static', filename='images/navbar/logo_session.png') }}" alt="Borderless Logo"></a>
     {% endif %}
 
@@ -19,13 +19,13 @@
         <ul class="navbar-nav ml-auto">
             {% if session.user %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('main.feed') }}"><i class="fas fa-globe-americas"></i></a>
+                <a class="nav-link" href="{{ url_for('main.feed') }}" aria-label="Go to feed page"><i class="fas fa-globe-americas"></i></a>
             </li>
             {% if notifications|length != 0 %}
             <li class="nav-item">
                 <div class="dropdown dropleft">
                     <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                        aria-expanded="false" aria-label="Notification">
                         <i class="fas fa-bell"></i>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -37,16 +37,16 @@
                                     <div class="row no-gutters">
                                         <div class="col-12 requestText">
                                             <p><a
-                                                    href="{{ url_for('public_profile.public_profile', trip_user=ntf._id) }}">{{
+                                                    href="{{ url_for('public_profile.public_profile', trip_user=ntf._id) }}" aria-label="Follow requester profile">{{
                                                     ntf.name }}</a> sent a follow request</p>
                                         </div>
                                         <div class="col-6 content-alignment requestBtn">
-                                            <a class="btn btn-danger btn-sm">Refuse</a>
+                                            <a class="btn btn-danger btn-sm" aria-label="Refuse follow request">Refuse</a>
                                         </div>
                                         <div class="col-6 content-alignment requestBtn">
                                             <a id="accept_btn_{{ ntf._id }}" class="btn btn-primary btn-sm accept_btn"
                                                 data-id="{{ ntf._id }}"
-                                                href="{{ url_for('follow_request.follow_request', user_id=ntf._id) }}">Accept</a>
+                                                href="{{ url_for('follow_request.follow_request', user_id=ntf._id) }}" aria-label="Accept follow request">Accept</a>
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
             <li class="nav-item">
                 <div class="dropdown dropleft">
                     <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                        aria-expanded="false" aria-label="Notifications">
                         <i class="far fa-bell"></i>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -80,13 +80,13 @@
             {% endif %}
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('about.about') }}">About</a>
+                <a class="nav-link" href="{{ url_for('about.about') }}" aria-label="Go to about page">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link signUpBtn">SignUp</a>
+                <a class="nav-link signUpBtn" aria-label="Open sign up modal form">SignUp</a>
             </li>
             <li class="nav-item">
-                <a id="loginBtn" class="nav-link">Login</a>
+                <a id="loginBtn" class="nav-link" aria-label="Open Log in modal form">Login</a>
             </li>
             {% endif %}
         </ul>
@@ -94,16 +94,16 @@
         <div>
             <div class="dropdown dropleft">
                 <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
+                    aria-expanded="false" aria-label="Profile menu">
                     <img id="profileLinkPic" src="{{ profile_pic(session.user) }}" alt="Profile Link Photo">
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="{{ url_for('profile.profile') }}"><i class="fas fa-user"></i>
+                    <a class="dropdown-item" href="{{ url_for('profile.profile') }}" aria-label="Go to profile page"><i class="fas fa-user"></i>
                         Profile</a>
-                    <a class="dropdown-item" href="{{ url_for('edit_profile.edit_profile') }}"><i
+                    <a class="dropdown-item" href="{{ url_for('edit_profile.edit_profile') }}" aria-label="Go to edit profile page"><i
                             class="fas fa-user-edit"></i> Edit Profile</a>
-                    <a class="dropdown-item" href="{{ url_for('logout.logout') }}"><i class="fas fa-sign-out-alt"></i>
+                    <a class="dropdown-item" href="{{ url_for('logout.logout') }}" aria-label="Log out"><i class="fas fa-sign-out-alt"></i>
                         Log Out</a>
                 </div>
             </div>

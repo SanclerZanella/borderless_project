@@ -38,8 +38,8 @@
     </header>
 
     <main>
-        <section>
-            <h2 class="sr-only">Flash message</h2>
+        <section aria-labelledby="flashMessage">
+            <h2 id="flashMessage" class="sr-only">Flash message</h2>
             <!-- Flash messages -->
             {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -55,8 +55,8 @@
         </section>
 
         <!--vvv Custom Content vvv-->
-        <section>
-            <h2 class="sr-only">Main Content</h2>
+        <section aria-labelledby="mainContent">
+            <h2 id="mainContent" class="sr-only">Main Content</h2>
 
             {% block content %}
             {% endblock %}

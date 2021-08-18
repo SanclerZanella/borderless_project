@@ -1,15 +1,15 @@
 <!-- Pagination links top -->
 <div class="col-12 pagination paginationTop content-alignment">
     {% if page != 1 %}
-    <a class="page-link" href="{{ prev_pag }}">&laquo;</a>
+    <a class="page-link" href="{{ prev_pag }}" aria-label="Previous page">&laquo;</a>
     {% endif %}
     {% set count = namespace(value=0) %}
     {% for pageNum in range(num_pages) %}
     <a class="pageLink page-link" data-page='{{ page }}'
-        href="{{ pag_link(pag_name, sec_arg, limit, count.value, loop.index) }}">{{loop.index }}</a>
+        href="{{ pag_link(pag_name, sec_arg, limit, count.value, loop.index) }}" aria-label="Page {{ page }}">{{loop.index }}</a>
     {% set count.value = count.value + offset_sum %}
     {% endfor %}
     {% if num_pages != page %}
-    <a class="page-link" href="{{ next_pag }}">&raquo;</a>
+    <a class="page-link" href="{{ next_pag }}" aria-label="Next Page">&raquo;</a>
     {% endif %}
 </div>

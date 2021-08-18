@@ -13,8 +13,7 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
 
 [Click here to see the project live](https://borderless-project.herokuapp.com/)
 
-![responsiveness TEST](assets/images/readme/responsiveness.PNG)
-ADD RESPONSIVENESS TEST PRINT
+![responsiveness TEST](app/static/images/readme/test/manual/responsive_test.png)
 
 ---
 

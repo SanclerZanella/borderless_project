@@ -51,7 +51,7 @@
                                 {% for res in resources %}
                                 <div class="col-3">
                                     <img id="{{ res.asset_id }}" class="tripPhoto"
-                                        src="{{ img_url(res.folder, res.filename) }}" alt="">
+                                        src="{{ img_url(res.folder, res.filename) }}" alt="{{ res.filename }}">
                                 </div>
 
                                 <!-- Trip photo modal -->
@@ -73,7 +73,7 @@
                                                             <div class="col-12">
                                                                 <img id="tripPhotoView_{{ res.asset_id }}" class="tripPhotoView"
                                                                     src="{{ img_url(res.folder, res.filename) }}"
-                                                                    alt="">
+                                                                    alt="{{ res.filename }}">
                                                             </div>
                                                         </div>
                                                         <hr>

@@ -9,13 +9,12 @@
                 {% if session.user == Undefined %}
                 <!-- Jumbotron from bootstrap -->
                 <div class="jumbotron text-center">
-                    <img src="{{ url_for('static', filename='images/logo_session.png') }}" alt="">
                     <h1 class="display-4">Say Hello to a Borderless World!</h1>
                     <p class="lead">This is the place to share your adventures with an enthusiastic community of
                         adventurers.</p>
                     <hr class="my-4">
                     <p>Come on board and discover more about the Borderless platform.</p>
-                    <a class="btn btn-primary btn-lg" href="{{ url_for('about.about') }}" role="button">Discover
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('about.about') }}" role="button" aria-label="Go to About page">Discover
                         more</a>
                 </div>
                 {% endif %}
