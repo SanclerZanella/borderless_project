@@ -76,7 +76,7 @@ def create_app(config_class=Config):
     # whitelist sources for Flask-Talisman
     csp = {
         'img-src': [
-            '\'unsafe-inline\' blob: \'self\'',
+            '\'unsafe-inline\' blob: data: \'self\'',
             '*'
         ],
         'default-src': [
