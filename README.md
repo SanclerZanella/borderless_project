@@ -34,17 +34,21 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
   - [Front-End Technologies](#front-end-technologies)
   - [Back-End Technologies](#back-end-technologies)
 - [Testing](#testing)
-  - [Testing User Stories](#testing-user-stories)
+  - [Creating an Account](#creating-an-account)
+  - [Log In](#log-in)
+  - [Add, Edit and Delete a Trip Post](#add,-edit-and-delete-a-trip-post)
+  - [Pagination](#pagination)
+  - [Trip Post](#trip-post)
   - [Validating The HTML and CSS code](#validating-the-html-and-css-code)
   - [Testing in different browsers](#testing-in-different-browsers)
   - [Testing responsiveness](#testing-responsiveness)
-  - [Issues found](#issues-found)
+  - [Known Issues](#known-issues)
 - [Accessibility](#accessibility)
 - [Deployment](#deployment)
-  - [Deploying my project](#deploying-my-project)
+  - [Local Deployment](#local-deployment)
+  - [Remote Deployment](#remote-deployment)
 - [Cloning my project](#cloning-my-project)
 - [Credits](#credits)
-  - [Content](#content)
   - [Acknowledgements](#acknowledgements)
 
 ---
@@ -527,7 +531,7 @@ I manually tested the live project by doing the following:
   * Using Google Developer Tools to view the project on devices with different screen sizes.
   * Asking for feedback from friends and family who opened and interacted with the project on their devices.
 
-### Issues found
+### Known Issues
 
   1. The Unfollow button in public profile page, when clicked all code related to remove user from the specific field in the database works well and the button UI turn to a Follow Button, but it does not behave as a Follow button unless the page is reloaded.
 
