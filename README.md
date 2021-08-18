@@ -36,7 +36,7 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
 - [Testing](#testing)
   - [Creating an Account](#creating-an-account)
   - [Log In](#log-in)
-  - [Add, Edit and Delete a Trip Post](#add,-edit-and-delete-a-trip-post)
+  - [Add, Edit and Delete a Trip Post](#add-edit-and-delete-a-trip-post)
   - [Pagination](#pagination)
   - [Trip Post](#trip-post)
   - [Validating The HTML and CSS code](#validating-the-html-and-css-code)

@@ -76,9 +76,8 @@ def create_app(config_class=Config):
     # whitelist sources for Flask-Talisman
     csp = {
         'img-src': [
-            '\'unsafe-inline\' \'self\'',
-            '*',
-            '*.herokuapp.com'
+            '\'unsafe-inline\' blob: \'self\'',
+            '*'
         ],
         'default-src': [
             '\'unsafe-inline\' \'self\'',
@@ -119,6 +118,9 @@ def create_app(config_class=Config):
             '*.cloudinary.com',
             '*.bootstrap.com',
             'cdn.jsdelivr.net'
+        ],
+        'object-src': [
+            '\'unsafe-inline\' blob: \'self\''
         ]
     }
 
