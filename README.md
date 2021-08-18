@@ -541,7 +541,9 @@ I manually tested the live project by doing the following:
 
   4. Unfollow link in Following tab (profile page) and Remove Follower in the Followers tab (profile page), just work with a double click.
 
-  5. Icons from google maps are not rendering.
+  5. ~~Icons from google maps are not rendering.~~ Fixed adding 'data:' data scheme to content security policy.
+
+  6. ~~Pictures in preview photos in edit trip page are not redering~~ Fixed adding 'blob:' data scheme to content security policy
 
 Back to the [Tables of Contents](#tables-of-contents)
 
