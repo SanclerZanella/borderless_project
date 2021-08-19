@@ -23,7 +23,7 @@ def trip(trip_id):
                      None)
 
     trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
-    resources = trip_func.folder_resources(trip['trip_name'])
+    resources = trip_func.folder_resources(trip_id)
 
     num_photos = trip_func.get_no_pictures(trip['user'], trip['_id'])
     map = Config.MAP_KEY

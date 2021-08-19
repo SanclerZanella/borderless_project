@@ -1,11 +1,10 @@
 from flask import (Blueprint, request,
                    flash, redirect,
                    url_for)
-from bson.objectid import ObjectId
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from app.utils import (trips_collection, Trip)
+from app.utils import Trip
 from app.config import Config
 
 # Configure Cloudinary API
@@ -34,12 +33,8 @@ def delete_trip(trip_id):
                          None, None, None,
                          None)
 
-        trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
-        search_exp = (trip['trip_name']).replace(" ", " AND ")
-        trip_path = cloudinary.Search().expression(search_exp).execute()
-
         # Handle trip deletion
-        trip_func.delete_trip(trip, trip_path, trip_id)
+        trip_func.delete_trip(trip_id)
 
         flash("Trip Successfuly Deleted")
         return redirect(request.referrer)

@@ -33,7 +33,7 @@
                         <div class="form-group">
                             <label for="trip_name">Trip Name</label>
                             <input type="text" class="form-control" id="trip_name" name="trip_name" minlength="5"
-                                maxlength="30" placeholder="Holidays in Rome"
+                                maxlength="30" pattern="^[a-zA-Z]" placeholder="Holidays in Rome"
                                 value="{{ current_trip['trip_name']|title }}" required>
                         </div>
                     </div>

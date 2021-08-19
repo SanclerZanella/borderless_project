@@ -1,22 +1,30 @@
 <!-- Trip Post -->
 <div class="col-11 tripPostLink">
+
+    <!-- Post background -->
     <img class="postBackground img-centered" src="{{ bg_post_url(trip.user, trip._id) }}" alt="Trip post background">
+
     <div class="row no-gutters">
         {% if trip.user == current_user_id or path == (request.path)|string %}
+
+        <!-- Post author picture -->
         <div class="col-8 col-md-10">
             <img class="postLinkProfilePic" src="{{ user_photo(trip.user) }}" alt="Post author profile photo">
         </div>
         {% else %}
         <div class="col-10">
-            <a href="{{ url_for('public_profile.public_profile', trip_user=trip.user) }}" aria-label="Go to post author profile"><img
-                    class="postLinkProfilePic shadowEffect" src="{{ user_photo(trip.user) }}" alt="Post author profile photo"></a>
+
+            <!-- Post author picture link -->
+            <a href="{{ url_for('public_profile.public_profile', trip_user=trip.user) }}"
+                aria-label="Go to post author profile"><img class="postLinkProfilePic shadowEffect"
+                    src="{{ user_photo(trip.user) }}" alt="Post author profile photo"></a>
         </div>
         {% endif %}
         {% if trip.user == current_user_id %}
         <!-- Delete trip Button -->
         <div class="col-2 col-md-1 deleteTrip">
-            <a id="deleteTripBtn_{{ trip._id }}" class="deletePost" data-id="{{ trip._id }}" aria-label="Delete trip icon"><i
-                    class="fas fa-trash-alt shakeEffect"></i></a>
+            <a id="deleteTripBtn_{{ trip._id }}" class="deletePost" data-id="{{ trip._id }}"
+                aria-label="Delete trip icon"><i class="fas fa-trash-alt shakeEffect"></i></a>
         </div>
 
         <!-- Edit trip button -->
@@ -64,7 +72,8 @@
     {% if session.user %}
     <div class="row no-gutters postLikes">
         <div class="col-12 text-center">
-            <a href="{{ url_for('likes.likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}" aria-label="Like button">
+            <a href="{{ url_for('likes.likes', trip_id=trip._id) }}" class="like" data-trip="{{ trip._id }}"
+                aria-label="Like button">
                 <i id="{{ 'like_icon_%s' % trip._id }}" class="fas fa-heart shakeEffect"></i>
             </a>
             <span name="like_count" id="{{'like_count_%s' % trip._id}}">{{

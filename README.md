@@ -594,7 +594,7 @@ Next, there's a series of steps to take in order to proceed with local deploymen
   * You should now be able to launch your app using the following command in your terminal:
    * > flask run
 
-  * The app should now be running on localhost on an address similar to http://127.0.0.1:5000. Simply copy/paste this into the browser of your choice!
+  * The app should now be running on localhost on an address similar to http://10.116.8.16:8000/. Simply copy/paste this into the browser of your choice!
 
 Back to the [Tables of Contents](#tables-of-contents)
 

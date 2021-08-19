@@ -747,28 +747,28 @@ class Trip:
                 for trip_photo in range(len(photo_files)):
                     file = photo_files[trip_photo]
                     category = self.category.lower().replace(" ", "_")
-                    folder_name = self.trip_name.replace(" ", "_")
-                    photo_id = "%s_%s" % (folder_name, trip_photo)
+                    trip_name = self.trip_name.replace(" ", "_").lower()
+                    photo_id = "%s_%s" % (trip_name, trip_photo)
                     folder_path = "users/%s/trips/%s/%s/" % (session['user'],
                                                              category,
-                                                             folder_name)
+                                                             trip_name)
                     cloudinary.uploader.upload(file,
                                                folder=folder_path,
                                                public_id=photo_id,
                                                format='jpg')
             else:
                 category = self.category.lower().replace(" ", "_").lower()
-                folder_name = self.trip_name.replace(" ", "_").lower()
+                trip_name = self.trip_name.replace(" ", "_").lower()
                 folder_path = "users/%s/trips/%s/%s" % (session['user'],
                                                         category,
-                                                        folder_name)
+                                                        trip_name)
                 cloudinary.api.create_folder(folder_path)
         else:
             category = self.category.lower().replace(" ", "_").lower()
-            folder_name = self.trip_name.replace(" ", "_").lower()
+            trip_name = self.trip_name.replace(" ", "_").lower()
             folder_path = "users/%s/trips/%s/%s" % (session['user'],
                                                     category,
-                                                    folder_name)
+                                                    trip_name)
             cloudinary.api.create_folder(folder_path)
 
     def get_BGPost_pic(self, user_id, trip_id):
@@ -781,7 +781,11 @@ class Trip:
         num_pic = self.get_no_pictures(user_id, trip_id)
 
         if num_pic > 0:
-            search_exp = (post['trip_name']).replace(" ", " AND ")
+            category = (post['trip_category']).replace(" ", "_").lower()
+            trip_name = (post['trip_name']).replace(" ", "_").lower()
+            search_exp = 'folder=users/%s/trips/%s/%s' % (post['user'],
+                                                          category,
+                                                          trip_name)
             trip_path = cloudinary.Search().expression(search_exp).execute()
             res = trip_path['resources'][-1]
             first_pic = res['public_id']
@@ -804,7 +808,11 @@ class Trip:
             {'_id': trip_id})
 
         if current_user_id == post['user']:
-            search_exp = (post['trip_name']).replace(" ", " AND ")
+            category = (post['trip_category']).replace(" ", "_").lower()
+            trip_name = (post['trip_name']).replace(" ", "_").lower()
+            search_exp = 'folder=users/%s/trips/%s/%s' % (trip_user,
+                                                          category,
+                                                          trip_name)
             search_cloud = cloudinary.Search().expression(search_exp).execute()
             no_files = search_cloud['total_count']
             return no_files
@@ -931,13 +939,17 @@ class Trip:
         cloudinary.uploader.rename(public_id, delete_folder)
         cloudinary.uploader.destroy(delete_folder)
 
-    def delete_trip(self, trip, trip_path, trip_id):
+    def delete_trip(self, trip_id):
         """
         View to execute the delete_trip
         """
 
         trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
-        search_exp = (trip['trip_name']).replace(" ", " AND ")
+        category = (trip['trip_category']).replace(" ", "_").lower()
+        trip_name = (trip['trip_name']).replace(" ", "_").lower()
+        search_exp = 'folder=users/%s/trips/%s/%s' % (trip['user'],
+                                                      category,
+                                                      trip_name)
         trip_path = cloudinary.Search().expression(search_exp).execute()
 
         # Delete trip pictures and folder from cloud
@@ -1012,11 +1024,16 @@ class Trip:
                                                         filename)).url
         return pic_url
 
-    def folder_resources(self, trip_name):
+    def folder_resources(self, trip_id):
         """
         Provide a list of all images in a trip folder in the cloud
         """
-        search_exp = (trip_name).replace(" ", " AND ")
+        trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
+        category = (trip['trip_category']).replace(" ", "_").lower()
+        trip_name = (trip['trip_name']).replace(" ", "_").lower()
+        search_exp = 'folder=users/%s/trips/%s/%s' % (trip['user'],
+                                                      category,
+                                                      trip_name)
         trip_path = cloudinary.Search().expression(search_exp).execute()
         resources = trip_path['resources']
 
@@ -1061,8 +1078,11 @@ class Trip:
 
             # Add amount of photos in each trip to
             # total_photos list
-            trip_name = trip['trip_name']
-            search_exp = (trip_name).replace(" ", " AND ")
+            category = (trip['trip_category']).replace(" ", "_").lower()
+            trip_name = (trip['trip_name']).replace(" ", "_").lower()
+            search_exp = 'folder=users/%s/trips/%s/%s' % (trip['user'],
+                                                          category,
+                                                          trip_name)
             trip_path = cloudinary.Search().expression(search_exp).execute()
             res = trip_path['total_count']
             total_photos.append(res)
@@ -1115,7 +1135,7 @@ class Trip:
                 # Send uploded photos to the cloud
                 for trip_photo in range(len(trip_photos)):
                     file = trip_photos[trip_photo]
-                    category = trip_category.lower().replace(" ", "_")
+                    category = trip_category.lower().replace(" ", "_").lower()
                     folder_name = trip_name.replace(" ", "_").lower()
 
                     last_id = ids[-1]
