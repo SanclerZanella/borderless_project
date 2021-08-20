@@ -908,7 +908,7 @@ class Trip:
             cloudinary.api.delete_folder(old_folder)
 
             # List of all photos in the new folder
-            new_resources = self.folder_resources(self.trip_name)
+            new_resources = self.folder_resources(current_trip['_id'])
 
             # Send new photos to the new folder
             self.update_trip_photos(trip_photos,
@@ -935,7 +935,7 @@ class Trip:
                                                  trip_catg,
                                                  trip_name,
                                                  filename)
-        delete_folder = 'users/%s/delete' % trip_user
+        delete_folder = 'users/%s/delete/deleted_img' % trip_user
         cloudinary.uploader.rename(public_id, delete_folder)
         cloudinary.uploader.destroy(delete_folder)
 
@@ -959,7 +959,7 @@ class Trip:
                 resources = res[img]
 
                 # Delete folder
-                delete_folder = 'users/%s/delete' % trip['user']
+                delete_folder = 'users/%s/delete/deleted_img' % trip['user']
 
                 cloudinary.uploader.rename(resources['public_id'],
                                            delete_folder)

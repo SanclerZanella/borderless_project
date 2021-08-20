@@ -805,7 +805,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 4em;
+        font-size: 3em;
     }
 
     .tripPostLink {
@@ -893,7 +893,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 3em;
+        font-size: 2em;
     }
 
     .tripPostLink {
@@ -902,7 +902,7 @@ div#map {
 
     .postLinkProfilePic {
         height: 8vh;
-        width: 8vw;
+        width: 10vw;
     }
 
     .tripPhoto {
@@ -1141,7 +1141,7 @@ div#map {
 
     .postLinkProfilePic {
         height: 10vh;
-        width: 14vw;
+        width: 16vw;
     }
 
     .postStatistic {
@@ -1308,8 +1308,6 @@ div#map {
     }
 }
 
-/* Horizontal width */
-
 @media screen and (min-width: 568px) and (max-width: 569px) {
     #profilePic {
         height: 40vh;
@@ -1393,7 +1391,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 4em;
+        font-size: 3em;
     }
 
     .postNameDate span {
