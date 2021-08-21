@@ -38,6 +38,13 @@ def edit_trip(trip_id):
         search_exp = (current_trip['trip_name']).replace(" ", " AND ")
         trip_path = cloudinary.Search().expression(search_exp).execute()
         resources = trip_path['resources']
+        ids = []
+
+        if len(resources) > 0:
+            for res in range(len(resources)):
+                last_file = resources[res]['filename']
+                last_file_id = int(last_file[-1])
+                ids.append(last_file_id)
 
         # Instance of Trip Class
         trip_func = Trip(None, None, None,
@@ -76,7 +83,8 @@ def edit_trip(trip_id):
                                 current_name,
                                 resources,
                                 current_trip,
-                                trip_photos)
+                                trip_photos,
+                                ids)
 
             flash('Trip Updated')
             return redirect(url_for('profile.profile'))

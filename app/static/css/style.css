@@ -779,7 +779,7 @@ div#map {
     }
 
     #profilePic {
-        left: 300px;
+        left: 380px;
     }
 
     #profileLinkPic {
@@ -813,7 +813,7 @@ div#map {
     }
 
     .postLinkProfilePic {
-        height: 10vh;
+        height: 12vh;
         width: 10vw;
     }
 
@@ -827,7 +827,7 @@ div#map {
     }
 
     .statisticResultWrapper {
-        height: 15vh;
+        height: 20vh;
     }
 
     .statisticResult {
@@ -857,7 +857,7 @@ div#map {
     }
 
     #profilePic {
-        left: 200px;
+        left: 220px;
     }
 
     #profileLinkPic {

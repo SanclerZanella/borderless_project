@@ -837,7 +837,8 @@ class Trip:
                   current_name,
                   resources,
                   current_trip,
-                  trip_photos):
+                  trip_photos,
+                  ids):
         """
         Handle edit trip functionality
         """
@@ -868,7 +869,8 @@ class Trip:
                                     resources,
                                     self.category,
                                     self.trip_name,
-                                    session['user'])
+                                    session['user'],
+                                    ids)
 
             return redirect(url_for('profile.profile'))
 
@@ -915,7 +917,8 @@ class Trip:
                                     new_resources,
                                     self.category,
                                     self.trip_name,
-                                    session['user'])
+                                    session['user'],
+                                    ids)
 
             # Update trip data in database
             trips_collection.update({"_id": ObjectId(current_trip['_id'])},
@@ -1117,20 +1120,17 @@ class Trip:
                            resources,
                            trip_category,
                            trip_name,
-                           current_user_id):
+                           current_user_id,
+                           ids):
         """
         Update trip photos in the cloud
         """
 
-        # Check if there is any photo in the trip folder in the cloud
+        # Check if there is any photo in the trip folder at the cloud
         if len(resources) > 0:
 
             # Check if the user uploaded any photo
             if trip_photos[0].filename != "":
-                ids = []
-                last_file = resources[0]['filename']
-                last_file_id = int(last_file[-1])
-                ids.append(last_file_id)
 
                 # Send uploded photos to the cloud
                 for trip_photo in range(len(trip_photos)):
@@ -1138,9 +1138,21 @@ class Trip:
                     category = trip_category.lower().replace(" ", "_").lower()
                     folder_name = trip_name.replace(" ", "_").lower()
 
-                    last_id = ids[-1]
-                    id = last_id + 1
-                    ids.append(id)
+                    # last_id = ids[-1]
+                    # id = last_id
+                    # while id == last_id:
+                    #     id += 2
+                    #     ids.append(id)
+
+                    id = 0
+                    while True:
+                        if id in ids:
+                            id += 1
+                        else:
+                            ids.append(id)
+                            break
+
+                    # id = last_id + 1
                     photo_id = "%s_%s" % (folder_name, id)
 
                     folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
@@ -1156,7 +1168,6 @@ class Trip:
 
         # If there isn't photo in the folder
         else:
-
             # Check if the user uploaded any photo
             if trip_photos[0].filename != "":
 
@@ -1166,7 +1177,15 @@ class Trip:
                     category = trip_category.lower().replace(" ", "_")
                     folder_name = trip_name.replace(" ", "_").lower()
 
-                    photo_id = "%s_%s" % (folder_name, trip_photo)
+                    id = 0
+                    while True:
+                        if id in ids:
+                            id += 1
+                        else:
+                            ids.append(id)
+                            break
+
+                    photo_id = "%s_%s" % (folder_name, id)
 
                     folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
                                                              category,
