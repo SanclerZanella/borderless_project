@@ -1138,12 +1138,6 @@ class Trip:
                     category = trip_category.lower().replace(" ", "_").lower()
                     folder_name = trip_name.replace(" ", "_").lower()
 
-                    # last_id = ids[-1]
-                    # id = last_id
-                    # while id == last_id:
-                    #     id += 2
-                    #     ids.append(id)
-
                     id = 0
                     while True:
                         if id in ids:
@@ -1152,7 +1146,6 @@ class Trip:
                             ids.append(id)
                             break
 
-                    # id = last_id + 1
                     photo_id = "%s_%s" % (folder_name, id)
 
                     folder_path = "users/%s/trips/%s/%s/" % (current_user_id,
