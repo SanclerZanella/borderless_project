@@ -536,7 +536,8 @@ footer {
 }
 
 .friendProfilePic {
-    height: 10vh;
+    height: 12vh;
+    width: 12vh;
     border: 1px solid #000;
     border-radius: 100%;
     margin: 0.5rem;
@@ -858,12 +859,12 @@ div#map {
     }
 
     #profilePic {
-        left: 220px;
+        left: 270px;
     }
 
     #profileLinkPic {
         height: 8vh;
-        width: 8vw;
+        width: 7vw;
     }
 
     .profileNav .nav-item {
@@ -903,7 +904,7 @@ div#map {
 
     .postLinkProfilePic {
         height: 8vh;
-        width: 10vw;
+        width: 7vw;
     }
 
     .tripPhoto {
@@ -1020,7 +1021,7 @@ div#map {
 
     .postLinkProfilePic {
         height: 10vh;
-        width: 12vw;
+        width: 14vw;
     }
 
     .postStatistic {

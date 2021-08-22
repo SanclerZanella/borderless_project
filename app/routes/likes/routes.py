@@ -22,7 +22,6 @@ def likes(trip_id):
                          None)
 
         current_user = session['user']
-        trip_id = trip_id
         trip = trips_collection.find_one({'_id': ObjectId(trip_id)})
         likes = trip['trip_likes']
 

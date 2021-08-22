@@ -993,8 +993,8 @@ class Trip:
 
         if len(likes) > 0:
             for like in range(len(likes)):
-                user = likes[like]['user']
-                if user != user:
+                like_user = likes[like]['user']
+                if like_user != user:
                     trips_collection.update({'_id': ObjectId(id)}, {
                         '$push': {
                             'trip_likes': lk
