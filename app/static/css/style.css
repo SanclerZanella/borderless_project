@@ -805,7 +805,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 3em;
+        font-size: 2em;
     }
 
     .tripPostLink {
@@ -823,6 +823,7 @@ div#map {
     }
 
     .postLikes {
+        margin-top: 0;
         font-size: 2em;
     }
 
@@ -893,7 +894,7 @@ div#map {
     }
 
     .postNameDate h1 {
-        font-size: 2em;
+        font-size: 1.8em;
     }
 
     .tripPostLink {
@@ -926,6 +927,10 @@ div#map {
 
     .editCard {
         margin-top: 1rem;
+    }
+
+    .postLikes {
+        margin-top: 0;
     }
 }
 
