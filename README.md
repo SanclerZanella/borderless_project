@@ -13,8 +13,6 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
 
 [Click here to see the project live](https://borderless-project.herokuapp.com/)
 
-![responsiveness TEST](app/static/images/readme/test/manual/responsive_test.png)
-
 ---
 
 ## Tables of Contents
@@ -34,6 +32,7 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
   - [Front-End Technologies](#front-end-technologies)
   - [Back-End Technologies](#back-end-technologies)
 - [Testing](#testing)
+  - [Testing User Stories](#testing-user-stories)
   - [Creating an Account](#creating-an-account)
   - [Log In](#log-in)
   - [Add, Edit and Delete a Trip Post](#add-edit-and-delete-a-trip-post)
@@ -41,7 +40,6 @@ your travels, tracks or any adventure around the world. Be without limits, Be bo
   - [Trip Post](#trip-post)
   - [Validating The HTML and CSS code](#validating-the-html-and-css-code)
   - [Testing in different browsers](#testing-in-different-browsers)
-  - [Testing responsiveness](#testing-responsiveness)
   - [Known Issues](#known-issues)
 - [Accessibility](#accessibility)
 - [Deployment](#deployment)
@@ -319,99 +317,158 @@ Back to the [Tables of Contents](#tables-of-contents)
 
 ## Testing
 
-### Creating an Account
+### Testing User Stories
 
-I've created my own personal account. In addition to this primary account, I've tested with about 5 fake accounts in order to confirm authentication and validation worked as expected. The authentication and validation to create an account consists in:
+*"As a user, I would like to _____________________________"*
 
-1. Check if the Sign up form is properly filled out.
-    * If the "First name" and "Last name" fields are filled out, with a minimum length of 2 characters and maximum of 15 characters;
-      ```html
-      <!-- First Name Field -->
-      <div class="row no-gutters content-alignment">
-          <div class="col-8">
-              <label for="fname">First Name</label>
-              <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
-                  pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
-                  placeholder="First name" required>
+* *view the site from any device (mobile, tablet, desktop).*
+
+  * I manually tested the live project by doing the following:  
+    * Using Google Developer Tools to view the project on devices with different screen sizes.
+    * Asking for feedback from friends and family who opened and interacted with the project on their devices.
+    ![responsiveness TEST](app/static/images/readme/test/manual/responsive_test.png)
+
+* *view all trip posts as a guest.*
+* *view all trip as a guest.*
+* *view public profile as a guest.*
+  * All visitors are able to see public trips, public profiles and trip views without an account.
+    ![feed page](app/static/images/readme/test/manual/feed_page.png)
+
+* *search trip posts by trip name or place.*
+![feed page](app/static/images/readme/test/manual/search.png)
+
+* *create my own profile.*
+    I've created my own personal account. In addition to this primary account, I've tested with about 5 fake accounts in order to confirm authentication and validation worked as expected. The authentication and validation to create an account consists in:
+
+    1. Check if the Sign up form is properly filled out.
+        * If the "First name" and "Last name" fields are filled out, with a minimum length of 2 characters and maximum of 15 characters;
+          ```html
+          <!-- First Name Field -->
+          <div class="row no-gutters content-alignment">
+              <div class="col-8">
+                  <label for="fname">First Name</label>
+                  <input type="text" id="fname" name="fname" minlength="5" maxlenght="15"
+                      pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
+                      placeholder="First name" required>
+              </div>
           </div>
-      </div>
 
-      <!-- Last Name Field -->
-      <div class="row no-gutters content-alignment">
-          <div class="col-8">
-              <label for="lname">Last Name</label>
-              <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
-                  pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
-                  placeholder="Last name" required>
+          <!-- Last Name Field -->
+          <div class="row no-gutters content-alignment">
+              <div class="col-8">
+                  <label for="lname">Last Name</label>
+                  <input type="text" id="lname" name="lname" minlength="5" maxlenght="15"
+                      pattern="^[a-zA-Z0-9]{2,15}$" class="form-control"
+                      placeholder="Last name" required>
+              </div>
           </div>
-      </div>
-      
-      ```
-      - Checking if the above fields are filled out:
-      ![fname lname check](app/static/images/readme/test/manual/signup_fname.png)
+          
+          ```
+          - Checking if the above fields are filled out:
+          ![fname lname check](app/static/images/readme/test/manual/signup_fname.png)
 
-      - Checking if the above fields have the right length:
-      ![fname lname len check](app/static/images/readme/test/manual/signup_fname_len.png)
+          - Checking if the above fields have the right length:
+          ![fname lname len check](app/static/images/readme/test/manual/signup_fname_len.png)
 
-    * If the "Email" field is filled out with the properly email format;
-      ```html
-      <!-- Email Field -->
-      <div class="row no-gutters content-alignment">
-          <div class="col-8">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" class="form-control"
-                  placeholder="Email" required>
+        * If the "Email" field is filled out with the properly email format;
+          ```html
+          <!-- Email Field -->
+          <div class="row no-gutters content-alignment">
+              <div class="col-8">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" class="form-control"
+                      placeholder="Email" required>
+              </div>
           </div>
-      </div>
 
-      ```
-      - Checking if the email field has the right format:
-      ![email format check](app/static/images/readme/test/manual/signup_email.png)
+          ```
+          - Checking if the email field has the right format:
+          ![email format check](app/static/images/readme/test/manual/signup_email.png)
 
-    * If the "Password" and "Confirm Password" field are properly filled out with a minimum length of 6 characters and maximum of 15 characters and if these fields match, in case of these fields not match, the register button "Register" keep disabled.
-      ```html
-      <!-- Password Field -->
-      <div class="row no-gutters content-alignment">
-          <div class="col-8">
-              <label for="password">Password</label>
-              <input type="password" id="password" name="password" minlenght="6"
-                  maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
-                  placeholder="Password" required>
+        * If the "Password" and "Confirm Password" field are properly filled out with a minimum length of 6 characters and maximum of 15 characters and if these fields match, in case of these fields not match, the register button "Register" keep disabled.
+          ```html
+          <!-- Password Field -->
+          <div class="row no-gutters content-alignment">
+              <div class="col-8">
+                  <label for="password">Password</label>
+                  <input type="password" id="password" name="password" minlenght="6"
+                      maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                      placeholder="Password" required>
+              </div>
           </div>
-      </div>
 
-      <!-- Repeat Password Field -->
-      <div class="row no-gutters content-alignment">
-          <div class="col-8">
-              <label for="Rpassword">Confirm Password</label>
-              <input type="password" id="Rpassword" name="Rpassword" minlenght="6"
-                  maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
-                  placeholder="Password" required>
+          <!-- Repeat Password Field -->
+          <div class="row no-gutters content-alignment">
+              <div class="col-8">
+                  <label for="Rpassword">Confirm Password</label>
+                  <input type="password" id="Rpassword" name="Rpassword" minlenght="6"
+                      maxlenght="15" pattern="^[a-zA-Z0-9]{5,15}$" class="form-control"
+                      placeholder="Password" required>
+              </div>
           </div>
-      </div>
 
-      ```
-      - Checking if the above fields have the right length:
-      ![password length check](app/static/images/readme/test/manual/password_check.png)
+          ```
+          - Checking if the above fields have the right length:
+          ![password length check](app/static/images/readme/test/manual/password_check.png)
 
-      - If the above fields match, then "Register" button is no longer disabled:
-        * Match:
-          ![password match check](app/static/images/readme/test/manual/password_match.png)
-        * No Match:
-          ![password match check](app/static/images/readme/test/manual/password_no_match.png)
+          - If the above fields match, then "Register" button is no longer disabled:
+            * Match:
+              ![password match check](app/static/images/readme/test/manual/password_match.png)
+            * No Match:
+              ![password match check](app/static/images/readme/test/manual/password_no_match.png)
 
-2. Check if the user already exists in the database, using the email as parameter, if the user already exists, the return to the previous page with a flash message which says "User already exists";
-    ```python
-    # Check if the username already exists in db
-    existing_user = users_collections.find_one(
-        {"email": request.form.get("email")})
+    2. Check if the user already exists in the database, using the email as parameter, if the user already exists, the return to the previous page with a flash message which says "User already exists";
+        ```python
+        # Check if the username already exists in db
+        existing_user = users_collections.find_one(
+            {"email": request.form.get("email")})
 
-    if existing_user:
-        flash("User already exists")
+        if existing_user:
+            flash("User already exists")
 
-        # redirect to previous page if the users already exists
-        return redirect(request.referrer)
-    ```
+            # redirect to previous page if the users already exists
+            return redirect(request.referrer)
+        ```
+
+* *choose my trip post privacy.*
+![privacy](app/static/images/readme/test/manual/privacy.png)
+
+* *edit my own profile.*
+![edit profile](app/static/images/readme/test/manual/edit_profile.png)
+
+* *add my own trips.*
+* *edit my own trips.*
+* *delete my own trips.*
+Several trip posts were created in order to prepare for pagination building. These trip posts were created using my actual account, the admin account, and several test accounts.
+For several posts, I've edited minor things to test all parts of a trip post, adding place and country, description, photos and creating without photos to test the functionality of creating and updating a trip post to the database and cloud platform.
+  * Add:
+  ![add trip button](app/static/images/readme/test/manual/add_trip_btn.png)
+  ![add trip form](app/static/images/readme/test/manual/add_trip_form.png)
+  * Edit
+  ![edit trip form](app/static/images/readme/test/manual/edit_trip_form.png)
+  * Delete
+  ![delete trip warning](app/static/images/readme/test/manual/delete_trip_warn.png)
+
+* *be able to like and dislike a trips.*
+![like button](app/static/images/readme/test/manual/like.png)
+
+* *be able to follow or unfollow other users.*
+![follow button](app/static/images/readme/test/manual/follow_btn.png)
+
+* *be able to receive a notification when another user send a follow request.*
+![notification](app/static/images/readme/test/manual/notification.png)
+
+* *be able to to remove a follower.*
+![remove follower](app/static/images/readme/test/manual/remove_follower.png)
+
+* *be able see my followers and following users in my profile.*
+![follow tabs](app/static/images/readme/test/manual/follow_tabs.png)
+
+* *be able see a statistic about my trips in my profile.*
+![statistics](app/static/images/readme/test/manual/statistics.png)
+
+* *be able to log out.*
+![log out button](app/static/images/readme/test/manual/logout_btn.png)
 
 ### Log in
 
@@ -429,12 +486,6 @@ I've tested the log in form and functionality in all initial pages, filling the 
       ![email format check](app/static/images/readme/test/manual/login_password.png)
 
 2. Check if the user exists in the database, using the email as parameter, in the case the user exists in the database, then check if the password match with the password stored in the database. If the email or password is incorrect, then reload the previous page with a flash message, which is "Incorrect email and/or password";
-
-### Add, Edit and Delete a Trip Post
-
-Several trip posts were created in order to prepare for pagination building. These trip posts were created using my actual account, the admin account, and several test accounts.
-
-For several posts, I've edited minor things to test all parts of a trip post, adding place and country, description, photos and creating without photos to test the functionality of creating and updating a trip post to the database and cloud platform.
 
 ### Pagination
 
@@ -518,18 +569,11 @@ I've checked the trip post in different pages (Profile, Public Profile and Feed)
 
 ### Testing in different browsers
 
-I manually tested the website on the following web browsers, checking that buttons, responsiveness and design worked as planned:
+I manually tested the website on the following web browsers, checking buttons, responsiveness and design worked as planned:
 
   * Google Chrome
   * Mozilla Firefox
   * Microsoft Edge
-
-### Testing responsiveness
-
-I manually tested the live project by doing the following:
-  
-  * Using Google Developer Tools to view the project on devices with different screen sizes.
-  * Asking for feedback from friends and family who opened and interacted with the project on their devices.
 
 ### Known Issues
 
