@@ -441,11 +441,14 @@ Back to the [Tables of Contents](#tables-of-contents)
 * *delete my own trips.*
 Several trip posts were created in order to prepare for pagination building. These trip posts were created using my actual account, the admin account, and several test accounts.
 For several posts, I've edited minor things to test all parts of a trip post, adding place and country, description, photos and creating without photos to test the functionality of creating and updating a trip post to the database and cloud platform.
+
   * Add:
   ![add trip button](app/static/images/readme/test/manual/add_trip_btn.png)
   ![add trip form](app/static/images/readme/test/manual/add_trip_form.png)
+
   * Edit
   ![edit trip form](app/static/images/readme/test/manual/edit_trip_form.png)
+  
   * Delete
   ![delete trip warning](app/static/images/readme/test/manual/delete_trip_warn.png)
 
