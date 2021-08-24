@@ -45,7 +45,8 @@
 
         <!-- Add new trip button -->
         <div class="col-12 content-alignment">
-            <a id="TripBtn" class="btn btn-outline-primary addTripBtn" aria-label="New trip Button">New Trip <i class="fas fa-plus"></i></a>
+            <a id="TripBtn" class="btn btn-outline-primary addTripBtn" aria-label="New trip Button">New Trip <i
+                    class="fas fa-plus"></i></a>
         </div>
 
         <!-- Trips Profile Feed -->
@@ -55,7 +56,9 @@
                 {% if user_trips|length > 0 %}
 
                 <!-- Pagination links top -->
+                {% if user_trips|length %}
                 {% include "partials/_pagination_top.html" %}
+                {% endif %}
 
                 {% endif %}
 
@@ -64,7 +67,7 @@
                         {% if user_trips|length %}
                         {% for trip in trips %}
                         {% if trip.user == current_user_id %}
-                        
+
                         <!-- Trip Post -->
                         {% include "partials/_post.html" %}
 
@@ -80,7 +83,12 @@
                 {% if user_trips|length > 0 %}
 
                 <!-- Pagination links bottom -->
+                {% if user_trips|length %}
                 {% include "partials/_pagination_bottom.html" %}
+                {% endif %}
+
+                {% else %}
+                <h1>NO TRIPS TO SHOW</h1>
 
                 {% endif %}
 
@@ -160,8 +168,7 @@
                                         <div class="form-group">
                                             <label for="trip_description">Trip Description</label>
                                             <textarea class="form-control" name="trip_description" minlength="5"
-                                                id="trip_description" cols="30" rows="10"
-                                                required></textarea>
+                                                id="trip_description" cols="30" rows="10" required></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -218,7 +225,8 @@
                                 <div class="form-row">
                                     <div class="col content-alignment">
                                         <a href="{{ url_for('profile.profile') }}" type="button"
-                                            class="btn btn-danger tripFormBtn tripClearBtn" aria-label="Submit New Trip Button">Clear Form</a>
+                                            class="btn btn-danger tripFormBtn tripClearBtn"
+                                            aria-label="Submit New Trip Button">Clear Form</a>
                                         <button type="submit" class="btn btn-primary tripFormBtn tripAddBtn"
                                             disabled>Add
                                             Trip</button>
@@ -264,7 +272,8 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item"
-                                        href="{{ url_for('public_profile.public_profile', trip_user=follower) }}" aria-label="Visit profile">
+                                        href="{{ url_for('public_profile.public_profile', trip_user=follower) }}"
+                                        aria-label="Visit profile">
                                         <i class="fas fa-eye"></i> Visit Profile
                                     </a>
 
@@ -299,12 +308,14 @@
                                                     <hr>
                                                     <div class="row no-gutters content-alignment deleteBtnModal">
                                                         <div class="col-4 col-md-2 content-alignment">
-                                                            <a class="btn btn-primary closeRemoveConfirm" aria-label="Close remove follower confirmation">Cancel</a>
+                                                            <a class="btn btn-primary closeRemoveConfirm"
+                                                                aria-label="Close remove follower confirmation">Cancel</a>
                                                         </div>
                                                         <div class="col-4 col-md-2 content-alignment">
                                                             <a id="removeFwl_{{ loop.index }}" data-id="{{ follower }}"
                                                                 class="btn btn-danger removeFwl"
-                                                                href="{{ url_for('remove_follower.remove_follower', user_id=follower) }}" aria-label="Remove Follower button">Remove</a>
+                                                                href="{{ url_for('remove_follower.remove_follower', user_id=follower) }}"
+                                                                aria-label="Remove Follower button">Remove</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -395,12 +406,14 @@
                                                     <hr>
                                                     <div class="row no-gutters content-alignment deleteBtnModal">
                                                         <div class="col-4 col-md-2 content-alignment">
-                                                            <a class="btn btn-primary closeUnfollowConfirm" aria-label="Close Unfollow confirmation">Cancel</a>
+                                                            <a class="btn btn-primary closeUnfollowConfirm"
+                                                                aria-label="Close Unfollow confirmation">Cancel</a>
                                                         </div>
                                                         <div class="col-4 col-md-2 content-alignment">
                                                             <a id="removeFwln_{{ loop.index }}" data-id="{{ follow }}"
                                                                 class="btn btn-danger removeFwln"
-                                                                href="{{ url_for('follow_request.follow_request', user_id=follow) }}" aria-label="Unfollow Confirmation button">Unfollow</a>
+                                                                href="{{ url_for('follow_request.follow_request', user_id=follow) }}"
+                                                                aria-label="Unfollow Confirmation button">Unfollow</a>
                                                         </div>
                                                     </div>
                                                 </div>

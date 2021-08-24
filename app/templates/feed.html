@@ -26,7 +26,10 @@
                 {% include "partials/_searchbar.html" %}
 
                 <!-- Pagination links top -->
+                {% if trips|length %}
                 {% include "partials/_pagination_top.html" %}
+                {% endif %}
+
 
                 <div class="col-12 col-md-10 col-lg-10 col-xl-8 feedProfile">
                     <div class="row no-gutters content-alignment">
@@ -48,7 +51,9 @@
                 </div>
 
                 <!-- Pagination links bottom -->
+                {% if trips|length %}
                 {% include "partials/_pagination_bottom.html" %}
+                {% endif %}
 
             </div>
         </div>
